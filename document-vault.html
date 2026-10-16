@@ -337,7 +337,7 @@
       </svg>`
     };
 
-    const DEMO_DOCS = [
+    const DEFAULT_DOCS = [
       { id: 1, name: 'Discharge_Summary_Oct2026.pdf', cat: 'Discharge Summary', date: '2026-10-12', size: '245 KB', type: 'pdf', artKey: 'discharge', desc: 'City General Hospital inpatient admission & foot ulcer debridement summary.' },
       { id: 2, name: 'Blood_Test_Report_Sep2026.pdf', cat: 'Lab Report', date: '2026-09-28', size: '180 KB', type: 'pdf', artKey: 'lab', desc: 'HbA1c (7.8%), Fasting Blood Glucose & Complete Lipid Panel.' },
       { id: 3, name: 'Prescription_Dr_Sharma.jpg', cat: 'Prescription', date: '2026-10-12', size: '520 KB', type: 'img', artKey: 'prescription', desc: 'Diabetic foot medications, Piperacillin and Metformin prescription.' },
@@ -346,6 +346,21 @@
       { id: 6, name: 'Insurance_Claim_Form.pdf', cat: 'Insurance Document', date: '2026-10-13', size: '320 KB', type: 'pdf', artKey: 'insurance', desc: 'Cashless hospital reimbursement claim with itemized billing.' }
     ];
 
+    function getStoredDocs() {
+      try {
+        const stored = localStorage.getItem('carenest_vault_docs');
+        if (stored) return JSON.parse(stored);
+      } catch (e) {}
+      return [...DEFAULT_DOCS];
+    }
+
+    function saveVaultDocs(docs) {
+      try {
+        localStorage.setItem('carenest_vault_docs', JSON.stringify(docs));
+      } catch (e) {}
+    }
+
+    let DEMO_DOCS = getStoredDocs();
     let currentDocs = [...DEMO_DOCS];
 
     function renderDocs(list) {
@@ -411,6 +426,7 @@
         const idx = DEMO_DOCS.findIndex(d => d.id === id);
         if (idx !== -1) {
           DEMO_DOCS.splice(idx, 1);
+          saveVaultDocs(DEMO_DOCS);
           currentDocs = [...DEMO_DOCS];
           renderDocs(currentDocs);
         }
@@ -599,8 +615,10 @@
         date: new Date().toISOString().split('T')[0],
         size: Math.round(file.size / 1024) + ' KB',
         type: file.name.endsWith('.pdf') ? 'pdf' : 'img',
+        artKey: file.name.endsWith('.pdf') ? 'lab' : 'prescription',
         desc: 'User uploaded medical documentation.'
       });
+      saveVaultDocs(DEMO_DOCS);
       currentDocs = [...DEMO_DOCS];
       renderDocs(currentDocs);
     }
