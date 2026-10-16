@@ -584,9 +584,29 @@
       window.location.href = 'dashboard.html';
     }
 
-    function handleFormLogin(e) {
+    async function handleFormLogin(e) {
       e.preventDefault();
       const email = document.getElementById('input-email').value.trim();
+      const password = document.getElementById('input-password').value;
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          localStorage.setItem('carenest_user', JSON.stringify(data.user));
+          localStorage.setItem('carenest_logged_in', 'true');
+          window.location.href = 'dashboard.html';
+          return;
+        }
+      } catch (err) {
+        console.log('Backend offline or static mode, logging in locally:', err);
+      }
+
+      // Local fallback
       const user = {
         name: email.includes('@') ? email.split('@')[0].replace('.', ' ') : 'Santhosh Kumar',
         email: email,
@@ -599,10 +619,31 @@
       window.location.href = 'dashboard.html';
     }
 
-    function handleFormRegister(e) {
+    async function handleFormRegister(e) {
       e.preventDefault();
       const name = document.getElementById('reg-name').value.trim();
       const email = document.getElementById('reg-email').value.trim();
+      const password = document.getElementById('reg-password').value;
+
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          localStorage.setItem('carenest_user', JSON.stringify(data.user));
+          localStorage.setItem('carenest_logged_in', 'true');
+          alert("✅ Registration successful on CareNest Backend! Welcome.");
+          window.location.href = 'dashboard.html';
+          return;
+        }
+      } catch (err) {
+        console.log('Backend offline or static mode, registering locally:', err);
+      }
+
+      // Local fallback
       const user = {
         name: name || 'Santhosh Kumar',
         email: email || 'user@carenest.com',

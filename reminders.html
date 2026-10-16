@@ -1038,13 +1038,25 @@
       };
 
       MEDICINES.push(newMedicine);
+      try { localStorage.setItem('carenest_reminders', JSON.stringify(MEDICINES)); } catch(e) {}
       renderSchedules();
       closeAddMedicineModal();
+
+      // Post to backend API if available
+      fetch('/api/reminders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, time: timeFormatted, slot, food: meal, dose })
+      }).catch(() => {});
 
       alert(`✅ "${name}" has been added with tablet photo and active alarm!`);
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      try {
+        const savedMeds = localStorage.getItem('carenest_reminders');
+        if (savedMeds) MEDICINES = JSON.parse(savedMeds);
+      } catch(e) {}
       renderSchedules();
       const userStr = localStorage.getItem('carenest_user');
       if (userStr) {

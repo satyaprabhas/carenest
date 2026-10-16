@@ -1,0 +1,119 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "santhosh@carenest.org",
+      "password": "password123",
+      "name": "Dr. Santhosh Kumar",
+      "initials": "SK",
+      "role": "Patient #CN-88421"
+    }
+  ],
+  "documents": [
+    {
+      "id": 1,
+      "name": "Discharge_Summary_Oct2026.pdf",
+      "cat": "Discharge Summary",
+      "date": "2026-10-12",
+      "size": "245 KB",
+      "type": "pdf",
+      "artKey": "discharge",
+      "desc": "City General Hospital inpatient admission & foot ulcer debridement summary.",
+      "fileUrl": null
+    },
+    {
+      "id": 2,
+      "name": "Blood_Test_Report_Sep2026.pdf",
+      "cat": "Lab Report",
+      "date": "2026-09-28",
+      "size": "180 KB",
+      "type": "pdf",
+      "artKey": "lab",
+      "desc": "HbA1c (7.8%), Fasting Blood Glucose & Complete Lipid Panel.",
+      "fileUrl": null
+    },
+    {
+      "id": 3,
+      "name": "Prescription_Dr_Sharma.jpg",
+      "cat": "Prescription",
+      "date": "2026-10-12",
+      "size": "520 KB",
+      "type": "img",
+      "artKey": "prescription",
+      "desc": "Diabetic foot medications, Piperacillin and Metformin prescription.",
+      "fileUrl": null
+    },
+    {
+      "id": 4,
+      "name": "Foot_Xray_Report.pdf",
+      "cat": "Scan/X-Ray",
+      "date": "2026-10-06",
+      "size": "1.2 MB",
+      "type": "pdf",
+      "artKey": "scan",
+      "desc": "Right foot radiograph - No osteomyelitis or bone fracture identified.",
+      "fileUrl": null
+    },
+    {
+      "id": 5,
+      "name": "Medical_Certificate_Leave.pdf",
+      "cat": "Medical Certificate",
+      "date": "2026-10-12",
+      "size": "95 KB",
+      "type": "pdf",
+      "artKey": "cert",
+      "desc": "Doctor sanctioned 2 weeks rest with leg elevation.",
+      "fileUrl": null
+    },
+    {
+      "id": 6,
+      "name": "Insurance_Claim_Form.pdf",
+      "cat": "Insurance Document",
+      "date": "2026-10-13",
+      "size": "320 KB",
+      "type": "pdf",
+      "artKey": "insurance",
+      "desc": "Cashless hospital reimbursement claim with itemized billing.",
+      "fileUrl": null
+    }
+  ],
+  "reminders": [
+    {
+      "id": 1,
+      "name": "Pantoprazole 40mg",
+      "time": "07:30",
+      "slot": "Morning",
+      "food": "30 mins Before Breakfast",
+      "dose": "1 Capsule",
+      "photoUrl": null
+    },
+    {
+      "id": 2,
+      "name": "Metformin 500mg",
+      "time": "08:30",
+      "slot": "Morning",
+      "food": "With Breakfast",
+      "dose": "1 Tablet",
+      "photoUrl": null
+    },
+    {
+      "id": 3,
+      "name": "Clopidogrel 75mg",
+      "time": "13:30",
+      "slot": "Afternoon",
+      "food": "After Lunch",
+      "dose": "1 Tablet",
+      "photoUrl": null
+    },
+    {
+      "id": 4,
+      "name": "Atorvastatin 20mg",
+      "time": "21:00",
+      "slot": "Night",
+      "food": "After Dinner",
+      "dose": "1 Tablet",
+      "photoUrl": null
+    }
+  ],
+  "dietLogs": []
+}
