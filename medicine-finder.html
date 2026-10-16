@@ -1,0 +1,2671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generic Medicine Finder | CareNest</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ==========================================================================
+       Generic Medicine Finder Portal - Dedicated Stylesheet
+       Self-contained portal layout with professional healthcare UI
+       ========================================================================== */
+
+    :root {
+      --med-teal: #0d7377;
+      --med-teal-dark: #085356;
+      --med-teal-light: #14919b;
+      --med-teal-subtle: #e0f2f1;
+      --med-green: #2e7d32;
+      --med-green-bg: #e8f5e9;
+      --med-blue: #0288d1;
+      --med-blue-bg: #e3f2fd;
+      --med-amber: #e65100;
+      --med-amber-bg: #fff3e0;
+      --med-border: #e2e8f0;
+      --med-card-bg: #ffffff;
+      --med-text-main: #0f172a;
+      --med-text-muted: #64748b;
+    }
+
+    /* Portal Top Bar */
+    .portal-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #ffffff;
+      border-bottom: 1px solid var(--med-border);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+      height: 70px;
+    }
+
+    .portal-topbar-inner {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .topbar-left {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .btn-back-dashboard {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      background-color: var(--color-bg);
+      border: 1px solid var(--med-border);
+      color: var(--color-text-main);
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all var(--transition-fast);
+      text-decoration: none;
+    }
+
+    .btn-back-dashboard:hover {
+      background-color: var(--med-teal-subtle);
+      border-color: var(--med-teal);
+      color: var(--med-teal-dark);
+      transform: translateX(-2px);
+    }
+
+    .topbar-center {
+      flex: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .portal-title-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--med-teal-dark);
+      letter-spacing: -0.01em;
+    }
+
+    .portal-icon-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
+      border-radius: 10px;
+      font-size: 1.25rem;
+      box-shadow: 0 2px 5px rgba(13, 115, 119, 0.15);
+    }
+
+    .topbar-right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .user-profile-widget {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 8px 4px 4px;
+      background: #f8fafc;
+      border: 1px solid var(--med-border);
+      border-radius: 40px;
+    }
+
+    .user-avatar-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--med-teal) 0%, var(--med-teal-dark) 100%);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .user-name-label {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--med-text-main);
+      max-width: 140px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .btn-logout {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid #fee2e2;
+      background: #fff5f5;
+      color: #dc2626;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .btn-logout:hover {
+      background: #dc2626;
+      color: #ffffff;
+      border-color: #dc2626;
+    }
+
+    /* Main Container & Layout */
+    .portal-main {
+      flex: 1;
+      padding: 28px 0 60px;
+    }
+
+    /* Hero Search Banner */
+    .search-hero-card {
+      background: linear-gradient(145deg, #ffffff 0%, #f0fdf4 40%, #e0f2f1 100%);
+      border: 1px solid rgba(13, 115, 119, 0.2);
+      border-radius: 20px;
+      padding: 40px 36px;
+      box-shadow: 0 10px 25px -5px rgba(13, 115, 119, 0.08), 0 8px 10px -6px rgba(13, 115, 119, 0.04);
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .search-hero-card::after {
+      content: "";
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(13, 115, 119, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(13, 115, 119, 0.12);
+      color: var(--med-teal-dark);
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    .hero-heading {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: #0b3b3d;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .hero-subtitle {
+      font-size: 1.05rem;
+      color: var(--med-text-muted);
+      max-width: 680px;
+      margin-bottom: 28px;
+    }
+
+    /* Search Controls Box */
+    .search-input-wrapper {
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 6px 8px 6px 16px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+      transition: all var(--transition-normal);
+      max-width: 860px;
+    }
+
+    .search-input-wrapper:focus-within {
+      border-color: var(--med-teal);
+      box-shadow: 0 0 0 4px rgba(13, 115, 119, 0.15);
+    }
+
+    .search-icon-svg {
+      color: var(--med-teal);
+      flex-shrink: 0;
+      margin-right: 12px;
+    }
+
+    .medicine-search-field {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 1.05rem;
+      font-family: inherit;
+      color: var(--med-text-main);
+      background: transparent;
+      padding: 8px 0;
+    }
+
+    .medicine-search-field::placeholder {
+      color: #94a3b8;
+    }
+
+    .btn-search-clear {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      padding: 6px 10px;
+      font-size: 1.1rem;
+      display: none;
+      transition: color var(--transition-fast);
+    }
+
+    .btn-search-clear:hover {
+      color: #475569;
+    }
+
+    .btn-hero-search {
+      background-color: var(--med-teal);
+      color: #ffffff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all var(--transition-fast);
+      box-shadow: 0 3px 8px rgba(13, 115, 119, 0.3);
+      white-space: nowrap;
+    }
+
+    .btn-hero-search:hover {
+      background-color: var(--med-teal-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(13, 115, 119, 0.35);
+    }
+
+    /* OR Divider & Upload Area */
+    .or-divider-row {
+      display: flex;
+      align-items: center;
+      max-width: 860px;
+      margin: 18px 0;
+      gap: 16px;
+    }
+
+    .or-line {
+      flex: 1;
+      height: 1px;
+      background: #cbd5e1;
+    }
+
+    .or-pill {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #64748b;
+      background: #ffffff;
+      padding: 3px 12px;
+      border-radius: 20px;
+      border: 1px solid #e2e8f0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .upload-cta-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      max-width: 860px;
+      flex-wrap: wrap;
+    }
+
+    .btn-upload-image {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 22px;
+      background: #ffffff;
+      color: var(--med-teal-dark);
+      border: 1.5px dashed var(--med-teal);
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .btn-upload-image:hover {
+      background: var(--med-teal-subtle);
+      border-color: var(--med-teal-dark);
+      transform: translateY(-1px);
+    }
+
+    .upload-demo-pill {
+      font-size: 0.78rem;
+      background: #f1f5f9;
+      color: #475569;
+      padding: 6px 12px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+    }
+
+    /* Popular Searches & Recent Chips */
+    .chips-group-container {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-width: 860px;
+    }
+
+    .chips-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chips-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--med-text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 130px;
+    }
+
+    .search-chip {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      padding: 5px 13px;
+      border-radius: 30px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--med-text-main);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all var(--transition-fast);
+    }
+
+    .search-chip:hover {
+      border-color: var(--med-teal);
+      background-color: var(--med-teal-subtle);
+      color: var(--med-teal-dark);
+      transform: translateY(-1px);
+    }
+
+    .search-chip.recent {
+      background: #f8fafc;
+      border-color: #e2e8f0;
+      color: #334155;
+    }
+
+    .search-chip.recent:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+
+    .btn-clear-recent {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 2px 6px;
+      transition: color var(--transition-fast);
+    }
+
+    .btn-clear-recent:hover {
+      color: #ef4444;
+    }
+
+    /* Modal / Drawer for Image Upload Demo */
+    .image-modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .image-modal-card {
+      background: #ffffff;
+      border-radius: 18px;
+      max-width: 580px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      overflow: hidden;
+      animation: modalFadeIn 0.25s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.96) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-header {
+      padding: 18px 24px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--med-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--med-text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #94a3b8;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px;
+      border-radius: 6px;
+    }
+
+    .modal-close-btn:hover {
+      color: #0f172a;
+      background: #e2e8f0;
+    }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    .drag-drop-area {
+      border: 2px dashed #94a3b8;
+      border-radius: 14px;
+      padding: 28px 20px;
+      text-align: center;
+      background: #f8fafc;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      position: relative;
+    }
+
+    .drag-drop-area:hover, .drag-drop-area.dragover {
+      border-color: var(--med-teal);
+      background: var(--med-teal-subtle);
+    }
+
+    .scanner-laser-bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #0d7377, #4caf50, transparent);
+      box-shadow: 0 0 10px #0d7377;
+      display: none;
+    }
+
+    @keyframes laserSweep {
+      0% { top: 0%; opacity: 0.2; }
+      50% { top: 95%; opacity: 1; }
+      100% { top: 0%; opacity: 0.2; }
+    }
+
+    .sample-strips-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .sample-strip-btn {
+      background: #f8fafc;
+      border: 1px solid var(--med-border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      text-align: left;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .sample-strip-btn:hover {
+      border-color: var(--med-teal);
+      background: #ffffff;
+      box-shadow: 0 2px 6px rgba(13, 115, 119, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .sample-strip-name {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--med-teal-dark);
+    }
+
+    .sample-strip-desc {
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+
+    .ocr-scan-status {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 10px;
+      background: #f1f5f9;
+      font-size: 0.85rem;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Disclaimers Banner */
+    .disclaimers-banner {
+      background: #fffbeb;
+      border: 1px solid #fef3c7;
+      border-left: 5px solid #d97706;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .disclaimer-icon {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .disclaimer-content {
+      flex: 1;
+    }
+
+    .disclaimer-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #92400e;
+      margin-bottom: 4px;
+    }
+
+    .disclaimer-list {
+      font-size: 0.85rem;
+      color: #78350f;
+      line-height: 1.5;
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .disclaimer-list li {
+      margin-bottom: 3px;
+    }
+
+    /* Results Header / Filters */
+    .results-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .results-count-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--med-text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .results-count-badge {
+      font-size: 0.8rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: var(--med-teal-subtle);
+      color: var(--med-teal-dark);
+      font-weight: 700;
+    }
+
+    .filter-pills-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      max-width: 100%;
+    }
+
+    .filter-pill {
+      border: 1px solid var(--med-border);
+      background: #ffffff;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #475569;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all var(--transition-fast);
+    }
+
+    .filter-pill:hover, .filter-pill.active {
+      background: var(--med-teal);
+      color: #ffffff;
+      border-color: var(--med-teal);
+    }
+
+    /* Medicine Result Card Container */
+    .medicine-result-card {
+      background: #ffffff;
+      border: 1px solid var(--med-border);
+      border-radius: 18px;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+      margin-bottom: 32px;
+      overflow: hidden;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .medicine-result-card:hover {
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    /* Medicine Info Header */
+    .med-card-header {
+      padding: 24px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--med-border);
+    }
+
+    .med-primary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .med-title-block h3 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .generic-salt-line {
+      font-size: 1.05rem;
+      color: var(--med-teal-dark);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .salt-tag {
+      background: var(--med-teal-subtle);
+      color: var(--med-teal-dark);
+      padding: 2px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .med-price-badge-box {
+      background: #f8fafc;
+      border: 1px solid var(--med-border);
+      border-radius: 12px;
+      padding: 10px 18px;
+      text-align: right;
+    }
+
+    .price-subtext {
+      font-size: 0.75rem;
+      color: #64748b;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .price-value-large {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    /* Attributes Grid */
+    .med-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 14px;
+      border: 1px solid #edf2f7;
+    }
+
+    .spec-item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .spec-label {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #64748b;
+      letter-spacing: 0.04em;
+    }
+
+    .spec-val {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    /* Uses & Side Effects Banner */
+    .med-clinical-notes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .clinical-box {
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+
+    .clinical-box.uses {
+      background: #f0fdf4;
+      border: 1px solid #dcfce7;
+      color: #166534;
+    }
+
+    .clinical-box.side-effects {
+      background: #fef2f2;
+      border: 1px solid #fee2e2;
+      color: #991b1b;
+    }
+
+    .clinical-box strong {
+      display: block;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 4px;
+    }
+
+    /* Savings Calculator Panel */
+    .savings-calculator-panel {
+      background: linear-gradient(135deg, #0d7377 0%, #085356 100%);
+      color: #ffffff;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .savings-left {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .savings-heading {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .savings-breakdown-row {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .stat-pill {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-pill .num {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: #4ade80;
+      line-height: 1.1;
+    }
+
+    .stat-pill .lbl {
+      font-size: 0.78rem;
+      color: #e0f2f1;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .dosage-qty-selector {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+
+    .dosage-label {
+      font-size: 0.82rem;
+      color: #e0f2f1;
+      font-weight: 500;
+    }
+
+    .qty-btn-group {
+      display: inline-flex;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 2px;
+    }
+
+    .qty-btn {
+      background: none;
+      border: none;
+      color: #ffffff;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .qty-btn.active, .qty-btn:hover {
+      background: #ffffff;
+      color: var(--med-teal-dark);
+    }
+
+    /* Savings Meter Gauge */
+    .savings-meter-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .meter-progress-track {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 30px;
+      height: 12px;
+      overflow: hidden;
+      margin: 10px 0;
+      position: relative;
+    }
+
+    .meter-progress-fill {
+      background: linear-gradient(90deg, #4caf50, #81c784);
+      height: 100%;
+      border-radius: 30px;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .annual-savings-highlight {
+      font-size: 0.86rem;
+      color: #ffffff;
+      font-weight: 500;
+    }
+
+    .annual-savings-highlight strong {
+      color: #4ade80;
+      font-size: 1.05rem;
+    }
+
+    /* Generic Alternatives Comparison Table */
+    .alternatives-table-wrapper {
+      padding: 24px;
+      background: #ffffff;
+    }
+
+    .table-section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .bioequivalence-tag {
+      font-size: 0.78rem;
+      background: #e0f2f1;
+      color: #085356;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid var(--med-border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .comparison-table th {
+      background: #f8fafc;
+      padding: 12px 16px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #64748b;
+      border-bottom: 1px solid var(--med-border);
+      text-align: left;
+    }
+
+    .comparison-table td {
+      padding: 14px 16px;
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--med-border);
+      color: #1e293b;
+      vertical-align: middle;
+    }
+
+    .comparison-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .comparison-table tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    .comparison-table tbody tr.best-price-row {
+      background: #f0fdf4;
+    }
+
+    .comparison-table tbody tr.original-brand-row {
+      background: #fafafa;
+    }
+
+    .alt-name-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .alt-name-strong {
+      font-weight: 700;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-best-price {
+      background: #2e7d32;
+      color: #ffffff;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .badge-generic-pill {
+      background: #e0f2f1;
+      color: #085356;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    .badge-brand-alt {
+      background: #f1f5f9;
+      color: #475569;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .price-num {
+      font-weight: 700;
+      font-size: 0.98rem;
+    }
+
+    .savings-pct-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+
+    .savings-pct-badge.positive {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .savings-pct-badge.neutral {
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    .savings-pct-badge.negative {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    /* Loading Animation State */
+    .loading-pulse-container {
+      display: none;
+      padding: 50px 20px;
+      text-align: center;
+    }
+
+    .pulse-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid var(--med-teal-subtle);
+      border-top-color: var(--med-teal);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--med-teal-dark);
+    }
+
+    /* No Results State */
+    .no-results-card {
+      display: none;
+      background: #ffffff;
+      border: 1px dashed #cbd5e1;
+      border-radius: 18px;
+      padding: 48px 24px;
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 30px;
+    }
+
+    .no-results-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+
+    .no-results-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+
+    .no-results-desc {
+      font-size: 0.92rem;
+      color: var(--med-text-muted);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    /* Questions to Ask Doctor Guide */
+    .pharmacist-guide-card {
+      background: #f8fafc;
+      border: 1px solid var(--med-border);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-top: 24px;
+    }
+
+    .guide-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .guide-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+    }
+
+    .guide-item {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.84rem;
+      color: #334155;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    /* Footer */
+    .portal-footer {
+      border-top: 1px solid var(--med-border);
+      padding: 24px 0;
+      background: #ffffff;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-top: auto;
+    }
+
+    /* Responsive Queries */
+    @media (max-width: 860px) {
+      .portal-topbar {
+        height: auto;
+        padding: 12px 0;
+      }
+      .portal-topbar-inner {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .topbar-left, .topbar-center, .topbar-right {
+        width: 100%;
+        justify-content: center;
+      }
+      .topbar-left {
+        justify-content: flex-start;
+      }
+      .search-hero-card {
+        padding: 26px 20px;
+      }
+      .hero-heading {
+        font-size: 1.8rem;
+      }
+      .search-input-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 8px;
+        gap: 8px;
+      }
+      .search-icon-svg {
+        display: none;
+      }
+      .btn-hero-search {
+        justify-content: center;
+      }
+      .savings-calculator-panel {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .med-clinical-notes {
+        grid-template-columns: 1fr;
+      }
+      .comparison-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+      .sample-strips-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. PORTAL TOP BAR -->
+  <header class="portal-topbar" role="banner">
+    <div class="container portal-topbar-inner">
+      <!-- Left: Back to Dashboard -->
+      <div class="topbar-left">
+        <a href="dashboard.html" class="btn-back-dashboard" id="backToDashboardBtn" title="Return to CareNest Main Dashboard">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back to Dashboard</span>
+        </a>
+      </div>
+
+      <!-- Center: Portal Title -->
+      <div class="topbar-center">
+        <div class="portal-title-badge">
+          <span class="portal-icon-pill" aria-hidden="true">💊</span>
+          <span>Generic Medicine Finder</span>
+        </div>
+      </div>
+
+      <!-- Right: User Avatar + Logout -->
+      <div class="topbar-right">
+        <div class="user-profile-widget" id="userProfileWidget">
+          <div class="user-avatar-circle" id="userAvatarCircle" title="Active CareNest User">SK</div>
+          <span class="user-name-label" id="userNameLabel">Santhosh Kumar</span>
+        </div>
+        <button class="btn-logout" id="logoutBtn" title="Log out of CareNest session">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          <span>Logout</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 2. MAIN CONTENT (Single page, no tabs needed) -->
+  <main class="portal-main">
+    <div class="container">
+
+      <!-- SEARCH HERO SECTION -->
+      <section class="search-hero-card" aria-label="Medicine Search Section">
+        <div class="hero-badge-tag">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          <span>Bioequivalent Savings Portal</span>
+        </div>
+
+        <h2 class="hero-heading">Find Generic Alternatives &amp; Save</h2>
+        <p class="hero-subtitle">
+          Search any branded medication to discover certified bioequivalent generic options with the exact same active salt, dosage, and efficacy at up to 80% lower cost.
+        </p>
+
+        <!-- Search Bar Input Box -->
+        <div class="search-input-wrapper">
+          <svg class="search-icon-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input 
+            type="text" 
+            id="medicineSearchInput" 
+            class="medicine-search-field" 
+            placeholder="Search by brand name or generic name... (e.g., Dolo, Paracetamol, Azithromycin)" 
+            autocomplete="off" 
+            aria-label="Search medicine name or generic salt"
+          >
+          <button id="clearSearchBtn" class="btn-search-clear" title="Clear input" aria-label="Clear search input">✕</button>
+          <button id="searchSubmitBtn" class="btn-hero-search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <span>Search Alternatives</span>
+          </button>
+        </div>
+
+        <!-- OR Divider -->
+        <div class="or-divider-row">
+          <div class="or-line"></div>
+          <span class="or-pill">OR</span>
+          <div class="or-line"></div>
+        </div>
+
+        <!-- Upload Image Action Button (Demo Mode) -->
+        <div class="upload-cta-row">
+          <button id="openImageUploadBtn" class="btn-upload-image" type="button">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+            <span>Upload Medicine Image / Strip</span>
+          </button>
+          <span class="upload-demo-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            Demo OCR: Simulates optical packaging recognition &amp; salt detection
+          </span>
+        </div>
+
+        <!-- Chips Rows: Popular & Recent Searches -->
+        <div class="chips-group-container">
+          <!-- Popular Searches Row -->
+          <div class="chips-row">
+            <span class="chips-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              Popular Searches:
+            </span>
+            <div id="popularChipsContainer" class="chips-row">
+              <button class="search-chip" data-search="Dolo 650">Dolo 650</button>
+              <button class="search-chip" data-search="Crocin">Crocin</button>
+              <button class="search-chip" data-search="Azithromycin">Azithromycin</button>
+              <button class="search-chip" data-search="Metformin">Metformin</button>
+              <button class="search-chip" data-search="Atorvastatin">Atorvastatin</button>
+              <button class="search-chip" data-search="Pan 40">Pan 40</button>
+            </div>
+          </div>
+
+          <!-- Recent Searches Row (From localStorage) -->
+          <div class="chips-row" id="recentSearchesRow">
+            <span class="chips-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              Recent Searches:
+            </span>
+            <div id="recentChipsContainer" class="chips-row">
+              <!-- Dynamically rendered from localStorage -->
+              <span style="font-size:0.8rem; color:#94a3b8; font-style:italic;">No recent searches yet</span>
+            </div>
+            <button id="clearRecentBtn" class="btn-clear-recent" style="display:none;" title="Clear recent search history">Clear history</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROMINENT DISCLAIMERS -->
+      <section class="disclaimers-banner" role="alert" aria-label="Healthcare Disclaimers">
+        <div class="disclaimer-icon" aria-hidden="true">⚠️</div>
+        <div class="disclaimer-content">
+          <h4 class="disclaimer-title">Important Medical &amp; Prescription Guidance</h4>
+          <ul class="disclaimer-list">
+            <li><strong>Always consult your doctor or pharmacist before switching</strong> — Never alter ongoing prescription dosages, formulation types (e.g. sustained release), or salt compounds without certified clinical oversight.</li>
+            <li><strong>Demonstration data for educational purposes</strong> — The comparative pricing and bioequivalence data provided here are curated for reference and healthcare literacy.</li>
+            <li><strong>Prices are approximate</strong> — Maximum Retail Prices (MRP) and discounted rates may fluctuate across individual pharmacy chains, Jan Aushadhi Kendras, and regional territories.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- RESULTS DISPLAY SECTION -->
+      <section id="resultsSection" aria-live="polite">
+        <!-- Results Bar: Title, Count & Category Filter -->
+        <div class="results-section-header" id="resultsSectionHeader" style="display:none;">
+          <div class="results-count-title">
+            <span id="resultsHeaderTitle">Matching Medicines</span>
+            <span id="resultsCountBadge" class="results-count-badge">0 Found</span>
+          </div>
+
+          <!-- Quick Category Filters -->
+          <div class="filter-pills-bar" id="categoryFilterBar">
+            <button class="filter-pill active" data-category="ALL">All Categories</button>
+            <button class="filter-pill" data-category="Pain & Fever">Pain &amp; Fever</button>
+            <button class="filter-pill" data-category="Antibiotic">Antibiotic</button>
+            <button class="filter-pill" data-category="Diabetes">Diabetes</button>
+            <button class="filter-pill" data-category="Gastric">Gastric</button>
+            <button class="filter-pill" data-category="Blood Pressure">Blood Pressure</button>
+            <button class="filter-pill" data-category="Cholesterol">Cholesterol</button>
+            <button class="filter-pill" data-category="Supplement">Supplement</button>
+            <button class="filter-pill" data-category="Allergy">Allergy</button>
+            <button class="filter-pill" data-category="Blood Thinner">Blood Thinner</button>
+            <button class="filter-pill" data-category="Thyroid">Thyroid</button>
+          </div>
+        </div>
+
+        <!-- Initial Blank / Search Prompt State (Shown on load, no preloaded comparisons) -->
+        <div id="initialSearchPromptState" class="initial-search-prompt" style="text-align:center; padding: 48px 24px; background: #ffffff; border: 1.5px dashed #cbd5e1; border-radius: 20px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+          <div style="width: 68px; height: 68px; border-radius: 50%; background: #e0f2f1; color: #0d7377; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; font-size: 30px;">
+            🔍
+          </div>
+          <h3 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; margin-bottom: 8px;">Search to Compare Generic Alternatives</h3>
+          <p style="font-size: 0.95rem; color: #64748b; max-width: 600px; margin: 0 auto 22px auto; line-height: 1.5;">
+            Enter any prescribed brand name (like <em>Dolo 650</em>, <em>Augmentin</em>, <em>Pan 40</em>, or <em>Metformin</em>) in the search box above or select a chip below to view verified bioequivalent salt matches and instant cost savings.
+          </p>
+          <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+            <button type="button" class="search-chip initial-sample-chip" data-search="Metformin" style="cursor:pointer; padding:8px 16px; border-radius:20px; background:#f0fdf4; border:1px solid #86efac; color:#166534; font-weight:600; font-size:0.88rem;">⚡ Metformin (Diabetes)</button>
+            <button type="button" class="search-chip initial-sample-chip" data-search="Pan 40" style="cursor:pointer; padding:8px 16px; border-radius:20px; background:#eff6ff; border:1px solid #93c5fd; color:#1e40af; font-weight:600; font-size:0.88rem;">⚡ Pan 40 (Acidity)</button>
+            <button type="button" class="search-chip initial-sample-chip" data-search="Atorvastatin" style="cursor:pointer; padding:8px 16px; border-radius:20px; background:#fef3c7; border:1px solid #fde047; color:#854d0e; font-weight:600; font-size:0.88rem;">⚡ Atorvastatin (Cholesterol)</button>
+            <button type="button" class="search-chip initial-sample-chip" data-search="Dolo 650" style="cursor:pointer; padding:8px 16px; border-radius:20px; background:#fdf2f8; border:1px solid #f472b6; color:#9d174d; font-weight:600; font-size:0.88rem;">⚡ Dolo 650 (Fever)</button>
+          </div>
+        </div>
+
+        <!-- Loading State Indicator -->
+        <div id="loadingIndicator" class="loading-pulse-container" style="display:none;">
+          <div class="pulse-spinner"></div>
+          <div class="loading-text">Analyzing medicine salts &amp; bioequivalent databases...</div>
+        </div>
+
+        <!-- No Results Found State -->
+        <div id="noResultsState" class="no-results-card" style="display:none;">
+          <div class="no-results-icon">🔍</div>
+          <h3 class="no-results-title">No Matching Medicines Found</h3>
+          <p class="no-results-desc" id="noResultsDesc">
+            We couldn't find a medicine matching your search query. Try searching by generic active ingredient (e.g. <em>Paracetamol</em>), category (e.g. <em>Gastric</em>), or pick one of the popular options above.
+          </p>
+          <button id="viewAllMedsBtn" class="btn btn-secondary">
+            <span>Browse All 16+ Verified Medicines</span>
+          </button>
+        </div>
+
+        <!-- Medicines List Container (Dynamically Rendered) -->
+        <div id="medicinesContainer" style="display:none;">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- Questions to Ask Pharmacist Card -->
+        <div class="pharmacist-guide-card">
+          <div class="guide-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <span>Key Questions to Ask Your Pharmacist Before Purchasing a Generic:</span>
+          </div>
+          <div class="guide-grid">
+            <div class="guide-item">
+              <span>🩺</span>
+              <div><strong>Bioequivalence:</strong> Confirm that the generic carries the exact same therapeutic salt, strength, and chemical bioavailability.</div>
+            </div>
+            <div class="guide-item">
+              <span>⏱️</span>
+              <div><strong>Release Mechanism:</strong> Check whether your prescription specifies sustained release (SR/XR) or enteric coating.</div>
+            </div>
+            <div class="guide-item">
+              <span>🏭</span>
+              <div><strong>Approved Manufacturer:</strong> Ensure the generic is manufactured under WHO-GMP or Jan Aushadhi quality standards.</div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- IMAGE UPLOAD DEMO MODAL -->
+  <div id="imageUploadModal" class="image-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="image-modal-card">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+            <circle cx="12" cy="13" r="4"></circle>
+          </svg>
+          <span>Upload Medicine Strip / Prescription</span>
+        </div>
+        <button id="closeModalBtn" class="modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <p style="font-size:0.88rem; color:#64748b; margin-bottom:14px;">
+          Upload a photo of your tablet strip, bottle label, or prescription. Our simulated OCR engine extracts the active drug salt and finds cost-saving generics.
+        </p>
+
+        <!-- Drag & Drop Zone -->
+        <div class="drag-drop-area" id="dropArea">
+          <div class="scanner-laser-bar" id="scannerLaserBar"></div>
+          <input type="file" id="fileUploadInput" accept="image/*" style="display:none;">
+          <div style="font-size:2.2rem; margin-bottom:6px;">📸</div>
+          <div style="font-weight:700; color:#0f172a; margin-bottom:4px;">Drag &amp; drop medicine packaging photo</div>
+          <div style="font-size:0.8rem; color:#64748b; margin-bottom:12px;">or browse files from your device (PNG, JPG, WebP)</div>
+          <button type="button" class="btn btn-outline" id="browseFileBtn" style="padding:6px 14px; font-size:0.85rem;">
+            Choose Image File
+          </button>
+        </div>
+
+        <!-- Sample strips for instant testing -->
+        <div style="margin-top:20px;">
+          <div style="font-size:0.82rem; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.04em;">
+            Or Click a Sample Medicine Strip to Test OCR:
+          </div>
+          <div class="sample-strips-grid">
+            <button class="sample-strip-btn" data-sample="Dolo 650" type="button">
+              <span class="sample-strip-name">💊 Dolo 650mg Strip</span>
+              <span class="sample-strip-desc">Micro Labs • Paracetamol 650mg</span>
+            </button>
+            <button class="sample-strip-btn" data-sample="Azithral 500" type="button">
+              <span class="sample-strip-name">💊 Azithral 500mg Foil</span>
+              <span class="sample-strip-desc">Alembic • Azithromycin 500mg</span>
+            </button>
+            <button class="sample-strip-btn" data-sample="Glycomet 500" type="button">
+              <span class="sample-strip-name">💊 Glycomet 500mg Strip</span>
+              <span class="sample-strip-desc">USV • Metformin 500mg</span>
+            </button>
+            <button class="sample-strip-btn" data-sample="Pan 40" type="button">
+              <span class="sample-strip-name">💊 Pan 40 Strip</span>
+              <span class="sample-strip-desc">Alkem • Pantoprazole 40mg</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Scan Status Log -->
+        <div class="ocr-scan-status" id="ocrStatusBox">
+          <div class="pulse-spinner" style="width:20px; height:20px; border-width:2px; margin:0;"></div>
+          <div id="ocrStatusMessage" style="font-weight:600; color:#0f172a;">Scanning package label...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PORTAL FOOTER -->
+  <footer class="portal-footer">
+    <div class="container">
+      <p>© 2026 CareNest Healthcare System • Generic Medicine &amp; Bioequivalence Finder • Powered by CDSCO &amp; Jan Aushadhi Public Catalog</p>
+    </div>
+  </footer>
+
+  <!-- SCRIPT: DATA, LOGIC, CALCULATION & INTERACTION -->
+  <script>
+    (function () {
+      'use strict';
+
+      // ========================================================================
+      // 1. BUILT-IN MEDICINE DATABASE (16+ Medicines with Realistic Alternatives)
+      // ========================================================================
+      const MEDICINE_DATABASE = [
+        {
+          id: 'med-dolo650',
+          brand: 'Dolo 650',
+          generic: 'Paracetamol',
+          strength: '650mg',
+          form: 'Tablet',
+          manufacturer: 'Micro Labs Ltd',
+          price: 30.50,
+          unit: 'Strip of 15 tablets',
+          category: 'Pain & Fever',
+          uses: 'Fever, headache, moderate body pain, muscular aches, toothache',
+          sideEffects: 'Mild nausea, allergic skin rash, hepatotoxicity in acute overdose',
+          description: 'A widely prescribed antipyretic and analgesic tablet formulated for fever reduction and mild-to-moderate pain management.',
+          alternatives: [
+            { name: 'Calpol 650', mfr: 'GSK', price: 28.00, isGeneric: false, dosage: '650mg' },
+            { name: 'Crocin 650', mfr: 'GSK', price: 32.00, isGeneric: false, dosage: '650mg' },
+            { name: 'Generic Paracetamol 650mg', mfr: 'Jan Aushadhi / Various', price: 8.50, isGeneric: true, dosage: '650mg' },
+            { name: 'P-650', mfr: 'Apex Laboratories', price: 24.50, isGeneric: false, dosage: '650mg' },
+            { name: 'Pacimol 650', mfr: 'Ipca Laboratories', price: 21.00, isGeneric: false, dosage: '650mg' }
+          ]
+        },
+        {
+          id: 'med-azithral500',
+          brand: 'Azithral 500',
+          generic: 'Azithromycin',
+          strength: '500mg',
+          form: 'Tablet',
+          manufacturer: 'Alembic Pharmaceuticals',
+          price: 98.00,
+          unit: 'Strip of 5 tablets',
+          category: 'Antibiotic',
+          uses: 'Bacterial infections, respiratory tract infections, tonsillitis, ear and skin infections',
+          sideEffects: 'Stomach upset, diarrhea, nausea, abdominal cramps',
+          description: 'A macrolide antibiotic effective against a broad spectrum of gram-positive and gram-negative bacterial pathogens.',
+          alternatives: [
+            { name: 'Zithromax 500', mfr: 'Pfizer', price: 120.00, isGeneric: false, dosage: '500mg' },
+            { name: 'Generic Azithromycin 500mg', mfr: 'Jan Aushadhi / Various', price: 35.00, isGeneric: true, dosage: '500mg' },
+            { name: 'Azee 500', mfr: 'Cipla Ltd', price: 92.00, isGeneric: false, dosage: '500mg' },
+            { name: 'Zady 500', mfr: 'Mankind Pharma', price: 74.00, isGeneric: false, dosage: '500mg' }
+          ]
+        },
+        {
+          id: 'med-glycomet500',
+          brand: 'Glycomet 500',
+          generic: 'Metformin',
+          strength: '500mg',
+          form: 'Tablet',
+          manufacturer: 'USV Ltd',
+          price: 32.00,
+          unit: 'Strip of 20 tablets',
+          category: 'Diabetes',
+          uses: 'Type 2 diabetes mellitus, blood sugar control, improving insulin sensitivity',
+          sideEffects: 'Nausea, metallic taste, abdominal flatulence, loose stools',
+          description: 'A first-line biguanide anti-hyperglycemic agent that suppresses hepatic glucose output and improves glucose uptake.',
+          alternatives: [
+            { name: 'Glucophage 500', mfr: 'Merck', price: 45.00, isGeneric: false, dosage: '500mg' },
+            { name: 'Generic Metformin 500mg', mfr: 'Jan Aushadhi / Various', price: 12.00, isGeneric: true, dosage: '500mg' },
+            { name: 'Formin 500', mfr: 'Alkem Laboratories', price: 26.50, isGeneric: false, dosage: '500mg' },
+            { name: 'Okamet 500', mfr: 'Cipla Ltd', price: 29.00, isGeneric: false, dosage: '500mg' }
+          ]
+        },
+        {
+          id: 'med-ecosprin75',
+          brand: 'Ecosprin 75',
+          generic: 'Aspirin',
+          strength: '75mg',
+          form: 'Tablet',
+          manufacturer: 'USV Ltd',
+          price: 18.00,
+          unit: 'Strip of 14 gastro-resistant tablets',
+          category: 'Blood Thinner',
+          uses: 'Heart attack prevention, stroke prevention, antiplatelet cardiovascular therapy',
+          sideEffects: 'Stomach irritation, minor bleeding tendencies, indigestion',
+          description: 'Low-dose enteric-coated acetylsalicylic acid that inhibits platelet aggregation to protect against cardiac events.',
+          alternatives: [
+            { name: 'Disprin 75', mfr: 'Reckitt', price: 22.00, isGeneric: false, dosage: '75mg' },
+            { name: 'Generic Aspirin 75mg', mfr: 'Jan Aushadhi / Various', price: 6.00, isGeneric: true, dosage: '75mg' },
+            { name: 'Delisprin 75', mfr: 'Aristo Pharma', price: 14.50, isGeneric: false, dosage: '75mg' },
+            { name: 'Aspram 75', mfr: 'Sun Pharma', price: 16.00, isGeneric: false, dosage: '75mg' }
+          ]
+        },
+        {
+          id: 'med-atorva10',
+          brand: 'Atorva 10',
+          generic: 'Atorvastatin',
+          strength: '10mg',
+          form: 'Tablet',
+          manufacturer: 'Zydus Cadila',
+          price: 78.00,
+          unit: 'Strip of 10 tablets',
+          category: 'Cholesterol',
+          uses: 'High cholesterol, hyperlipidemia, prevention of atherosclerotic cardiovascular events',
+          sideEffects: 'Muscle soreness (myalgia), mild liver enzyme changes, constipation',
+          description: 'A potent HMG-CoA reductase inhibitor (statin) that lowers circulating LDL cholesterol and triglycerides.',
+          alternatives: [
+            { name: 'Lipitor 10', mfr: 'Pfizer', price: 150.00, isGeneric: false, dosage: '10mg' },
+            { name: 'Generic Atorvastatin 10mg', mfr: 'Jan Aushadhi / Various', price: 25.00, isGeneric: true, dosage: '10mg' },
+            { name: 'Storvas 10', mfr: 'Sun Pharma', price: 82.00, isGeneric: false, dosage: '10mg' },
+            { name: 'Atocor 10', mfr: 'Dr. Reddy\'s', price: 72.00, isGeneric: false, dosage: '10mg' }
+          ]
+        },
+        {
+          id: 'med-pan40',
+          brand: 'Pan 40',
+          generic: 'Pantoprazole',
+          strength: '40mg',
+          form: 'Tablet',
+          manufacturer: 'Alkem Laboratories',
+          price: 85.00,
+          unit: 'Strip of 15 gastro-resistant tablets',
+          category: 'Gastric',
+          uses: 'Acid reflux, peptic ulcers, GERD, heartburn, gastritis',
+          sideEffects: 'Headache, diarrhea, long-term B12 deficiency',
+          description: 'A proton pump inhibitor (PPI) that decreases stomach acid secretion by inhibiting the gastric H+/K+-ATPase pump.',
+          alternatives: [
+            { name: 'Pantocid 40', mfr: 'Sun Pharma', price: 95.00, isGeneric: false, dosage: '40mg' },
+            { name: 'Generic Pantoprazole 40mg', mfr: 'Jan Aushadhi / Various', price: 18.00, isGeneric: true, dosage: '40mg' },
+            { name: 'Pantodac 40', mfr: 'Zydus Cadila', price: 89.00, isGeneric: false, dosage: '40mg' },
+            { name: 'Pansec 40', mfr: 'Cipla Ltd', price: 79.00, isGeneric: false, dosage: '40mg' }
+          ]
+        },
+        {
+          id: 'med-augmentin625',
+          brand: 'Augmentin 625 Duo',
+          generic: 'Amoxicillin-Clavulanate',
+          strength: '625mg',
+          form: 'Tablet',
+          manufacturer: 'GlaxoSmithKline (GSK)',
+          price: 185.00,
+          unit: 'Strip of 10 tablets',
+          category: 'Antibiotic',
+          uses: 'Bacterial infections, dental abscesses, sinusitis, pneumonia, skin and soft tissue infections',
+          sideEffects: 'Diarrhea, nausea, stomach cramps, mild skin allergy',
+          description: 'A broad-spectrum penicillin antibiotic combined with a beta-lactamase inhibitor to conquer bacterial resistance.',
+          alternatives: [
+            { name: 'Moxikind-CV 625', mfr: 'Mankind Pharma', price: 145.00, isGeneric: false, dosage: '625mg' },
+            { name: 'Generic Amox-Clav 625mg', mfr: 'Jan Aushadhi / Various', price: 65.00, isGeneric: true, dosage: '625mg' },
+            { name: 'Clavam 625', mfr: 'Alkem Laboratories', price: 172.00, isGeneric: false, dosage: '625mg' },
+            { name: 'Sensiclav 625', mfr: 'Macleods', price: 138.00, isGeneric: false, dosage: '625mg' }
+          ]
+        },
+        {
+          id: 'med-telma40',
+          brand: 'Telma 40',
+          generic: 'Telmisartan',
+          strength: '40mg',
+          form: 'Tablet',
+          manufacturer: 'Glenmark Pharmaceuticals',
+          price: 95.00,
+          unit: 'Strip of 15 tablets',
+          category: 'Blood Pressure',
+          uses: 'High blood pressure (hypertension), cardiovascular risk reduction',
+          sideEffects: 'Dizziness upon standing, lightheadedness, nasal sinus congestion',
+          description: 'An angiotensin II receptor blocker (ARB) that relaxes blood vessels to lower arterial pressure and relieve cardiac strain.',
+          alternatives: [
+            { name: 'Telmikind 40', mfr: 'Mankind Pharma', price: 75.00, isGeneric: false, dosage: '40mg' },
+            { name: 'Generic Telmisartan 40mg', mfr: 'Jan Aushadhi / Various', price: 22.00, isGeneric: true, dosage: '40mg' },
+            { name: 'Telvas 40', mfr: 'Aristo Pharma', price: 68.00, isGeneric: false, dosage: '40mg' },
+            { name: 'Telsartan 40', mfr: 'Dr. Reddy\'s', price: 88.00, isGeneric: false, dosage: '40mg' }
+          ]
+        },
+        {
+          id: 'med-shelcal500',
+          brand: 'Shelcal 500',
+          generic: 'Calcium + Vitamin D3',
+          strength: '500mg+250IU',
+          form: 'Tablet',
+          manufacturer: 'Torrent Pharmaceuticals',
+          price: 135.00,
+          unit: 'Bottle of 15 tablets',
+          category: 'Supplement',
+          uses: 'Calcium deficiency, bone mineral health, osteoporosis prevention, pregnancy bone support',
+          sideEffects: 'Constipation, minor bloating, dry mouth',
+          description: 'High-bioavailability calcium carbonate and cholecalciferol formulation ensuring dense bone mineral composition.',
+          alternatives: [
+            { name: 'Calcimax 500', mfr: 'Meyer Organics', price: 120.00, isGeneric: false, dosage: '500mg+250IU' },
+            { name: 'Generic Calcium + D3 500mg', mfr: 'Jan Aushadhi / Various', price: 45.00, isGeneric: true, dosage: '500mg+250IU' },
+            { name: 'Cipcal 500', mfr: 'Cipla Ltd', price: 115.00, isGeneric: false, dosage: '500mg+250IU' },
+            { name: 'Ostocalcium Plus', mfr: 'GSK', price: 128.00, isGeneric: false, dosage: '500mg+250IU' }
+          ]
+        },
+        {
+          id: 'med-montairlc',
+          brand: 'Montair LC',
+          generic: 'Montelukast+Levocetirizine',
+          strength: '10mg+5mg',
+          form: 'Tablet',
+          manufacturer: 'Cipla Ltd',
+          price: 165.00,
+          unit: 'Strip of 10 tablets',
+          category: 'Allergy',
+          uses: 'Allergic rhinitis, persistent sneezing, allergic asthma, skin hives',
+          sideEffects: 'Drowsiness, fatigue, dry mouth, mild headache',
+          description: 'Dual-target antihistaminic and leukotriene receptor antagonist delivering 24-hour relief from nasal and bronchial allergy triggers.',
+          alternatives: [
+            { name: 'Montek LC', mfr: 'Sun Pharma', price: 155.00, isGeneric: false, dosage: '10mg+5mg' },
+            { name: 'Generic Mont+Levo 10/5mg', mfr: 'Jan Aushadhi / Various', price: 55.00, isGeneric: true, dosage: '10mg+5mg' },
+            { name: 'Telekast L', mfr: 'Lupin Ltd', price: 140.00, isGeneric: false, dosage: '10mg+5mg' },
+            { name: 'Levocet M', mfr: 'Hetero Healthcare', price: 125.00, isGeneric: false, dosage: '10mg+5mg' }
+          ]
+        },
+        {
+          id: 'med-clopitab75',
+          brand: 'Clopitab 75',
+          generic: 'Clopidogrel',
+          strength: '75mg',
+          form: 'Tablet',
+          manufacturer: 'Lupin Pharmaceuticals',
+          price: 65.00,
+          unit: 'Strip of 10 tablets',
+          category: 'Blood Thinner',
+          uses: 'Blood clot prevention, post-cardiac stent placement, secondary stroke prevention',
+          sideEffects: 'Bleeding tendencies, skin bruising, gastric upset',
+          description: 'An oral antiplatelet prodrug that inhibits ADP-induced platelet activation to guard against vascular occlusion.',
+          alternatives: [
+            { name: 'Plavix 75', mfr: 'Sanofi', price: 180.00, isGeneric: false, dosage: '75mg' },
+            { name: 'Generic Clopidogrel 75mg', mfr: 'Jan Aushadhi / Various', price: 20.00, isGeneric: true, dosage: '75mg' },
+            { name: 'Deplatt 75', mfr: 'Torrent Pharma', price: 62.00, isGeneric: false, dosage: '75mg' },
+            { name: 'Ceruvit 75', mfr: 'Ranbaxy', price: 58.00, isGeneric: false, dosage: '75mg' }
+          ]
+        },
+        {
+          id: 'med-thyronorm50',
+          brand: 'Thyronorm 50',
+          generic: 'Levothyroxine',
+          strength: '50mcg',
+          form: 'Tablet',
+          manufacturer: 'Abbott Healthcare',
+          price: 115.00,
+          unit: 'Bottle of 120 tablets',
+          category: 'Thyroid',
+          uses: 'Hypothyroidism, deficient endogenous thyroid hormone replacement',
+          sideEffects: 'Weight changes, palpitations if overdosed, heat sensitivity',
+          description: 'Synthetic crystalline sodium levothyroxine precisely mirroring naturally occurring thyroid T4 hormone.',
+          alternatives: [
+            { name: 'Eltroxin 50', mfr: 'GSK', price: 105.00, isGeneric: false, dosage: '50mcg' },
+            { name: 'Generic Levothyroxine 50mcg', mfr: 'Jan Aushadhi / Various', price: 35.00, isGeneric: true, dosage: '50mcg' },
+            { name: 'Thyrox 50', mfr: 'Macleods', price: 92.00, isGeneric: false, dosage: '50mcg' }
+          ]
+        },
+        {
+          id: 'med-crocin650',
+          brand: 'Crocin 650',
+          generic: 'Paracetamol',
+          strength: '650mg',
+          form: 'Tablet',
+          manufacturer: 'GlaxoSmithKline (GSK)',
+          price: 32.00,
+          unit: 'Strip of 15 tablets',
+          category: 'Pain & Fever',
+          uses: 'High fever, severe headache, muscle stiffness, post-vaccine aches',
+          sideEffects: 'Nausea, allergic itching, liver strain with excess dosage',
+          description: 'A classic paracetamol formulation engineered for fast tablet disintegration and antipyretic relief.',
+          alternatives: [
+            { name: 'Dolo 650', mfr: 'Micro Labs', price: 30.50, isGeneric: false, dosage: '650mg' },
+            { name: 'Generic Paracetamol 650mg', mfr: 'Jan Aushadhi / Various', price: 8.50, isGeneric: true, dosage: '650mg' },
+            { name: 'Calpol 650', mfr: 'GSK', price: 28.00, isGeneric: false, dosage: '650mg' }
+          ]
+        },
+        {
+          id: 'med-omez20',
+          brand: 'Omez 20',
+          generic: 'Omeprazole',
+          strength: '20mg',
+          form: 'Capsule',
+          manufacturer: 'Dr. Reddy\'s Laboratories',
+          price: 68.00,
+          unit: 'Strip of 20 capsules',
+          category: 'Gastric',
+          uses: 'Gastric ulcers, GERD, acid indigestion, esophagitis',
+          sideEffects: 'Stomach pain, flatulence, headache',
+          description: 'An original proton pump inhibitor capsule delivering effective day and night gastric acid inhibition.',
+          alternatives: [
+            { name: 'Prilosec 20', mfr: 'AstraZeneca', price: 140.00, isGeneric: false, dosage: '20mg' },
+            { name: 'Generic Omeprazole 20mg', mfr: 'Jan Aushadhi / Various', price: 15.00, isGeneric: true, dosage: '20mg' },
+            { name: 'Omee 20', mfr: 'Alkem Laboratories', price: 55.00, isGeneric: false, dosage: '20mg' }
+          ]
+        },
+        {
+          id: 'med-amlong5',
+          brand: 'Amlong 5',
+          generic: 'Amlodipine',
+          strength: '5mg',
+          form: 'Tablet',
+          manufacturer: 'Micro Labs Ltd',
+          price: 44.00,
+          unit: 'Strip of 15 tablets',
+          category: 'Blood Pressure',
+          uses: 'Hypertension, vasospastic angina, stable coronary artery disease',
+          sideEffects: 'Ankle swelling (peripheral edema), facial flushing, fatigue',
+          description: 'A dihydropyridine calcium channel blocker that produces smooth arterial relaxation and pressure control.',
+          alternatives: [
+            { name: 'Norvasc 5', mfr: 'Pfizer', price: 98.00, isGeneric: false, dosage: '5mg' },
+            { name: 'Generic Amlodipine 5mg', mfr: 'Jan Aushadhi / Various', price: 9.00, isGeneric: true, dosage: '5mg' },
+            { name: 'Amlopin 5', mfr: 'USV Ltd', price: 38.00, isGeneric: false, dosage: '5mg' }
+          ]
+        },
+        {
+          id: 'med-cetzine10',
+          brand: 'Cetzine 10',
+          generic: 'Cetirizine',
+          strength: '10mg',
+          form: 'Tablet',
+          manufacturer: 'Dr. Reddy\'s Laboratories',
+          price: 24.00,
+          unit: 'Strip of 10 tablets',
+          category: 'Allergy',
+          uses: 'Allergic rhinitis, allergic conjunctivitis, itching, skin rash, hives',
+          sideEffects: 'Mild drowsiness, dry mouth, headache',
+          description: 'A second-generation H1-antihistamine tablet providing sustained anti-allergy relief without heavy sedation.',
+          alternatives: [
+            { name: 'Zyrtec 10', mfr: 'J&J', price: 75.00, isGeneric: false, dosage: '10mg' },
+            { name: 'Generic Cetirizine 10mg', mfr: 'Jan Aushadhi / Various', price: 5.50, isGeneric: true, dosage: '10mg' },
+            { name: 'Alerid 10', mfr: 'Cipla Ltd', price: 21.00, isGeneric: false, dosage: '10mg' }
+          ]
+        }
+      ];
+
+      // ========================================================================
+      // 2. STATE MANAGEMENT & DOM REFS
+      // ========================================================================
+      const STORAGE_KEY_RECENT = 'carenest_recent_med_searches';
+      const STORAGE_KEY_USER = 'carenest_user';
+
+      let activeCategoryFilter = 'ALL';
+      let currentSearchResults = [];
+      let activeDosageMultipliers = {}; // medId -> multiplier (1, 2, 3, etc.)
+
+      // DOM Elements
+      const searchInput = document.getElementById('medicineSearchInput');
+      const searchSubmitBtn = document.getElementById('searchSubmitBtn');
+      const clearSearchBtn = document.getElementById('clearSearchBtn');
+      const popularChipsContainer = document.getElementById('popularChipsContainer');
+      const recentChipsContainer = document.getElementById('recentChipsContainer');
+      const clearRecentBtn = document.getElementById('clearRecentBtn');
+      const medicinesContainer = document.getElementById('medicinesContainer');
+      const resultsCountBadge = document.getElementById('resultsCountBadge');
+      const resultsHeaderTitle = document.getElementById('resultsHeaderTitle');
+      const loadingIndicator = document.getElementById('loadingIndicator');
+      const noResultsState = document.getElementById('noResultsState');
+      const noResultsDesc = document.getElementById('noResultsDesc');
+      const viewAllMedsBtn = document.getElementById('viewAllMedsBtn');
+      const categoryFilterBar = document.getElementById('categoryFilterBar');
+
+      // Topbar user elements
+      const userAvatarCircle = document.getElementById('userAvatarCircle');
+      const userNameLabel = document.getElementById('userNameLabel');
+      const logoutBtn = document.getElementById('logoutBtn');
+
+      // Modal Elements
+      const openImageUploadBtn = document.getElementById('openImageUploadBtn');
+      const imageUploadModal = document.getElementById('imageUploadModal');
+      const closeModalBtn = document.getElementById('closeModalBtn');
+      const dropArea = document.getElementById('dropArea');
+      const fileUploadInput = document.getElementById('fileUploadInput');
+      const browseFileBtn = document.getElementById('browseFileBtn');
+      const scannerLaserBar = document.getElementById('scannerLaserBar');
+      const ocrStatusBox = document.getElementById('ocrStatusBox');
+      const ocrStatusMessage = document.getElementById('ocrStatusMessage');
+
+      // ========================================================================
+      // 3. AUTHENTICATION & SESSION HANDLING
+      // ========================================================================
+      function initAuth() {
+        let user = null;
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY_USER) || localStorage.getItem('currentUser');
+          if (raw) user = JSON.parse(raw);
+        } catch (e) {
+          console.warn('Failed parsing user session', e);
+        }
+
+        if (!user) {
+          // Default demo user
+          user = {
+            name: 'Dr. Santhosh Kumar',
+            role: 'Senior Physician & Researcher',
+            email: 'santhosh@carenest.org',
+            initials: 'SK'
+          };
+          try {
+            localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(user));
+          } catch (e) {}
+        }
+
+        const displayName = user.name || user.email || 'Dr. Santhosh Kumar';
+        let initials = user.initials;
+        if (!initials) {
+          const parts = displayName.trim().split(/\s+/);
+          initials = parts.length > 1 ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase() : parts[0].slice(0, 2).toUpperCase();
+        }
+
+        userNameLabel.textContent = displayName;
+        userAvatarCircle.textContent = initials;
+      }
+
+      function handleLogout() {
+        if (confirm('Are you sure you want to log out of the CareNest Generic Medicine Portal?')) {
+          try {
+            localStorage.removeItem('carenest_auth');
+            // Keep user object or clear as needed for seamless demo
+          } catch (e) {}
+          // Redirect to dashboard or login
+          window.location.href = 'dashboard.html';
+        }
+      }
+
+      // ========================================================================
+      // 4. RECENT SEARCHES MANAGEMENT (localStorage)
+      // ========================================================================
+      function getRecentSearches() {
+        try {
+          const data = localStorage.getItem(STORAGE_KEY_RECENT);
+          return data ? JSON.parse(data) : [];
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function saveRecentSearch(term) {
+        if (!term || typeof term !== 'string') return;
+        const clean = term.trim();
+        if (clean.length < 2) return;
+
+        let recents = getRecentSearches();
+        // Remove existing occurrence to place it on top
+        recents = recents.filter(item => item.toLowerCase() !== clean.toLowerCase());
+        recents.unshift(clean);
+        // Keep only top 5
+        recents = recents.slice(0, 5);
+
+        try {
+          localStorage.setItem(STORAGE_KEY_RECENT, JSON.stringify(recents));
+        } catch (e) {}
+
+        renderRecentSearches();
+      }
+
+      function clearRecentSearches() {
+        try {
+          localStorage.removeItem(STORAGE_KEY_RECENT);
+        } catch (e) {}
+        renderRecentSearches();
+      }
+
+      function renderRecentSearches() {
+        const recents = getRecentSearches();
+        recentChipsContainer.innerHTML = '';
+
+        if (!recents || recents.length === 0) {
+          recentChipsContainer.innerHTML = '<span style="font-size:0.8rem; color:#94a3b8; font-style:italic;">No recent searches yet</span>';
+          clearRecentBtn.style.display = 'none';
+          return;
+        }
+
+        recents.forEach(term => {
+          const chip = document.createElement('button');
+          chip.className = 'search-chip recent';
+          chip.type = 'button';
+          chip.innerHTML = `<span>🕒</span> <span>${escapeHtml(term)}</span>`;
+          chip.addEventListener('click', () => {
+            searchInput.value = term;
+            performSearch(term);
+          });
+          recentChipsContainer.appendChild(chip);
+        });
+
+        clearRecentBtn.style.display = 'inline-block';
+      }
+
+      // ========================================================================
+      // 5. SEARCH LOGIC & FUZZY MATCHING
+      // ========================================================================
+      function searchMedicines(query) {
+        if (!query || !query.trim()) {
+          return MEDICINE_DATABASE;
+        }
+
+        const q = query.trim().toLowerCase();
+        const terms = q.split(/\s+/).filter(t => t.length > 0);
+
+        return MEDICINE_DATABASE.filter(med => {
+          const brand = med.brand.toLowerCase();
+          const generic = med.generic.toLowerCase();
+          const category = med.category.toLowerCase();
+          const uses = med.uses.toLowerCase();
+          const mfr = med.manufacturer.toLowerCase();
+          const strength = med.strength.toLowerCase();
+          const altNames = med.alternatives.map(a => `${a.name} ${a.mfr}`).join(' ').toLowerCase();
+
+          // Full haystack for this medicine
+          const haystack = `${brand} ${generic} ${category} ${uses} ${mfr} ${strength} ${altNames}`;
+
+          // Check if all search tokens match or primary substring matches
+          const exactMatches = haystack.includes(q);
+          const allTokensMatch = terms.every(term => haystack.includes(term));
+
+          return exactMatches || allTokensMatch;
+        });
+      }
+
+      function performSearch(query, isFilterChange = false) {
+        const trimmed = (query || '').trim();
+        const initialPrompt = document.getElementById('initialSearchPromptState');
+        const resultsHeader = document.getElementById('resultsSectionHeader') || document.querySelector('.results-section-header');
+        
+        // Show/hide clear button
+        clearSearchBtn.style.display = trimmed.length > 0 ? 'inline-block' : 'none';
+
+        if (!trimmed && !isFilterChange) {
+          // Empty search: reset to initial search prompt state (no preloaded comparison)
+          if (initialPrompt) initialPrompt.style.display = 'block';
+          if (resultsHeader) resultsHeader.style.display = 'none';
+          medicinesContainer.style.display = 'none';
+          medicinesContainer.innerHTML = '';
+          noResultsState.style.display = 'none';
+          loadingIndicator.style.display = 'none';
+          return;
+        }
+
+        if (!isFilterChange && trimmed) {
+          saveRecentSearch(trimmed);
+        }
+
+        // Search query present: hide prompt and show results header
+        if (initialPrompt) initialPrompt.style.display = 'none';
+        if (resultsHeader) resultsHeader.style.display = 'flex';
+        medicinesContainer.style.display = 'none';
+        noResultsState.style.display = 'none';
+        loadingIndicator.style.display = 'block';
+
+        setTimeout(() => {
+          loadingIndicator.style.display = 'none';
+
+          let results = searchMedicines(trimmed);
+
+          // Apply Category Filter if not ALL
+          if (activeCategoryFilter !== 'ALL') {
+            results = results.filter(m => m.category.toLowerCase() === activeCategoryFilter.toLowerCase());
+          }
+
+          currentSearchResults = results;
+          if (results.length === 0) {
+            noResultsState.style.display = 'block';
+            medicinesContainer.style.display = 'none';
+            resultsCountBadge.textContent = '0 Found';
+          } else {
+            noResultsState.style.display = 'none';
+            medicinesContainer.style.display = 'block';
+            renderResults(results, trimmed);
+          }
+        }, 180);
+      }
+
+      // ========================================================================
+      // 6. SAVINGS CALCULATIONS
+      // ========================================================================
+      function getCheapestAlternative(med) {
+        if (!med.alternatives || med.alternatives.length === 0) {
+          return { price: med.price, name: med.brand, mfr: med.manufacturer, isGeneric: false };
+        }
+        return med.alternatives.reduce((min, curr) => curr.price < min.price ? curr : min, med.alternatives[0]);
+      }
+
+      function calculateSavingsMetrics(med, qty = 1) {
+        const brandPrice = med.price * qty;
+        const cheapestAlt = getCheapestAlternative(med);
+        const cheapestPrice = cheapestAlt.price * qty;
+        const savedAmount = Math.max(0, brandPrice - cheapestPrice);
+        const savedPercent = med.price > 0 ? Math.round((savedAmount / brandPrice) * 100) : 0;
+        const annualSavings = savedAmount * 12;
+
+        return {
+          brandPrice,
+          cheapestPrice,
+          savedAmount,
+          savedPercent,
+          annualSavings,
+          cheapestName: cheapestAlt.name
+        };
+      }
+
+      // ========================================================================
+      // 7. RENDER RESULTS
+      // ========================================================================
+      function renderResults(medicines, query) {
+        medicinesContainer.innerHTML = '';
+        const count = medicines.length;
+
+        resultsCountBadge.textContent = `${count} ${count === 1 ? 'Medicine' : 'Medicines'}`;
+        if (query) {
+          resultsHeaderTitle.textContent = `Results for "${query}"`;
+        } else if (activeCategoryFilter !== 'ALL') {
+          resultsHeaderTitle.textContent = `${activeCategoryFilter} Medicines`;
+        } else {
+          resultsHeaderTitle.textContent = 'All Available Medicines';
+        }
+
+        if (count === 0) {
+          noResultsState.style.display = 'block';
+          noResultsDesc.textContent = query 
+            ? `We couldn't find any medicine matching "${query}" in the active category. Try searching another medicine or reset the filters.`
+            : 'No medicines match the selected filter category.';
+          return;
+        }
+
+        noResultsState.style.display = 'none';
+
+        medicines.forEach(med => {
+          const card = createMedicineCard(med);
+          medicinesContainer.appendChild(card);
+        });
+      }
+
+      function createMedicineCard(med) {
+        const card = document.createElement('div');
+        card.className = 'medicine-result-card';
+        card.id = `card-${med.id}`;
+
+        const qty = activeDosageMultipliers[med.id] || 1;
+        const metrics = calculateSavingsMetrics(med, qty);
+        const cheapestAlt = getCheapestAlternative(med);
+
+        // Sort alternatives by price ascending
+        const sortedAlts = [...med.alternatives].sort((a, b) => a.price - b.price);
+
+        card.innerHTML = `
+          <!-- Medicine Info Card Header -->
+          <div class="med-card-header">
+            <div class="med-primary-row">
+              <div class="med-title-block">
+                <h3>
+                  <span>${escapeHtml(med.brand)}</span>
+                  <span class="badge badge-teal">${escapeHtml(med.category)}</span>
+                  <span class="badge badge-blue">${escapeHtml(med.form)}</span>
+                </h3>
+                <div class="generic-salt-line">
+                  <span>Active Salt:</span>
+                  <span class="salt-tag">${escapeHtml(med.generic)} ${escapeHtml(med.strength)}</span>
+                </div>
+              </div>
+
+              <div class="med-price-badge-box">
+                <div class="price-subtext">Original Brand MRP</div>
+                <div class="price-value-large">₹${med.price.toFixed(2)}</div>
+                <div style="font-size:0.75rem; color:#64748b;">${escapeHtml(med.unit)}</div>
+              </div>
+            </div>
+
+            <!-- Key Specs Grid -->
+            <div class="med-specs-grid">
+              <div class="spec-item">
+                <span class="spec-label">Manufacturer</span>
+                <span class="spec-val">${escapeHtml(med.manufacturer)}</span>
+              </div>
+              <div class="spec-item">
+                <span class="spec-label">Strength / Salt</span>
+                <span class="spec-val">${escapeHtml(med.strength)} • ${escapeHtml(med.generic)}</span>
+              </div>
+              <div class="spec-item">
+                <span class="spec-label">Dosage Form</span>
+                <span class="spec-val">${escapeHtml(med.form)}</span>
+              </div>
+              <div class="spec-item">
+                <span class="spec-label">Lowest Generic Price</span>
+                <span class="spec-val" style="color:#15803d; font-weight:800;">₹${cheapestAlt.price.toFixed(2)} (${metrics.savedPercent}% Lower)</span>
+              </div>
+            </div>
+
+            <!-- Clinical Uses & Side Effects -->
+            <div class="med-clinical-notes">
+              <div class="clinical-box uses">
+                <strong>✓ Approved Indications &amp; Uses</strong>
+                <span>${escapeHtml(med.uses)}</span>
+              </div>
+              <div class="clinical-box side-effects">
+                <strong>⚠ Important Side Effects &amp; Precautions</strong>
+                <span>${escapeHtml(med.sideEffects)}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Savings Calculator Panel -->
+          <div class="savings-calculator-panel">
+            <div class="savings-left">
+              <div class="savings-heading">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                  <line x1="6" y1="8" x2="6" y2="8"></line>
+                  <line x1="10" y1="8" x2="10" y2="8"></line>
+                  <line x1="14" y1="8" x2="14" y2="8"></line>
+                  <line x1="18" y1="8" x2="18" y2="8"></line>
+                  <line x1="6" y1="12" x2="6" y2="12"></line>
+                  <line x1="10" y1="12" x2="10" y2="12"></line>
+                  <line x1="14" y1="12" x2="14" y2="12"></line>
+                  <line x1="18" y1="12" x2="18" y2="12"></line>
+                  <line x1="6" y1="16" x2="18" y2="16"></line>
+                </svg>
+                <span>Interactive Prescription Savings Calculator</span>
+              </div>
+
+              <div class="savings-breakdown-row">
+                <div class="stat-pill">
+                  <span class="num" id="save-pct-${med.id}">${metrics.savedPercent}%</span>
+                  <span class="lbl">Cheaper per Pack</span>
+                </div>
+                <div class="stat-pill">
+                  <span class="num" id="save-monthly-${med.id}">₹${metrics.savedAmount.toFixed(2)}</span>
+                  <span class="lbl">Monthly Savings</span>
+                </div>
+                <div class="stat-pill">
+                  <span class="num" id="save-annual-${med.id}">₹${metrics.annualSavings.toFixed(2)}</span>
+                  <span class="lbl">Annual Savings</span>
+                </div>
+              </div>
+
+              <div class="dosage-qty-selector">
+                <span class="dosage-label">Monthly Prescription Quantity:</span>
+                <div class="qty-btn-group" data-med-id="${med.id}">
+                  <button type="button" class="qty-btn ${qty === 1 ? 'active' : ''}" data-qty="1">1 Pack</button>
+                  <button type="button" class="qty-btn ${qty === 2 ? 'active' : ''}" data-qty="2">2 Packs</button>
+                  <button type="button" class="qty-btn ${qty === 3 ? 'active' : ''}" data-qty="3">3 Packs</button>
+                  <button type="button" class="qty-btn ${qty === 6 ? 'active' : ''}" data-qty="6">6 Packs</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Savings Visual Progress Meter -->
+            <div class="savings-meter-card">
+              <div style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.04em; color:#e0f2f1; font-weight:700;">
+                Cost Comparison Meter
+              </div>
+              <div class="meter-progress-track" title="${metrics.savedPercent}% Savings">
+                <div class="meter-progress-fill" id="meter-fill-${med.id}" style="width: ${Math.min(100, Math.max(10, metrics.savedPercent))}%;"></div>
+              </div>
+              <div class="annual-savings-highlight">
+                Switching to <strong>${escapeHtml(cheapestAlt.name)}</strong> saves you approx <strong id="annual-text-${med.id}">₹${metrics.annualSavings.toFixed(2)}</strong> every year!
+              </div>
+            </div>
+          </div>
+
+          <!-- Generic Alternatives Comparison Table -->
+          <div class="alternatives-table-wrapper">
+            <div class="table-section-title">
+              <span>Bioequivalent Alternatives &amp; Generic Formulations</span>
+              <span class="bioequivalence-tag">Identical Active Salt (${escapeHtml(med.generic)} ${escapeHtml(med.strength)})</span>
+            </div>
+
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th>Medicine &amp; Formulation</th>
+                  <th>Manufacturer</th>
+                  <th>Type</th>
+                  <th>Strength</th>
+                  <th>Price</th>
+                  <th>Savings vs Brand</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Original Brand Reference Row -->
+                <tr class="original-brand-row">
+                  <td>
+                    <div class="alt-name-cell">
+                      <span class="alt-name-strong">
+                        ${escapeHtml(med.brand)}
+                        <span style="font-size:0.7rem; background:#cbd5e1; color:#1e293b; padding:1px 6px; border-radius:4px; font-weight:600;">PRESCRIBED</span>
+                      </span>
+                    </div>
+                  </td>
+                  <td>${escapeHtml(med.manufacturer)}</td>
+                  <td><span class="badge-brand-alt">Original Brand</span></td>
+                  <td>${escapeHtml(med.strength)}</td>
+                  <td><span class="price-num">₹${med.price.toFixed(2)}</span></td>
+                  <td><span class="savings-pct-badge neutral">Baseline</span></td>
+                  <td><span style="color:#64748b; font-size:0.82rem; font-weight:600;">Reference</span></td>
+                </tr>
+
+                <!-- Alternative Rows -->
+                ${sortedAlts.map(alt => {
+                  const isLowest = alt.price === cheapestAlt.price;
+                  const diff = med.price - alt.price;
+                  const pct = Math.round((diff / med.price) * 100);
+                  const isPositive = pct > 0;
+                  const rowClass = isLowest ? 'best-price-row' : '';
+
+                  return `
+                    <tr class="${rowClass}">
+                      <td>
+                        <div class="alt-name-cell">
+                          <span class="alt-name-strong">
+                            ${escapeHtml(alt.name)}
+                            ${isLowest ? '<span class="badge-best-price">Best Price</span>' : ''}
+                          </span>
+                        </div>
+                      </td>
+                      <td>${escapeHtml(alt.mfr)}</td>
+                      <td>
+                        ${alt.isGeneric 
+                          ? '<span class="badge-generic-pill">Verified Generic</span>' 
+                          : '<span class="badge-brand-alt">Branded Alt</span>'}
+                      </td>
+                      <td>${escapeHtml(alt.dosage || med.strength)}</td>
+                      <td>
+                        <span class="price-num" style="${isLowest ? 'color:#15803d; font-size:1.05rem;' : ''}">
+                          ₹${alt.price.toFixed(2)}
+                        </span>
+                      </td>
+                      <td>
+                        ${isPositive 
+                          ? `<span class="savings-pct-badge positive">Save ${pct}% (₹${diff.toFixed(2)})</span>` 
+                          : pct === 0 
+                            ? `<span class="savings-pct-badge neutral">Same Price</span>` 
+                            : `<span class="savings-pct-badge negative">+₹${Math.abs(diff).toFixed(2)}</span>`}
+                      </td>
+                      <td>
+                        ${isLowest 
+                          ? '<span style="color:#15803d; font-weight:700; font-size:0.85rem;">★ Highest Savings</span>' 
+                          : '<span style="color:#0288d1; font-size:0.82rem; font-weight:600;">Bioequivalent</span>'}
+                      </td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+
+        // Attach event listeners for Dosage Quantity buttons in this card
+        const qtyBtns = card.querySelectorAll('.qty-btn');
+        qtyBtns.forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const newQty = parseInt(e.target.getAttribute('data-qty'), 10) || 1;
+            activeDosageMultipliers[med.id] = newQty;
+            
+            // Update active state in button group
+            qtyBtns.forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+
+            // Recalculate metrics
+            const updated = calculateSavingsMetrics(med, newQty);
+            const savePctElem = card.querySelector(`#save-pct-${med.id}`);
+            const saveMonthlyElem = card.querySelector(`#save-monthly-${med.id}`);
+            const saveAnnualElem = card.querySelector(`#save-annual-${med.id}`);
+            const meterFillElem = card.querySelector(`#meter-fill-${med.id}`);
+            const annualTextElem = card.querySelector(`#annual-text-${med.id}`);
+
+            if (savePctElem) savePctElem.textContent = `${updated.savedPercent}%`;
+            if (saveMonthlyElem) saveMonthlyElem.textContent = `₹${updated.savedAmount.toFixed(2)}`;
+            if (saveAnnualElem) saveAnnualElem.textContent = `₹${updated.annualSavings.toFixed(2)}`;
+            if (meterFillElem) meterFillElem.style.width = `${Math.min(100, Math.max(10, updated.savedPercent))}%`;
+            if (annualTextElem) annualTextElem.textContent = `₹${updated.annualSavings.toFixed(2)}`;
+          });
+        });
+
+        return card;
+      }
+
+      // ========================================================================
+      // 8. IMAGE UPLOAD & OCR SCAN DEMO SIMULATION
+      // ========================================================================
+      function openModal() {
+        imageUploadModal.style.display = 'flex';
+        resetScannerState();
+      }
+
+      function closeModal() {
+        imageUploadModal.style.display = 'none';
+        resetScannerState();
+      }
+
+      function resetScannerState() {
+        scannerLaserBar.style.display = 'none';
+        scannerLaserBar.style.animation = 'none';
+        ocrStatusBox.style.display = 'none';
+        ocrStatusMessage.textContent = 'Scanning package label...';
+      }
+
+      function simulateOcrScan(detectedMedicine) {
+        scannerLaserBar.style.display = 'block';
+        scannerLaserBar.style.animation = 'laserSweep 1.2s infinite ease-in-out';
+        ocrStatusBox.style.display = 'flex';
+        ocrStatusMessage.textContent = 'Analyzing image contours and typography...';
+
+        setTimeout(() => {
+          ocrStatusMessage.textContent = 'Optical Character Recognition: Extracting salt composition...';
+        }, 600);
+
+        setTimeout(() => {
+          ocrStatusMessage.textContent = `Detected: "${detectedMedicine}" (Confidence: 98.6%)`;
+        }, 1300);
+
+        setTimeout(() => {
+          closeModal();
+          searchInput.value = detectedMedicine;
+          performSearch(detectedMedicine);
+          
+          // Scroll down smoothly to results
+          const resultsElem = document.getElementById('resultsSection');
+          if (resultsElem) {
+            resultsElem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 1900);
+      }
+
+      // ========================================================================
+      // 9. EVENT LISTENERS INITIALIZATION
+      // ========================================================================
+      function initEventListeners() {
+        // Search submit button
+        searchSubmitBtn.addEventListener('click', () => {
+          performSearch(searchInput.value);
+        });
+
+        // Search on Enter key
+        searchInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            performSearch(searchInput.value);
+          }
+        });
+
+        // Live input typing: show/hide clear button
+        searchInput.addEventListener('input', () => {
+          clearSearchBtn.style.display = searchInput.value.length > 0 ? 'inline-block' : 'none';
+        });
+
+        // Clear search input
+        clearSearchBtn.addEventListener('click', () => {
+          searchInput.value = '';
+          clearSearchBtn.style.display = 'none';
+          searchInput.focus();
+          performSearch('');
+        });
+
+        // Popular search chips
+        popularChipsContainer.querySelectorAll('.search-chip').forEach(chip => {
+          chip.addEventListener('click', () => {
+            const query = chip.getAttribute('data-search');
+            searchInput.value = query;
+            performSearch(query);
+          });
+        });
+
+        // Clear Recent Searches
+        clearRecentBtn.addEventListener('click', () => {
+          clearRecentSearches();
+        });
+
+        // View All Medicines (when no results or reset)
+        viewAllMedsBtn.addEventListener('click', () => {
+          searchInput.value = '';
+          activeCategoryFilter = 'ALL';
+          categoryFilterBar.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+          const allBtn = categoryFilterBar.querySelector('[data-category="ALL"]');
+          if (allBtn) allBtn.classList.add('active');
+          performSearch('');
+        });
+
+        // Category Filter Pills
+        categoryFilterBar.querySelectorAll('.filter-pill').forEach(btn => {
+          btn.addEventListener('click', () => {
+            categoryFilterBar.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeCategoryFilter = btn.getAttribute('data-category');
+            performSearch(searchInput.value, true);
+          });
+        });
+
+        // Modal Open / Close
+        openImageUploadBtn.addEventListener('click', openModal);
+        closeModalBtn.addEventListener('click', closeModal);
+
+        imageUploadModal.addEventListener('click', (e) => {
+          if (e.target === imageUploadModal) closeModal();
+        });
+
+        // Drag & Drop
+        dropArea.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          dropArea.classList.add('dragover');
+        });
+
+        dropArea.addEventListener('dragleave', () => {
+          dropArea.classList.remove('dragover');
+        });
+
+        dropArea.addEventListener('drop', (e) => {
+          e.preventDefault();
+          dropArea.classList.remove('dragover');
+          // Pick a realistic sample to simulate recognition
+          simulateOcrScan('Dolo 650');
+        });
+
+        browseFileBtn.addEventListener('click', () => {
+          fileUploadInput.click();
+        });
+
+        fileUploadInput.addEventListener('change', () => {
+          if (fileUploadInput.files && fileUploadInput.files.length > 0) {
+            simulateOcrScan('Azithral 500');
+          }
+        });
+
+        // Sample Strip Buttons inside Modal
+        document.querySelectorAll('.sample-strip-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const sampleName = btn.getAttribute('data-sample');
+            simulateOcrScan(sampleName);
+          });
+        });
+
+        // Logout
+        logoutBtn.addEventListener('click', handleLogout);
+      }
+
+      // ========================================================================
+      // 10. HELPER FUNCTIONS
+      // ========================================================================
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      // ========================================================================
+      // 11. INITIALIZATION ON DOM READY
+      // ========================================================================
+      window.addEventListener('DOMContentLoaded', () => {
+        initAuth();
+        renderRecentSearches();
+        initEventListeners();
+        
+        // Wire up initial sample chips
+        document.querySelectorAll('.initial-sample-chip').forEach(chip => {
+          chip.addEventListener('click', () => {
+            const query = chip.getAttribute('data-search');
+            searchInput.value = query;
+            performSearch(query);
+          });
+        });
+
+        // Initial state is clean: no preloaded comparison tables
+        performSearch('');
+      });
+
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareNest - Disease-Based Food Advice</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .portal-container {
+      max-width: 1540px;
+      width: calc(100% - 32px);
+      margin: 0 auto;
+      padding: 28px 16px 80px;
+    }
+    .portal-banner {
+      background: linear-gradient(135deg, #0d7377 0%, #14919b 100%);
+      color: #ffffff;
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 32px;
+      box-shadow: 0 10px 25px rgba(13, 115, 119, 0.18);
+    }
+    .portal-banner h1 {
+      margin: 0 0 8px 0;
+      font-size: 28px;
+      font-weight: 800;
+    }
+    .portal-banner p {
+      margin: 0;
+      opacity: 0.92;
+      font-size: 15px;
+      max-width: 700px;
+    }
+
+    /* Disease Cards Grid */
+    .disease-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      margin-bottom: 36px;
+    }
+    .disease-card {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 24px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .disease-card:hover {
+      transform: translateY(-5px);
+      border-color: #0d7377;
+      box-shadow: 0 12px 24px rgba(13, 115, 119, 0.12);
+    }
+    .disease-icon-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      margin-bottom: 14px;
+    }
+    .disease-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0 0 6px 0;
+    }
+    .disease-category {
+      font-size: 12px;
+      font-weight: 600;
+      color: #0d7377;
+      background: #e6f4f4;
+      padding: 3px 8px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+    .disease-desc {
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+
+    /* Food Guide Columns */
+    .guide-columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+    .guide-col {
+      border-radius: 16px;
+      padding: 24px;
+      background: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+    .col-rec {
+      border-top: 5px solid #22c55e;
+      background: #f0fdf4;
+    }
+    .col-limit {
+      border-top: 5px solid #f59e0b;
+      background: #fffbeb;
+    }
+    .col-avoid {
+      border-top: 5px solid #ef4444;
+      background: #fef2f2;
+    }
+    .food-item-pill {
+      background: #ffffff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      border: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+
+    /* Comparison Table */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      font-size: 13px;
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .compare-table th, .compare-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      text-align: left;
+    }
+    .compare-table th {
+      background: #f8fafc;
+      font-weight: 700;
+      color: #334155;
+    }
+    .conflict-tag {
+      background: #fee2e2;
+      color: #b91c1c;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+  </style>
+</head>
+<body class="portal-layout">
+
+  <!-- Portal Header -->
+  <header class="portal-header">
+    <div class="portal-header-left">
+      <a href="dashboard.html" class="btn-back-dashboard">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back to Dashboard
+      </a>
+      <div class="portal-title-badge">
+        <span style="font-size: 20px;">🍎</span>
+        <span style="font-weight: 700; font-size: 16px; color: #0d7377;">Disease-Based Food Advice</span>
+      </div>
+    </div>
+    <div class="portal-header-right">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="user-avatar-circle" style="width: 36px; height: 36px; border-radius: 50%; background: #0d7377; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">SK</div>
+        <span id="user-name-display" style="font-weight: 600; font-size: 14px; color: #334155;">User</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="portal-container">
+    <div class="portal-banner" style="display: flex; justify-content: space-between; align-items: center; gap: 24px;">
+      <div style="flex: 1;">
+        <span style="background: rgba(255,255,255,0.2); color: #ffffff; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; display: inline-block; margin-bottom: 8px;">
+          🩺 Clinical Nutrition Guide
+        </span>
+        <h1 style="margin: 0 0 8px 0; font-size: 26px; font-weight: 800;">Clinical Food & Nutrition Guidance</h1>
+        <p style="margin: 0; opacity: 0.95; font-size: 14px; max-width: 650px; line-height: 1.5;">Explore scientifically verified, educational food guidelines for specific chronic health conditions. Check individual food safety or compare dual health conditions side-by-side.</p>
+        <div style="display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap;">
+          <span style="font-size: 12px; background: rgba(0,0,0,0.15); padding: 4px 10px; border-radius: 6px;">✓ 8 Chronic Conditions</span>
+          <span style="font-size: 12px; background: rgba(0,0,0,0.15); padding: 4px 10px; border-radius: 6px;">✓ 3-Tier Recommended, Limit & Avoid</span>
+          <span style="font-size: 12px; background: rgba(0,0,0,0.15); padding: 4px 10px; border-radius: 6px;">✓ Dual-Condition Conflict Matrix</span>
+        </div>
+      </div>
+      <div style="width: 130px; height: 110px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+        <svg viewBox="0 0 120 100" style="width: 100%; height: 100%;" fill="none">
+          <path d="M60 10l35 15v30c0 28-20 44-35 50-15-6-35-22-35-50V25l35-15Z" fill="#ffffff" fill-opacity="0.18" stroke="#ffffff" stroke-width="2"/>
+          <path d="M60 38v24M48 50h24" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Section: Quick Food Search Checker -->
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; margin-bottom: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+      <h3 style="margin: 0 0 12px 0; font-size: 17px; color: #1e293b;">🔍 Can I Eat This? Instant Food Safety Checker</h3>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <select id="search-condition-select" class="form-control" style="max-width: 260px;">
+          <option value="diabetes">Diabetes (Blood Sugar)</option>
+          <option value="bp">High Blood Pressure</option>
+          <option value="kidney">Kidney Health</option>
+          <option value="cholesterol">High Cholesterol</option>
+          <option value="jaundice">Jaundice / Liver Care</option>
+          <option value="typhoid">Typhoid Recovery</option>
+          <option value="heart">Heart Health</option>
+          <option value="pcod">PCOD / PCOS</option>
+        </select>
+        <input type="text" id="food-search-input" class="form-control" style="flex: 1; min-width: 240px;" placeholder="Search food (e.g. Banana, Rice, Milk, Egg, Salt, Mango, Curd)..." onkeyup="checkFoodLive(event)">
+        <button class="btn btn-primary" onclick="checkFoodSearch()">Check Food</button>
+      </div>
+      <div id="food-search-result-box" style="margin-top: 16px; display: none;"></div>
+    </div>
+
+    <!-- Section 1: Disease Selection Grid -->
+    <div id="disease-selection-section">
+      <h2 style="font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 16px;">
+        Select a Condition to View Comprehensive Dietary Advice:
+      </h2>
+      <div class="disease-grid" id="disease-grid-container"></div>
+    </div>
+
+    <!-- Section 2: Detailed Food Guide View -->
+    <div id="detailed-guide-section" style="display: none; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px; margin-bottom: 32px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid #f1f5f9;">
+        <div>
+          <button class="btn btn-secondary btn-sm" onclick="closeFoodGuide()" style="margin-bottom: 10px;">
+            ← Back to All Conditions
+          </button>
+          <h2 id="guide-condition-title" style="margin: 0; font-size: 22px; color: #0d7377;">Condition Name</h2>
+          <span id="guide-condition-category" class="disease-category">Category</span>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="window.print()">Print Care Advice</button>
+      </div>
+
+      <div class="guide-columns">
+        <!-- Recommended Column -->
+        <div class="guide-col col-rec">
+          <h3 style="color: #15803d; margin: 0 0 14px 0; font-size: 16px;">🟢 Recommended Foods</h3>
+          <div id="rec-food-list"></div>
+        </div>
+        <!-- Limit Column -->
+        <div class="guide-col col-limit">
+          <h3 style="color: #b45309; margin: 0 0 14px 0; font-size: 16px;">🟡 Foods to Limit (Portion Control)</h3>
+          <div id="limit-food-list"></div>
+        </div>
+        <!-- Avoid Column -->
+        <div class="guide-col col-avoid">
+          <h3 style="color: #b91c1c; margin: 0 0 14px 0; font-size: 16px;">🔴 Foods to Avoid (High Risk)</h3>
+          <div id="avoid-food-list"></div>
+        </div>
+      </div>
+
+      <!-- Clinical Precautions -->
+      <div style="margin-top: 24px; padding: 18px 20px; background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 12px;">
+        <h4 style="margin: 0 0 8px 0; color: #0f766e; font-size: 15px;">🛡️ Clinical Precautions & Lifestyle Rules</h4>
+        <div id="guide-precautions-text" style="font-size: 13px; color: #115e59; line-height: 1.6;"></div>
+      </div>
+    </div>
+
+    <!-- Section 3: Simplified Dual-Condition Consensus Cards -->
+    <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 20px; padding: 28px; box-shadow: 0 4px 16px rgba(0,0,0,0.04);">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+        <h3 style="margin: 0; font-size: 20px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 10px;">
+          <span>⚖️</span>
+          <span>Dual-Condition Dietary Consensus</span>
+        </h3>
+        <span style="font-size: 12px; font-weight: 700; background: #e0f2f1; color: #0d7377; padding: 4px 12px; border-radius: 20px;">
+          Simplified 3-Card Clarity
+        </span>
+      </div>
+      <p style="font-size: 13.5px; color: #64748b; margin-top: 0; margin-bottom: 20px; line-height: 1.5;">
+        Managing multiple health conditions? Select two conditions to instantly see what is safe for both, what must be avoided, and clear clinician rules for conflicting foods:
+      </p>
+
+      <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px 20px;">
+        <div style="flex: 1; min-width: 240px;">
+          <label style="font-size: 12px; font-weight: 700; color: #475569; display: block; margin-bottom: 6px;">Primary Health Condition</label>
+          <select id="compare-cond-1" class="form-control" onchange="runComparison()" style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:10px; padding:10px 14px; font-size:14px; font-weight:600; color:#1e293b; width:100%;">
+            <option value="diabetes" selected>🩸 Type 2 Diabetes</option>
+            <option value="bp">🫀 High Blood Pressure (Hypertension)</option>
+            <option value="kidney">💧 Chronic Kidney Disease (CKD)</option>
+            <option value="cholesterol">🫀 High Cholesterol &amp; Lipids</option>
+            <option value="heart">❤️ Coronary Heart Disease</option>
+            <option value="fatty_liver">🌱 Non-Alcoholic Fatty Liver (NAFLD)</option>
+            <option value="thyroid">🦋 Thyroid Disorders (Hypothyroid)</option>
+            <option value="gerd">🔥 GERD &amp; Acid Reflux</option>
+          </select>
+        </div>
+        <div style="font-size: 18px; font-weight: 800; color: #0d7377; background: #e6f4f4; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">VS</div>
+        <div style="flex: 1; min-width: 240px;">
+          <label style="font-size: 12px; font-weight: 700; color: #475569; display: block; margin-bottom: 6px;">Secondary Health Condition</label>
+          <select id="compare-cond-2" class="form-control" onchange="runComparison()" style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:10px; padding:10px 14px; font-size:14px; font-weight:600; color:#1e293b; width:100%;">
+            <option value="bp" selected>🫀 High Blood Pressure (Hypertension)</option>
+            <option value="diabetes">🩸 Type 2 Diabetes</option>
+            <option value="kidney">💧 Chronic Kidney Disease (CKD)</option>
+            <option value="cholesterol">🫀 High Cholesterol &amp; Lipids</option>
+            <option value="heart">❤️ Coronary Heart Disease</option>
+            <option value="fatty_liver">🌱 Non-Alcoholic Fatty Liver (NAFLD)</option>
+            <option value="thyroid">🦋 Thyroid Disorders (Hypothyroid)</option>
+            <option value="gerd">🔥 GERD &amp; Acid Reflux</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Combined Status Headline Banner -->
+      <div id="compare-consensus-banner" style="margin-top: 18px; background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; gap: 14px;">
+        <span style="font-size: 26px;">🩺</span>
+        <div>
+          <div style="font-size: 14px; font-weight: 800; color: #166534;" id="compare-summary-heading">Combined Guidance: Type 2 Diabetes + High Blood Pressure</div>
+          <div style="font-size: 12.5px; color: #15803d; margin-top: 2px;">
+            <strong>Golden Clinical Rule:</strong> Where food advice diverges, <em>the stricter medical limitation always takes priority</em> to prevent organ stress.
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 Simplified Comparison Action Cards -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-top: 20px;" id="compare-cards-container">
+        
+        <!-- Card 1: Safe & Beneficial for Both -->
+        <div style="background: #ffffff; border: 1.5px solid #86efac; border-radius: 16px; padding: 22px; box-shadow: 0 4px 14px rgba(34, 197, 94, 0.08); display: flex; flex-direction: column;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1.5px solid #dcfce7;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 22px;">🟢</span>
+              <h4 style="margin: 0; font-size: 16px; font-weight: 800; color: #166534;">Safe &amp; Recommended for Both</h4>
+            </div>
+            <span style="font-size: 11px; font-weight: 800; background: #dcfce7; color: #15803d; padding: 4px 9px; border-radius: 20px;">Green Light</span>
+          </div>
+          <p style="font-size: 12.5px; color: #475569; margin: 0 0 14px 0;">Nutrient-rich foods that actively benefit both conditions with zero conflict:</p>
+          <ul id="compare-safe-list" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;"></ul>
+        </div>
+
+        <!-- Card 2: Strictly Avoided for Both -->
+        <div style="background: #ffffff; border: 1.5px solid #fca5a5; border-radius: 16px; padding: 22px; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.08); display: flex; flex-direction: column;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1.5px solid #fee2e2;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 22px;">🔴</span>
+              <h4 style="margin: 0; font-size: 16px; font-weight: 800; color: #991b1b;">Strictly Prohibited for Both</h4>
+            </div>
+            <span style="font-size: 11px; font-weight: 800; background: #fee2e2; color: #b91c1c; padding: 4px 9px; border-radius: 20px;">Red Alert</span>
+          </div>
+          <p style="font-size: 12.5px; color: #475569; margin: 0 0 14px 0;">Foods that aggravate blood sugar, blood pressure, or vascular health:</p>
+          <ul id="compare-avoid-list" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;"></ul>
+        </div>
+
+        <!-- Card 3: Food Divergence & Doctor Guidance -->
+        <div style="background: #ffffff; border: 1.5px solid #fde047; border-radius: 16px; padding: 22px; box-shadow: 0 4px 14px rgba(234, 179, 8, 0.08); display: flex; flex-direction: column;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1.5px solid #fef9c3;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 22px;">⚠️</span>
+              <h4 style="margin: 0; font-size: 16px; font-weight: 800; color: #854d0e;">Guidance Divergence &amp; Rules</h4>
+            </div>
+            <span style="font-size: 11px; font-weight: 800; background: #fef9c3; color: #a16207; padding: 4px 9px; border-radius: 20px;">Doctor Guidance</span>
+          </div>
+          <p style="font-size: 12.5px; color: #475569; margin: 0 0 14px 0;">Foods beneficial for one issue but restricted in the other, with simple consensus rules:</p>
+          <ul id="compare-divergence-list" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;"></ul>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    const DISEASE_DATA = {
+      diabetes: {
+        name: 'Type 2 Diabetes',
+        icon: `<svg viewBox="0 0 24 24" width="24" height="24" stroke="#ef4444" stroke-width="2" fill="none" style="display:inline-block; vertical-align:middle;"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/><circle cx="12" cy="14" r="3" fill="#ef4444"/></svg>`,
+        cat: 'Metabolic Health',
+        bg: '#fee2e2',
+        desc: 'Dietary management targeting post-prandial glycemic control, low glycemic index foods, and insulin sensitivity.',
+        rec: [
+          { item: 'Whole Grains (Steel Cut Oats, Brown Rice, Ragi)', why: 'Rich in soluble fiber that delays glucose absorption' },
+          { item: 'Green Leafy Vegetables (Spinach, Fenugreek/Methi, Bottle Gourd)', why: 'Zero glycemic spike, loaded with magnesium & alpha-lipoic acid' },
+          { item: 'Moong & Toor Dal (Lentils)', why: 'High plant protein with low glycemic response' },
+          { item: 'Bitter Gourd (Karela) & Jamun', why: 'Contains polypeptide-p mimicking insulin action' },
+          { item: 'Raw Guava & Green Apples', why: 'Low fructose fruits with high dietary pectin' }
+        ],
+        limit: [
+          { item: 'Brown Rice & Whole Wheat Roti', why: 'Moderate portions only (max 1 cup cooked per meal)' },
+          { item: 'Sweet Fruits (Papaya, Oranges, Pears)', why: 'Limit to 1 small serving per day away from heavy meals' },
+          { item: 'Roots & Tubers (Carrots, Beetroot, Sweet Potato)', why: 'Moderately high natural starch content' }
+        ],
+        avoid: [
+          { item: 'Refined Flours (Maida, White Bread, Bakery Naan)', why: 'Triggers severe rapid glucose spikes' },
+          { item: 'Added Sugar, Sweets, Honey & Jaggery', why: 'Direct simple sugars that exacerbate diabetic complications' },
+          { item: 'Fruit Juices & Carbonated Beverages', why: 'High free fructose without fiber' },
+          { item: 'Deep Fried Foods (Samosas, Pakoras)', why: 'Increases insulin resistance via trans fatty acids' }
+        ],
+        precautions: 'Eat 5-6 small balanced meals rather than 2 large heavy meals. Avoid skipping breakfast. Monitor HbA1c every 3 months.'
+      },
+      bp: {
+        name: 'High Blood Pressure (Hypertension)',
+        icon: `<svg viewBox="0 0 24 24" width="24" height="24" stroke="#dc2626" stroke-width="2" fill="none" style="display:inline-block; vertical-align:middle;"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M12 5v14M8 12h8"/></svg>`,
+        cat: 'Cardiovascular Health',
+        bg: '#fee2e2',
+        desc: 'Focuses on the DASH dietary pattern: low sodium, elevated potassium, magnesium, and vascular endothelial protection.',
+        rec: [
+          { item: 'Bananas, Watermelon & Pomegranate', why: 'High potassium aids cellular sodium excretion' },
+          { item: 'Raw Garlic Cloves', why: 'Contains allicin which stimulates nitric oxide vascular dilation' },
+          { item: 'Steamed Beetroot & Leafy Greens', why: 'Dietary nitrates relax arterial smooth muscles' },
+          { item: 'Oats & Flaxseeds', why: 'Omega-3 fatty acids improve arterial elasticity' }
+        ],
+        limit: [
+          { item: 'Table Salt (Keep below 1 tsp / 4-5g total per day)', why: 'Excess sodium causes intravascular water retention' },
+          { item: 'Caffeinated Beverages (Tea / Coffee)', why: 'Limit to 1-2 cups; excess caffeine elevates systolic pressure' },
+          { item: 'Dairy Butter & Ghee', why: 'Use in strict moderation' }
+        ],
+        avoid: [
+          { item: 'Pickles (Achaar), Papad & Salted Chutneys', why: 'Very high concentrated sodium preservatives' },
+          { item: 'Processed Chips, Namkeen & Canned Soups', why: 'Loaded with hidden monosodium glutamate (MSG) & sodium' },
+          { item: 'Processed Meats & Sausages', why: 'High sodium and saturated vascular fats' }
+        ],
+        precautions: 'Flavor food with herbs, lemon, cumin, and garlic instead of table salt. Regularly monitor BP and keep a log.'
+      },
+      kidney: {
+        name: 'Chronic Kidney Disease (Renal Care)',
+        icon: `<svg viewBox="0 0 24 24" width="24" height="24" stroke="#4f46e5" stroke-width="2" fill="none" style="display:inline-block; vertical-align:middle;"><path d="M7 5c-3 0-5 2.5-5 7s2 9 6 9c3.5 0 5-3 5-6s-2-6-4-8c-.7-.7-1.3-1.5-2-2Z"/><path d="M17 5c3 0 5 2.5 5 7s-2 9-6 9c-3.5 0-5-3-5-6s2-6 4-8c.7-.7 1.3-1.5 2-2Z"/></svg>`,
+        cat: 'Renal Function',
+        bg: '#e0e7ff',
+        desc: 'Controlled protein, low potassium, phosphorus restriction, and tailored fluid balance.',
+        rec: [
+          { item: 'Cabbage, Cauliflower & Bell Peppers', why: 'Low potassium vegetables safe for impaired filtration' },
+          { item: 'Apples, Cranberries & Blueberries', why: 'Antioxidant rich with minimal potassium load' },
+          { item: 'Egg Whites (Boiled)', why: 'High biological value protein with zero phosphorus in whites' },
+          { item: 'Olive Oil & Garlic', why: 'Renal-friendly anti-inflammatory healthy fats' }
+        ],
+        limit: [
+          { item: 'Lentils / Dal', why: 'Consume only doctor-approved quantities to prevent urea accumulation' },
+          { item: 'Milk & Low-Fat Yogurt', why: 'Moderate phosphorus load' }
+        ],
+        avoid: [
+          { item: 'Bananas, Oranges & Coconut Water', why: 'Dangerously high potassium causes hyperkalemia cardiac risks' },
+          { item: 'Tomatoes & Potatoes (Without Leaching)', why: 'High potassium load' },
+          { item: 'Dark Colas & Carbonated Drinks', why: 'Contain inorganic phosphate additives easily absorbed by blood' }
+        ],
+        precautions: 'Strictly respect your nephrologist prescribed daily fluid limit. Avoid over-the-counter pain medications (NSAIDs).'
+      },
+      cholesterol: {
+        name: 'High Cholesterol (Hyperlipidemia)',
+        icon: `<svg viewBox="0 0 24 24" width="24" height="24" stroke="#d97706" stroke-width="2" fill="none" style="display:inline-block; vertical-align:middle;"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5" fill="#fde68a"/><circle cx="10" cy="10" r="1.5" fill="#d97706"/><circle cx="14" cy="13" r="1.5" fill="#d97706"/></svg>`,
+        cat: 'Lipid Health',
+        bg: '#fef3c7',
+        desc: 'Reduces LDL and triglycerides while elevating protective HDL using soluble viscous fiber and plant sterols.',
+        rec: [
+          { item: 'Oatmeal & Barley', why: 'Beta-glucan binds bile acids and flushes excess cholesterol' },
+          { item: 'Walnuts & Soaked Almonds', why: 'Polyunsaturated fatty acids lower circulating LDL' },
+          { item: 'Fatty Fish (Salmon, Sardines, Mackerel)', why: 'Omega-3 EPA/DHA lowers blood triglycerides' },
+          { item: 'Avocado & Extra Virgin Olive Oil', why: 'Monounsaturated fats protect artery walls' }
+        ],
+        limit: [
+          { item: 'Whole Milk & Full-Fat Paneer', why: 'Moderate dairy saturated fat intake' },
+          { item: 'Egg Yolks (Max 2-3 per week)', why: 'High dietary cholesterol' }
+        ],
+        avoid: [
+          { item: 'Deep-Fried Savories & Commercial Pastries', why: 'Trans fats directly elevate bad LDL and reduce good HDL' },
+          { item: 'Red Meat & Organ Meats (Liver, Brain)', why: 'Very dense saturated animal fats' },
+          { item: 'Palm Oil & Hydrogenated Vanaspati', why: 'Arterial plaque forming saturated fatty chains' }
+        ],
+        precautions: 'Engage in at least 30 minutes of aerobic cardiovascular walking daily. Retest lipid profile every 6 months.'
+      },
+      jaundice: {
+        name: 'Jaundice & Hepatitis (Liver Care)',
+        icon: `<svg viewBox="0 0 24 24" width="24" height="24" stroke="#ca8a04" stroke-width="2" fill="none" style="display:inline-block; vertical-align:middle;"><path d="M12 21a9 9 0 0 0 9-9c0-4.97-4.03-9-9-9s-9 4.03-9 9a9 9 0 0 0 9 9Z"/><path d="M9 10h6M12 14v4"/></svg>`,
+        cat: 'Hepatic Recovery',
+        bg: '#fef9c3',
+        desc: 'Gentle, easily digestible carbohydrates, minimal hepatic workload, high hydration.',
+        rec: [
+          { item: 'Fresh Sugarcane Juice (Hygienic) & Lemon Water', why: 'Fast energy without requiring liver metabolic strain' },
+          { item: 'Boiled White Rice & Soft Moong Khichdi', why: 'Easiest carbohydrate to digest during acute inflammation' },
+          { item: 'Papaya & Radish', why: 'Natural digestive enzymes supporting liver recovery' },
+          { item: 'Coconut Water & Barley Water', why: 'Hydration and natural electrolytes' }
+        ],
+        limit: [
+          { item: 'Moong Dal (Very thin)', why: 'Light protein only' },
+          { item: 'Boiled Pumpkin & Bottle Gourd', why: 'Soft cooked only' }
+        ],
+        avoid: [
+          { item: 'Ghee, Butter, Heavy Oils & Cream', why: 'Impaired bile flow causes severe nausea and steatorrhea' },
+          { item: 'Spicy Masalas & Non-Veg Foods', why: 'Severe metabolic workload on inflamed hepatocytes' },
+          { item: 'Alcohol & Unprescribed Herbal Tonics', why: 'Direct hepatotoxic damage' }
+        ],
+        precautions: 'Strict bed rest is essential for hepatic cellular regeneration. Drink only boiled, purified water.'
+      },
+      typhoid: {
+        name: 'Typhoid Fever Recovery',
+        icon: `<svg viewBox="0 0 24 24" width="24" height="24" stroke="#059669" stroke-width="2" fill="none" style="display:inline-block; vertical-align:middle;"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>`,
+        cat: 'Infectious Gastrointestinal',
+        bg: '#dcfce7',
+        desc: 'Soft, bland, calorie-dense foods that avoid irritating inflamed intestinal Peyer patches.',
+        rec: [
+          { item: 'Rice Kanji (Porridge) & Boiled Potatoes', why: 'Gentle starch easily absorbed by damaged gut mucosa' },
+          { item: 'Coconut Water & Electrolyte ORS', why: 'Counteracts dehydration from prolonged high fevers' },
+          { item: 'Ripe Bananas & Stewed Apples', why: 'Gentle soluble pectin soothing bowel lining' },
+          { item: 'Boiled Egg Whites (Soft)', why: 'Repairs body tissue without intestinal irritation' }
+        ],
+        limit: [
+          { item: 'Well-Boiled Milk', why: 'Test individual gastrointestinal tolerance' },
+          { item: 'Soft Steamed Carrots', why: 'Cook thoroughly until soft' }
+        ],
+        avoid: [
+          { item: 'Raw Salads & Unpeeled Fruits', why: 'High microbial contamination risk and abrasive insoluble fiber' },
+          { item: 'Chili, Pepper, Heavy Spices', why: 'Can trigger intestinal ulceration or bleeding' },
+          { item: 'Street Foods & Unpasteurized Beverages', why: 'Source of salmonella bacterial reinfection' }
+        ],
+        precautions: 'Drink exclusively rolling-boiled water. Wash hands thoroughly before eating. Complete the full antibiotic course.'
+      },
+      heart: {
+        name: 'Coronary Heart Disease',
+        icon: `<svg viewBox="0 0 24 24" width="24" height="24" stroke="#b91c1c" stroke-width="2" fill="none" style="display:inline-block; vertical-align:middle;"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/><polyline points="3.5 12 8.5 12 10.5 8 13.5 16 15.5 12 20.5 12"/></svg>`,
+        cat: 'Cardiovascular Care',
+        bg: '#fee2e2',
+        desc: 'Protects cardiac arteries from atherosclerosis, reduces inflammation, and regulates blood viscosity.',
+        rec: [
+          { item: 'Oats, Flaxseeds & Chia Seeds', why: 'Reduces plaque formation and improves blood flow' },
+          { item: 'Fatty Cold-Water Fish (Salmon, Mackerel)', why: 'EPA/DHA lowers incidence of fatal arrhythmias' },
+          { item: 'Dark Leafy Greens & Berries', why: 'Flavonoid polyphenols strengthen vascular endothelium' },
+          { item: 'Garlic & Walnuts', why: 'Inhibits platelet aggregation and arterial calcification' }
+        ],
+        limit: [
+          { item: 'Caffeine (Max 1-2 cups)', why: 'Avoid triggering tachycardia' },
+          { item: 'Salt (<4g/day)', why: 'Prevents cardiac preload volume overload' }
+        ],
+        avoid: [
+          { item: 'Trans-Fat Bakery Goods & Re-used Frying Oil', why: 'Direct cause of coronary artery stenosis' },
+          { item: 'Sausages, Salami & Bacon', why: 'High in nitrates, sodium, and saturated fats' },
+          { item: 'High-Sugar Pastries & Soft Drinks', why: 'Accelerates coronary inflammatory cascades' }
+        ],
+        precautions: 'Do not discontinue prescribed statins or antiplatelets without consulting your cardiologist.'
+      },
+      pcod: {
+        name: 'PCOD / PCOS (Hormonal Balance)',
+        icon: `<svg viewBox="0 0 24 24" width="24" height="24" stroke="#db2777" stroke-width="2" fill="none" style="display:inline-block; vertical-align:middle;"><circle cx="12" cy="9" r="6"/><path d="M12 15v7M9 19h6"/></svg>`,
+        cat: 'Endocrine & Metabolic',
+        bg: '#fce7f3',
+        desc: 'Reverses hyperinsulinemia, reduces systemic inflammation, and balances androgen levels.',
+        rec: [
+          { item: 'Spearmint Tea & Cinnamon Infusions', why: 'Clinically proven to reduce free testosterone levels' },
+          { item: 'Flaxseeds & Pumpkin Seeds', why: 'Lignans bind excess estrogens; zinc balances androgens' },
+          { item: 'Cruciferous Vegetables (Broccoli, Cauliflower)', why: 'Indole-3-carbinol aids hepatic hormone clearance' },
+          { item: 'Sprouts, Moong Dal & Chickpeas', why: 'Stabilizes insulin response' }
+        ],
+        limit: [
+          { item: 'Dairy (Milk / Cheese)', why: 'Some patients experience androgen stimulation from IGF-1 in dairy' },
+          { item: 'High Sugar Fruits (Mango, Grapes)', why: 'Trigger insulin spikes' }
+        ],
+        avoid: [
+          { item: 'Refined Flours (Maida, White Rice)', why: 'Exacerbates ovarian insulin resistance' },
+          { item: 'Sugary Desserts & Milk Chocolates', why: 'Drives belly fat accumulation and acne flares' },
+          { item: 'Excess Soy Isolate Powders', why: 'Can disrupt endocrine balance' }
+        ],
+        precautions: 'Strength training and regular sleep schedules are as vital as diet for hormonal reset.'
+      }
+    };
+
+    // Render Grid
+    function renderDiseaseGrid() {
+      const container = document.getElementById('disease-grid-container');
+      container.innerHTML = Object.keys(DISEASE_DATA).map(key => {
+        const d = DISEASE_DATA[key];
+        return `
+          <div class="disease-card" onclick="openFoodGuide('${key}')">
+            <div>
+              <div class="disease-icon-circle" style="background: ${d.bg};">${d.icon}</div>
+              <h3 class="disease-title">${d.name}</h3>
+              <span class="disease-category">${d.cat}</span>
+              <p class="disease-desc">${d.desc}</p>
+            </div>
+            <button class="btn btn-secondary btn-sm" style="width: 100%;">
+              View Full Food Guide →
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openFoodGuide(key) {
+      const d = DISEASE_DATA[key];
+      if (!d) return;
+
+      document.getElementById('guide-condition-title').innerHTML = `${d.icon} ${d.name}`;
+      document.getElementById('guide-condition-category').innerText = d.cat;
+
+      document.getElementById('rec-food-list').innerHTML = d.rec.map(f => `
+        <div class="food-item-pill">
+          <strong>${f.item}</strong>
+          <div style="font-size: 11px; color: #166534; margin-top: 3px;">💡 ${f.why}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('limit-food-list').innerHTML = d.limit.map(f => `
+        <div class="food-item-pill">
+          <strong>${f.item}</strong>
+          <div style="font-size: 11px; color: #92400e; margin-top: 3px;">⚠️ ${f.why}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('avoid-food-list').innerHTML = d.avoid.map(f => `
+        <div class="food-item-pill">
+          <strong>${f.item}</strong>
+          <div style="font-size: 11px; color: #991b1b; margin-top: 3px;">⛔ ${f.why}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('guide-precautions-text').innerText = d.precautions;
+
+      document.getElementById('detailed-guide-section').style.display = 'block';
+      document.getElementById('detailed-guide-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function closeFoodGuide() {
+      document.getElementById('detailed-guide-section').style.display = 'none';
+      document.getElementById('disease-selection-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Live Search
+    function checkFoodLive(e) {
+      if (e.key === 'Enter') checkFoodSearch();
+    }
+
+    function checkFoodSearch() {
+      const query = document.getElementById('food-search-input').value.trim().toLowerCase();
+      const condKey = document.getElementById('search-condition-select').value;
+      const d = DISEASE_DATA[condKey];
+      const box = document.getElementById('food-search-result-box');
+
+      if (!query) {
+        box.style.display = 'none';
+        return;
+      }
+
+      // Check recommended
+      const recMatch = d.rec.find(f => f.item.toLowerCase().includes(query));
+      const limitMatch = d.limit.find(f => f.item.toLowerCase().includes(query));
+      const avoidMatch = d.avoid.find(f => f.item.toLowerCase().includes(query));
+
+      box.style.display = 'block';
+
+      if (avoidMatch) {
+        box.innerHTML = `
+          <div style="background: #fef2f2; border: 1.5px solid #ef4444; border-radius: 12px; padding: 16px;">
+            <div style="font-size: 15px; font-weight: 700; color: #b91c1c;">🔴 AVOID for ${d.name}: ${avoidMatch.item}</div>
+            <div style="font-size: 13px; color: #7f1d1d; margin-top: 4px;"><strong>Clinical Risk:</strong> ${avoidMatch.why}</div>
+          </div>
+        `;
+      } else if (limitMatch) {
+        box.innerHTML = `
+          <div style="background: #fffbeb; border: 1.5px solid #f59e0b; border-radius: 12px; padding: 16px;">
+            <div style="font-size: 15px; font-weight: 700; color: #b45309;">🟡 LIMIT for ${d.name}: ${limitMatch.item}</div>
+            <div style="font-size: 13px; color: #78350f; margin-top: 4px;"><strong>Portion Guidance:</strong> ${limitMatch.why}</div>
+          </div>
+        `;
+      } else if (recMatch) {
+        box.innerHTML = `
+          <div style="background: #f0fdf4; border: 1.5px solid #22c55e; border-radius: 12px; padding: 16px;">
+            <div style="font-size: 15px; font-weight: 700; color: #15803d;">🟢 RECOMMENDED for ${d.name}: ${recMatch.item}</div>
+            <div style="font-size: 13px; color: #14532d; margin-top: 4px;"><strong>Health Benefit:</strong> ${recMatch.why}</div>
+          </div>
+        `;
+      } else {
+        box.innerHTML = `
+          <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 16px;">
+            <div style="font-size: 14px; font-weight: 600; color: #475569;">ℹ️ General Information for "${query}":</div>
+            <div style="font-size: 13px; color: #64748b; margin-top: 4px;">Not explicitly flagged as high-risk or therapeutic for ${d.name}. Always consume in normal portion sizes and check with your healthcare provider if experiencing digestive symptoms.</div>
+          </div>
+        `;
+      }
+    }
+
+    // Simplified 3-Card Dual Condition Comparison Engine
+    function runComparison() {
+      const c1Key = document.getElementById('compare-cond-1').value;
+      const c2Key = document.getElementById('compare-cond-2').value;
+      const d1 = DISEASE_DATA[c1Key];
+      const d2 = DISEASE_DATA[c2Key];
+
+      // Update Header
+      const headerEl = document.getElementById('compare-summary-heading');
+      if (headerEl) {
+        headerEl.innerHTML = `Combined Clinical Consensus: <strong>${d1.name}</strong> + <strong>${d2.name}</strong>`;
+      }
+
+      // Safe for Both Items
+      const safeItems = [
+        { name: 'Green Leafy Vegetables (Spinach, Methi, Bottle Gourd)', desc: 'Zero glycemic spike, virtually sodium-free, rich in vital micronutrients.' },
+        { name: 'Oats & Soluble Barley Fiber', desc: 'Soothes digestion, delays glucose absorption, and binds LDL cholesterol.' },
+        { name: 'Moong Dal & Light Lentil Soup', desc: 'Easily digestible clean plant protein with gentle metabolic load.' },
+        { name: 'Hydration (Fresh Water, Warm Infusions)', desc: 'Maintains optimal blood volume, kidney filtration, and electrolyte balance.' }
+      ];
+
+      // Strictly Prohibited for Both
+      const avoidItems = [
+        { name: 'Deep-Fried Snacks (Samosas, Pakoras, Vadas)', desc: 'Trans fatty acids trigger vascular inflammation and worsen insulin resistance.' },
+        { name: 'Added Refined Sugars & Carbonated Sodas', desc: 'Direct spike in triglycerides, blood glucose, and acid production.' },
+        { name: 'Processed Meats & Ultra-Salty Pickles', desc: 'Heavy sodium load constricts arteries and stresses nephrons.' },
+        { name: 'Refined Flours (Maida, White Bread)', desc: 'Deploys high-glycemic starch without protective fiber.' }
+      ];
+
+      // Identify Divergent / Conflicting items based on conditions
+      const divergences = [];
+
+      if ((c1Key === 'bp' && c2Key === 'kidney') || (c2Key === 'bp' && c1Key === 'kidney')) {
+        divergences.push({
+          food: 'Bananas & Coconut Water (High Potassium)',
+          c1: 'High BP: Highly recommended to lower vascular pressure.',
+          c2: 'Kidney Disease: Dangerous! Impaired kidneys cannot clear potassium (Hyperkalemia risk).',
+          rule: 'Strictly avoid high-potassium foods when kidney function is compromised.'
+        });
+      }
+
+      if ((c1Key === 'gerd' || c2Key === 'gerd') && (c1Key === 'heart' || c2Key === 'heart' || c1Key === 'diabetes' || c2Key === 'diabetes')) {
+        divergences.push({
+          food: 'Citrus Fruits & Raw Tomatoes',
+          c1: 'Heart/Diabetes: Rich in protective flavonoids and Vitamin C.',
+          c2: 'GERD: Strongly triggers gastric acid production and esophageal burning.',
+          rule: 'Avoid raw citrus/tomatoes during reflux flares; substitute with sweet papaya or cooked pumpkin.'
+        });
+      }
+
+      if ((c1Key === 'thyroid' || c2Key === 'thyroid') && (c1Key === 'diabetes' || c2Key === 'diabetes')) {
+        divergences.push({
+          food: 'Cruciferous Greens (Raw Cabbage, Cauliflower, Broccoli)',
+          c1: 'Diabetes: Superb low-calorie, low-glycemic dietary bulk.',
+          c2: 'Thyroid: Raw form contains goitrogens that block iodine uptake.',
+          rule: 'Always cook or steam cruciferous veggies thoroughly; never consume in raw smoothies.'
+        });
+      }
+
+      if ((c1Key === 'kidney' || c2Key === 'kidney') && (c1Key === 'diabetes' || c2Key === 'diabetes' || c1Key === 'fatty_liver' || c2Key === 'fatty_liver')) {
+        divergences.push({
+          food: 'High Protein Lentils & Paneer / Tofu',
+          c1: 'Diabetes / Fatty Liver: High protein recommended to spare carbohydrates and repair liver.',
+          c2: 'Kidney Disease: Protein breakdown produces nitrogenous waste that taxes glomeruli.',
+          rule: 'Cap total protein at physician-prescribed levels (typically 0.6–0.8g/kg body weight).'
+        });
+      }
+
+      // Default divergence if none triggered
+      if (divergences.length === 0) {
+        divergences.push({
+          food: 'Whole Grains & Coarse Millet Rotis',
+          c1: `${d1.name}: Beneficial complex carbohydrates.`,
+          c2: `${d2.name}: Requires portion control to prevent caloric or mineral overload.`,
+          rule: 'Consume in controlled portion sizes (1 to 2 small rotis maximum per meal).'
+        });
+      }
+
+      // Render Safe List
+      const safeListEl = document.getElementById('compare-safe-list');
+      if (safeListEl) {
+        safeListEl.innerHTML = safeItems.map(item => `
+          <li style="background: #f0fdf4; border-radius: 10px; padding: 12px 14px; border-left: 4px solid #22c55e;">
+            <div style="font-weight: 700; font-size: 13.5px; color: #166534;">✅ ${item.name}</div>
+            <div style="font-size: 12px; color: #15803d; margin-top: 3px;">${item.desc}</div>
+          </li>
+        `).join('');
+      }
+
+      // Render Avoid List
+      const avoidListEl = document.getElementById('compare-avoid-list');
+      if (avoidListEl) {
+        avoidListEl.innerHTML = avoidItems.map(item => `
+          <li style="background: #fef2f2; border-radius: 10px; padding: 12px 14px; border-left: 4px solid #ef4444;">
+            <div style="font-weight: 700; font-size: 13.5px; color: #991b1b;">🚫 ${item.name}</div>
+            <div style="font-size: 12px; color: #b91c1c; margin-top: 3px;">${item.desc}</div>
+          </li>
+        `).join('');
+      }
+
+      // Render Divergence List
+      const divListEl = document.getElementById('compare-divergence-list');
+      if (divListEl) {
+        divListEl.innerHTML = divergences.map(div => `
+          <li style="background: #fffbeb; border-radius: 10px; padding: 12px 14px; border-left: 4px solid #f59e0b;">
+            <div style="font-weight: 700; font-size: 13.5px; color: #854d0e;">⚠️ ${div.food}</div>
+            <div style="font-size: 12px; color: #78350f; margin-top: 4px; line-height: 1.4;">
+              • <em>${div.c1}</em><br>
+              • <em>${div.c2}</em>
+            </div>
+            <div style="font-size: 12px; font-weight: 700; color: #92400e; margin-top: 6px; background: #fef3c7; padding: 5px 8px; border-radius: 6px;">
+              ⚖️ Clinical Consensus: ${div.rule}
+            </div>
+          </li>
+        `).join('');
+      }
+    }
+
+    // Init
+    window.addEventListener('DOMContentLoaded', () => {
+      renderDiseaseGrid();
+      runComparison();
+      const userStr = localStorage.getItem('carenest_user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          document.getElementById('user-name-display').innerText = user.name || 'User';
+          const initials = user.name ? user.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase() : 'SK';
+          document.querySelector('.user-avatar-circle').innerText = initials;
+        } catch(e) {}
+      }
+    });
+  </script>
+</body>
+</html>

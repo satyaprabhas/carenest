@@ -1,0 +1,4268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discharge Summary Assistant - CareNest</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Portal Specific Theme Extensions */
+    :root {
+      --topbar-height: 72px;
+      --tab-nav-height: 58px;
+    }
+
+    body {
+      background-color: #f4f7f9;
+      color: #1e293b;
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Portal Top Bar */
+    .portal-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #ffffff;
+      height: var(--topbar-height);
+      border-bottom: 1px solid #e2e8f0;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .back-dashboard-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--color-primary);
+      background: var(--color-primary-soft);
+      padding: 9px 16px;
+      border-radius: var(--radius-md);
+      transition: all 0.2s ease;
+      text-decoration: none;
+      border: 1px solid rgba(13, 115, 119, 0.15);
+    }
+
+    .back-dashboard-btn:hover {
+      background: #ccebe8;
+      color: var(--color-primary-dark);
+      transform: translateX(-2px);
+    }
+
+    .topbar-center {
+      text-align: center;
+    }
+
+    .portal-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .portal-subtitle {
+      font-size: 0.76rem;
+      color: var(--color-text-muted);
+      font-weight: 500;
+      margin-top: 1px;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .lang-select-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .lang-select {
+      appearance: none;
+      background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%230d7377' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 12px center;
+      border: 1px solid #cbd5e1;
+      padding: 8px 34px 8px 14px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      color: #334155;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .lang-select:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px var(--color-primary-soft);
+    }
+
+    .user-avatar-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 5px 12px 5px 6px;
+      background: #f1f5f9;
+      border-radius: var(--radius-full);
+      border: 1px solid #e2e8f0;
+      cursor: default;
+    }
+
+    .avatar-circle {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0d7377, #14919b);
+      color: white;
+      font-weight: 700;
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(13, 115, 119, 0.25);
+    }
+
+    .user-name-small {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #1e293b;
+      line-height: 1.1;
+    }
+
+    .user-role-small {
+      font-size: 0.7rem;
+      color: #64748b;
+    }
+
+    /* Disclaimer Sub-Bar */
+    .portal-disclaimer-bar {
+      background: #e6f4f1;
+      border-bottom: 1px solid #cce8e2;
+      padding: 8px 24px;
+      font-size: 0.82rem;
+      color: #085356;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-align: center;
+    }
+
+    .portal-disclaimer-bar strong {
+      font-weight: 700;
+    }
+
+    /* Master-Detail Layout (Vertical Options Sidebar + Content Canvas) */
+    .discharge-master-layout {
+      display: flex;
+      gap: 28px;
+      max-width: 1540px;
+      width: calc(100% - 32px);
+      margin: 24px auto 60px auto;
+      align-items: flex-start;
+    }
+
+    /* Vertical Sidebar Navigation */
+    .vertical-sidebar-nav {
+      width: 300px;
+      flex-shrink: 0;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 16px;
+      position: sticky;
+      top: 20px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+      z-index: 10;
+    }
+
+    .vertical-nav-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px 14px 10px;
+      border-bottom: 1px solid #f1f5f9;
+      margin-bottom: 12px;
+    }
+
+    .vertical-nav-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #94a3b8;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .vertical-nav-pill {
+      font-size: 11px;
+      font-weight: 700;
+      color: #0d7377;
+      background: #e6f4f1;
+      padding: 3px 8px;
+      border-radius: 10px;
+    }
+
+    .vertical-nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .vertical-tab-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1.5px solid transparent;
+      background: transparent;
+      color: #475569;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .vertical-tab-btn:hover {
+      background: #f8fafc;
+      color: #0d7377;
+      border-color: #e2e8f0;
+      transform: translateX(3px);
+    }
+
+    .vertical-tab-btn.active {
+      background: #e6f4f1;
+      border-color: #0d7377;
+      color: #085356;
+      box-shadow: 0 2px 8px rgba(13, 115, 119, 0.12);
+    }
+
+    .tab-btn-icon-wrap {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #475569;
+      transition: all 0.2s ease;
+    }
+
+    .vertical-tab-btn.active .tab-btn-icon-wrap {
+      background: #0d7377;
+      color: #ffffff;
+    }
+
+    .tab-btn-text-wrap {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      min-width: 0;
+    }
+
+    .tab-main-label {
+      font-size: 13.5px;
+      font-weight: 700;
+      line-height: 1.25;
+      color: #1e293b;
+    }
+
+    .vertical-tab-btn.active .tab-main-label {
+      color: #085356;
+    }
+
+    .tab-sub-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    .vertical-tab-btn.active .tab-sub-label {
+      color: #0d7377;
+    }
+
+    .tab-badge {
+      font-size: 0.72rem;
+      padding: 2px 7px;
+      border-radius: 12px;
+      background: #f1f5f9;
+      color: #475569;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .vertical-tab-btn.active .tab-badge {
+      background: #0d7377;
+      color: #ffffff;
+    }
+
+    /* Right Main Content Area */
+    .discharge-content-pane {
+      flex: 1;
+      min-width: 0;
+      width: 100%;
+    }
+
+    @media (max-width: 1024px) {
+      .discharge-master-layout {
+        flex-direction: column;
+      }
+      .vertical-sidebar-nav {
+        width: 100%;
+        position: static;
+      }
+      .vertical-nav-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+    }
+
+    .tab-pane {
+      display: none;
+      animation: fadeIn 0.25s ease forwards;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Common Card Styles */
+    .content-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      padding: 26px;
+      margin-bottom: 24px;
+    }
+
+    .card-header-flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .card-title-group h2, .card-title-group h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-desc {
+      color: #64748b;
+      font-size: 0.88rem;
+      margin-top: 3px;
+    }
+
+    /* Source Tags */
+    .source-tag {
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .source-summary {
+      background: #e0f2f1;
+      color: #00695c;
+      border: 1px solid #b2dfdb;
+    }
+
+    .source-general {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+    }
+
+    /* TAB 1: Upload & Summary Styles */
+    .upload-zone-wrapper {
+      border: 2px dashed #99c2c4;
+      background: #f8fbfb;
+      border-radius: var(--radius-lg);
+      padding: 42px 24px;
+      text-align: center;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .upload-zone-wrapper:hover, .upload-zone-wrapper.dragover {
+      border-color: var(--color-primary);
+      background: #eef8f8;
+      box-shadow: 0 4px 14px rgba(13, 115, 119, 0.1);
+    }
+
+    .upload-icon-circle {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: var(--color-primary-soft);
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px auto;
+      font-size: 2rem;
+    }
+
+    .upload-main-text {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 6px;
+    }
+
+    .upload-sub-text {
+      font-size: 0.86rem;
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+
+    .upload-actions-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    /* File Status Card */
+    .file-status-card {
+      margin-top: 20px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .file-info-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .file-icon {
+      font-size: 2rem;
+    }
+
+    .file-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #0f172a;
+    }
+
+    .file-meta {
+      font-size: 0.8rem;
+      color: #64748b;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .progress-bar-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #0d7377, #4caf50);
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-top: 6px;
+      display: none;
+    }
+
+    .upload-error-alert {
+      display: none;
+      margin-top: 16px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Patient Overview Hero Banner */
+    .patient-hero-banner {
+      background: linear-gradient(135deg, #0d7377 0%, #085356 100%);
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 20px rgba(13, 115, 119, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .patient-hero-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-stat-item {
+      border-left: 3px solid rgba(255, 255, 255, 0.3);
+      padding-left: 14px;
+    }
+
+    .hero-stat-label {
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #b2dfdb;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .hero-stat-val {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    /* Extracted Summary Section Grid */
+    .summary-sections-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 20px;
+    }
+
+    .summary-section-box {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .summary-section-box:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      border-color: #cbd5e1;
+    }
+
+    .section-box-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .section-box-header h4 {
+      font-size: 1rem;
+      color: #0f172a;
+      font-weight: 700;
+    }
+
+    .section-box-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .summary-content-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.88rem;
+      color: #334155;
+    }
+
+    .summary-content-list li {
+      position: relative;
+      padding-left: 18px;
+      line-height: 1.45;
+    }
+
+    .summary-content-list li::before {
+      content: "•";
+      position: absolute;
+      left: 4px;
+      color: var(--color-primary);
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    /* TAB 2: Care Plan Accordions */
+    .accordion-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .accordion-item {
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-md);
+      margin-bottom: 14px;
+      background: #ffffff;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      transition: all 0.2s ease;
+    }
+
+    .accordion-item.open {
+      border-color: var(--color-primary-light);
+      box-shadow: 0 4px 14px rgba(13, 115, 119, 0.08);
+    }
+
+    .accordion-header {
+      width: 100%;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #ffffff;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.2s;
+    }
+
+    .accordion-header:hover {
+      background: #f8fafc;
+    }
+
+    .accordion-item.open .accordion-header {
+      background: #f0fdf4;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .accordion-title-flex {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .accordion-icon-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      background: var(--color-primary-soft);
+      color: var(--color-primary);
+    }
+
+    .accordion-title-text {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .accordion-subtitle {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    .accordion-arrow {
+      font-size: 1.1rem;
+      color: #94a3b8;
+      transition: transform 0.25s ease;
+    }
+
+    .accordion-item.open .accordion-arrow {
+      transform: rotate(180deg);
+      color: var(--color-primary);
+    }
+
+    .accordion-body {
+      padding: 22px;
+      display: none;
+      background: #ffffff;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .accordion-item.open .accordion-body {
+      display: block;
+    }
+
+    .simplified-explanation {
+      font-size: 0.95rem;
+      color: #1e293b;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .original-text-toggle-btn {
+      font-size: 0.8rem;
+      color: var(--color-primary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      text-decoration: underline;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 0;
+    }
+
+    .original-text-panel {
+      display: none;
+      margin-top: 12px;
+      padding: 14px 18px;
+      background: #f8fafc;
+      border-left: 3px solid #64748b;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-family: monospace;
+      font-size: 0.83rem;
+      color: #334155;
+      line-height: 1.5;
+    }
+
+    .original-text-panel.open {
+      display: block;
+    }
+
+    /* Protocol Steps */
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: #f8fafc;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid #edf2f7;
+    }
+
+    .step-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      color: white;
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-details strong {
+      color: #0f172a;
+      display: block;
+      margin-bottom: 2px;
+      font-size: 0.92rem;
+    }
+
+    .step-details p {
+      color: #475569;
+      font-size: 0.86rem;
+      margin: 0;
+    }
+
+    /* TAB 3: Medicine Schedule */
+    .timeline-period-block {
+      margin-bottom: 28px;
+    }
+
+    .timeline-period-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #e2e8f0;
+      margin-bottom: 16px;
+    }
+
+    .period-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .period-time-badge {
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    .med-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 16px;
+    }
+
+    .med-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-md);
+      padding: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .med-card:hover {
+      border-color: #cbd5e1;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+    }
+
+    .med-card.checked {
+      background: #f0fdf4;
+      border-color: #86efac;
+      opacity: 0.85;
+    }
+
+    .med-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .med-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.25;
+    }
+
+    .med-dose {
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-top: 2px;
+    }
+
+    .food-relation-pill {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    .pill-before-food {
+      background: #fff7ed;
+      color: #c2410c;
+      border: 1px solid #fed7aa;
+    }
+
+    .pill-after-food {
+      background: #f0fdf4;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+
+    .pill-bedtime {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+
+    .med-details-list {
+      font-size: 0.82rem;
+      color: #475569;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+
+    .med-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 12px;
+      border-top: 1px solid #f1f5f9;
+      margin-top: 8px;
+    }
+
+    .badge-needs-confirmation {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .mark-taken-btn {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      padding: 5px 10px;
+      border-radius: var(--radius-md);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #475569;
+      transition: all 0.2s;
+    }
+
+    .mark-taken-btn:hover {
+      border-color: var(--color-green);
+      color: var(--color-green-dark);
+      background: var(--color-green-light);
+    }
+
+    .med-card.checked .mark-taken-btn {
+      background: var(--color-green);
+      color: white;
+      border-color: var(--color-green);
+    }
+
+    /* TAB 4: Diet Plan */
+    .diet-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .diet-card-group {
+      border-radius: var(--radius-md);
+      padding: 20px;
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+    }
+
+    .diet-group-recommended {
+      border-top: 4px solid var(--color-green);
+    }
+
+    .diet-group-avoid {
+      border-top: 4px solid var(--color-red);
+    }
+
+    .diet-group-limit {
+      border-top: 4px solid #f59e0b;
+    }
+
+    .diet-group-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .diet-group-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .diet-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .diet-item-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 10px;
+      background: #f8fafc;
+      border-radius: var(--radius-sm);
+    }
+
+    .diet-item-info strong {
+      font-size: 0.9rem;
+      color: #0f172a;
+      display: block;
+    }
+
+    .diet-item-info span {
+      font-size: 0.78rem;
+      color: #64748b;
+    }
+
+    /* Meal Plan Table */
+    .meal-suggestion-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+    }
+
+    .meal-suggestion-table th, .meal-suggestion-table td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 0.88rem;
+    }
+
+    .meal-suggestion-table th {
+      background: #f8fafc;
+      color: #475569;
+      font-weight: 700;
+    }
+
+    .meal-suggestion-table tr:hover td {
+      background: #fafcfc;
+    }
+
+    /* TAB 5: Can I Eat This? */
+    .food-search-box-wrapper {
+      max-width: 680px;
+      margin: 0 auto 28px auto;
+      text-align: center;
+    }
+
+    .food-input-group {
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: var(--radius-full);
+      padding: 6px 8px 6px 20px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .food-input-group:focus-within {
+      border-color: var(--color-primary);
+      box-shadow: 0 4px 18px rgba(13, 115, 119, 0.15);
+    }
+
+    .food-search-input {
+      border: none;
+      background: transparent;
+      width: 100%;
+      font-size: 1rem;
+      color: #0f172a;
+      outline: none;
+    }
+
+    .food-quick-tags {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .food-tag-pill {
+      font-size: 0.8rem;
+      padding: 5px 12px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: var(--radius-full);
+      color: #475569;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .food-tag-pill:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      background: var(--color-primary-soft);
+    }
+
+    /* Food Result Display Card */
+    .food-search-result-container {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .food-result-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      border: 2px solid #e2e8f0;
+      padding: 28px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .food-result-card.status-allowed {
+      border-color: #86efac;
+      background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 40%);
+    }
+
+    .food-result-card.status-avoid {
+      border-color: #fca5a5;
+      background: linear-gradient(180deg, #fef2f2 0%, #ffffff 40%);
+    }
+
+    .food-result-card.status-limited {
+      border-color: #fde68a;
+      background: linear-gradient(180deg, #fffbeb 0%, #ffffff 40%);
+    }
+
+    .result-status-icon {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      margin: 0 auto 16px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+    }
+
+    .icon-allowed { background: #dcfce7; color: #16a34a; }
+    .icon-avoid { background: #fee2e2; color: #dc2626; }
+    .icon-limited { background: #fef3c7; color: #d97706; }
+
+    .result-food-name {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #0f172a;
+      text-transform: capitalize;
+    }
+
+    .result-status-badge {
+      display: inline-block;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 6px 16px;
+      border-radius: var(--radius-full);
+      margin: 10px 0 16px 0;
+    }
+
+    .result-badge-allowed { background: #22c55e; color: white; }
+    .result-badge-avoid { background: #ef4444; color: white; }
+    .result-badge-limited { background: #f59e0b; color: white; }
+
+    .result-explanation-text {
+      font-size: 1rem;
+      color: #334155;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      max-width: 620px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .food-all-table {
+      margin-top: 36px;
+      background: #ffffff;
+      border-radius: var(--radius-md);
+      border: 1px solid #e2e8f0;
+      overflow: hidden;
+    }
+
+    /* TAB 6: Follow-up & Recovery */
+    .appointment-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .appointment-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+      position: relative;
+      border-left: 5px solid var(--color-primary);
+    }
+
+    .appointment-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .appointment-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .appointment-doctor {
+      font-size: 0.86rem;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    .countdown-pill {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .appointment-details {
+      font-size: 0.88rem;
+      color: #334155;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .activity-restriction-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .restriction-box {
+      padding: 16px;
+      border-radius: var(--radius-md);
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .restriction-icon {
+      font-size: 1.4rem;
+    }
+
+    /* Recovery Visual Roadmap */
+    .timeline-milestones {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+      margin-top: 20px;
+      padding-left: 28px;
+    }
+
+    .timeline-milestones::before {
+      content: "";
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      bottom: 10px;
+      width: 2px;
+      background: #cbd5e1;
+    }
+
+    .milestone-item {
+      position: relative;
+    }
+
+    .milestone-item::before {
+      content: "";
+      position: absolute;
+      left: -23px;
+      top: 4px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 0 2px var(--color-primary-light);
+    }
+
+    .milestone-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #0f172a;
+    }
+
+    .milestone-desc {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    /* TAB 7: Warning Signs */
+    .warning-signs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .warning-sign-card {
+      background: #ffffff;
+      border: 1px solid #fecaca;
+      border-left: 6px solid #dc2626;
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      box-shadow: 0 4px 10px rgba(220, 38, 38, 0.05);
+      transition: transform 0.2s;
+    }
+
+    .warning-sign-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(220, 38, 38, 0.1);
+    }
+
+    .warning-card-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .warning-icon {
+      font-size: 1.5rem;
+    }
+
+    .warning-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #991b1b;
+    }
+
+    .warning-desc {
+      font-size: 0.88rem;
+      color: #4b5563;
+      line-height: 1.45;
+      margin-bottom: 10px;
+    }
+
+    /* Emergency Contacts Hub */
+    .emergency-hub-banner {
+      background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: 0 6px 18px rgba(153, 27, 27, 0.25);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      align-items: center;
+    }
+
+    .emergency-call-card {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      text-align: center;
+    }
+
+    .emergency-number {
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: #ffffff;
+      margin: 4px 0;
+    }
+
+    .emergency-title {
+      font-size: 0.82rem;
+      color: #fca5a5;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* Print Care Sheet Specific Hidden Template */
+    #printableCareSheet {
+      display: none;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printableCareSheet, #printableCareSheet * {
+        visibility: visible;
+      }
+      #printableCareSheet {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        display: block !important;
+        background: white;
+        color: black;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+      }
+      .portal-topbar, .tab-nav-container, .portal-disclaimer-bar, .portal-content-body {
+        display: none !important;
+      }
+      .print-page-break {
+        page-break-after: always;
+      }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 900px) {
+      .portal-topbar {
+        padding: 0 16px;
+      }
+      .portal-title {
+        font-size: 1.1rem;
+      }
+      .user-name-small, .user-role-small {
+        display: none;
+      }
+      .tabs-wrapper {
+        padding: 0 12px;
+      }
+      .portal-content-body {
+        padding: 18px 14px 50px 14px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .portal-topbar {
+        flex-direction: column;
+        height: auto;
+        padding: 12px 14px;
+        gap: 10px;
+      }
+      .topbar-left, .topbar-center, .topbar-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .tab-nav-container {
+        top: 0;
+      }
+      .summary-sections-grid, .med-cards-grid, .diet-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PORTAL TOP BAR -->
+  <header class="portal-topbar" role="banner">
+    <div class="topbar-left">
+      <a href="dashboard.html" class="back-dashboard-btn" id="backDashboardBtn" title="Return to CareNest Main Dashboard">
+        <span>←</span>
+        <span data-i18n="back_to_dashboard">Back to Dashboard</span>
+      </a>
+    </div>
+
+    <div class="topbar-center">
+      <h1 class="portal-title">
+        <span>📋</span>
+        <span data-i18n="portal_title">Discharge Summary Assistant</span>
+      </h1>
+      <div class="portal-subtitle" data-i18n="portal_subtitle">AI Clinical Document Decoder & Post-Discharge Navigator</div>
+    </div>
+
+    <div class="topbar-right">
+      <div class="lang-select-wrapper" title="Change Language / భాష మార్చండి / भाषा बदलें / மொழியை மாற்றவும்">
+        <select id="languageSelect" class="lang-select" aria-label="Select Language">
+          <option value="en">English</option>
+          <option value="te">తెలుగు (Telugu)</option>
+          <option value="hi">हिन्दी (Hindi)</option>
+          <option value="ta">தமிழ் (Tamil)</option>
+        </select>
+      </div>
+
+      <button id="downloadCareSheetBtn" class="btn btn-primary" title="Generate and print comprehensive Care Sheet">
+        <span>🖨️</span>
+        <span data-i18n="download_care_sheet">Download Care Sheet</span>
+      </button>
+
+      <div class="user-avatar-pill" id="userProfilePill" title="Logged in patient">
+        <div class="avatar-circle" id="userAvatarText">RK</div>
+        <div>
+          <div class="user-name-small" id="userNameSmall">Rajesh Kumar</div>
+          <div class="user-role-small" id="userRoleSmall">Patient #CN-88421</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Reference Disclaimer Notice -->
+  <div class="portal-disclaimer-bar">
+    <span>ℹ️</span>
+    <span data-i18n="disclaimer_text">
+      <strong>Important Reference Notice:</strong> This summary assistant is designed to simplify your hospital discharge records. Translation & interpretations are for reference only. Always adhere strictly to your attending physician's printed advice.
+    </span>
+  </div>
+
+  <!-- DISCHARGE ASSISTANT MASTER LAYOUT (Vertical Navigation + Content Canvas) -->
+  <div class="discharge-master-layout">
+    <!-- Left: Vertical Sidebar Navigation -->
+    <aside class="vertical-sidebar-nav" aria-label="Discharge Assistant Options">
+      <div class="vertical-nav-header">
+        <span class="vertical-nav-title">ASSISTANT MODULES</span>
+        <span class="vertical-nav-pill">7 Options</span>
+      </div>
+      <div class="vertical-nav-list" role="tablist">
+        <button class="portal-tab-btn vertical-tab-btn active" data-tab="tab-upload" role="tab" aria-selected="true" id="navTabUpload">
+          <div class="tab-btn-icon-wrap">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
+          <div class="tab-btn-text-wrap">
+            <span class="tab-main-label" data-i18n="tab_upload">Upload & Summary</span>
+            <span class="tab-sub-label">OCR & document scan</span>
+          </div>
+        </button>
+
+        <button class="portal-tab-btn vertical-tab-btn" data-tab="tab-careplan" role="tab" aria-selected="false" id="navTabCareplan">
+          <div class="tab-btn-icon-wrap">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg>
+          </div>
+          <div class="tab-btn-text-wrap">
+            <span class="tab-main-label" data-i18n="tab_careplan">My Care Plan</span>
+            <span class="tab-sub-label">Diagnosis & recovery guide</span>
+          </div>
+          <span class="tab-badge">6</span>
+        </button>
+
+        <button class="portal-tab-btn vertical-tab-btn" data-tab="tab-medicine" role="tab" aria-selected="false" id="navTabMedicine">
+          <div class="tab-btn-icon-wrap">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="tab-btn-text-wrap">
+            <span class="tab-main-label" data-i18n="tab_medicine">Medicine Schedule</span>
+            <span class="tab-sub-label">Dosing & dayparts</span>
+          </div>
+          <span class="tab-badge">6 Meds</span>
+        </button>
+
+        <button class="portal-tab-btn vertical-tab-btn" data-tab="tab-diet" role="tab" aria-selected="false" id="navTabDiet">
+          <div class="tab-btn-icon-wrap">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 21a9 9 0 0 0 9-9H3a9 9 0 0 0 9 9Z"/><path d="M7 12V8a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="tab-btn-text-wrap">
+            <span class="tab-main-label" data-i18n="tab_diet">Diet Plan</span>
+            <span class="tab-sub-label">Recommended & restrictions</span>
+          </div>
+        </button>
+
+        <button class="portal-tab-btn vertical-tab-btn" data-tab="tab-food-checker" role="tab" aria-selected="false" id="navTabFoodChecker">
+          <div class="tab-btn-icon-wrap">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"/><path d="M10 2c1 .5 2 2 2 5"/></svg>
+          </div>
+          <div class="tab-btn-text-wrap">
+            <span class="tab-main-label" data-i18n="tab_can_i_eat">Can I Eat This?</span>
+            <span class="tab-sub-label">Instant food safety search</span>
+          </div>
+        </button>
+
+        <button class="portal-tab-btn vertical-tab-btn" data-tab="tab-recovery" role="tab" aria-selected="false" id="navTabRecovery">
+          <div class="tab-btn-icon-wrap">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div class="tab-btn-text-wrap">
+            <span class="tab-main-label" data-i18n="tab_recovery">Follow-up & Recovery</span>
+            <span class="tab-sub-label">Doctor visit countdowns</span>
+          </div>
+          <span class="tab-badge" style="background:#fee2e2; color:#b91c1c;">2 Visits</span>
+        </button>
+
+        <button class="portal-tab-btn vertical-tab-btn" data-tab="tab-warnings" role="tab" aria-selected="false" id="navTabWarnings">
+          <div class="tab-btn-icon-wrap">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="tab-btn-text-wrap">
+            <span class="tab-main-label" data-i18n="tab_warnings">Warning Signs</span>
+            <span class="tab-sub-label">Red flag symptoms & ER</span>
+          </div>
+          <span class="tab-badge" style="background:#dc2626; color:white;">Urgent</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Right: Main Content Canvas -->
+    <main class="discharge-content-pane">
+
+    <!-- ========================================== -->
+    <!-- TAB 1: UPLOAD & SUMMARY                    -->
+    <!-- ========================================== -->
+    <section id="tab-upload" class="tab-pane active" role="tabpanel">
+      <!-- Upload Zone Card -->
+      <div class="content-card">
+        <div class="card-header-flex">
+          <div class="card-title-group">
+            <h2 data-i18n="upload_card_title" style="display:flex; align-items:center; gap:8px;">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#0d7377" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Upload Discharge Summary
+            </h2>
+            <div class="card-desc" data-i18n="upload_card_desc">Upload your hospital discharge summary (PDF or image). Our clinical engine will extract key medications, diet, and wound care instructions.</div>
+          </div>
+          <div>
+            <button id="btnTrySampleSummary" class="btn btn-outline" style="border-color:#0d7377; color:#0d7377; font-weight:700;">
+              <span>✨</span>
+              <span data-i18n="try_sample_btn">Try Sample Summary</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Drag & Drop Zone -->
+        <div class="upload-zone-wrapper" id="dropZone" style="padding: 36px 20px;">
+          <input type="file" id="fileUploadInput" accept=".pdf, .jpg, .jpeg, .png" style="display:none;" />
+          <div class="upload-icon-circle" style="width: 60px; height: 60px; background: #e6f4f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px;">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#0d7377" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+          </div>
+          <div class="upload-main-text" data-i18n="drag_drop_text" style="font-size: 16px; font-weight: 700; color: #0d7377;">Drag and drop your Discharge Summary here</div>
+          <div class="upload-sub-text" data-i18n="supported_formats">Supported formats: PDF, JPG, JPEG, PNG (Max file size: 10 MB)</div>
+          
+          <div class="upload-actions-bar">
+            <button type="button" class="btn btn-primary" id="btnBrowseFiles">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+              <span data-i18n="browse_files_btn">Browse Files</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- File Upload Status / Progress -->
+        <div class="file-status-card" id="fileStatusCard">
+          <div class="file-info-group">
+            <div class="file-icon" id="fileIconDisplay">📄</div>
+            <div>
+              <div class="file-name" id="fileNameDisplay">Discharge_Summary_CityGen.pdf</div>
+              <div class="file-meta" id="fileMetaDisplay">2.4 MB • Ready to analyze</div>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span class="badge badge-teal" id="fileStatusBadge">Uploaded</span>
+            <button class="btn btn-secondary" id="btnRemoveFile" style="padding:6px 12px; font-size:0.8rem; color:#dc2626;" title="Remove this file">
+              <span>🗑️</span>
+              <span data-i18n="remove_file">Remove</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Simulated Progress Bar -->
+        <div class="progress-bar-container" id="uploadProgressBarContainer">
+          <div class="progress-bar-fill" id="uploadProgressBarFill"></div>
+        </div>
+        <div class="progress-text" id="uploadProgressText">Extracting medical entities (0%)...</div>
+
+        <!-- Validation Error Message -->
+        <div class="upload-error-alert" id="uploadErrorAlert">
+          <span>⚠️</span>
+          <span id="uploadErrorMsg">Invalid file type or size exceeded. Please choose a valid PDF, JPG, or PNG up to 10MB.</span>
+        </div>
+      </div>
+
+      <!-- ACTIVE EXTRACTED SUMMARY DISPLAY -->
+      <div id="summaryResultsContainer">
+        <!-- Patient Banner -->
+        <div class="patient-hero-banner">
+          <div class="patient-hero-grid">
+            <div class="hero-stat-item">
+              <div class="hero-stat-label" data-i18n="patient_label">Patient Name & Demographics</div>
+              <div class="hero-stat-val" id="patientNameField">Rajesh Kumar, 45, Male</div>
+            </div>
+            <div class="hero-stat-item">
+              <div class="hero-stat-label" data-i18n="hospital_label">Treating Hospital</div>
+              <div class="hero-stat-val" id="hospitalNameField">City General Hospital</div>
+            </div>
+            <div class="hero-stat-item">
+              <div class="hero-stat-label" data-i18n="stay_dates_label">Admission & Discharge Dates</div>
+              <div class="hero-stat-val" id="datesField">Oct 5, 2026 → Oct 12, 2026 (7 Days)</div>
+            </div>
+            <div class="hero-stat-item">
+              <div class="hero-stat-label" data-i18n="diagnosis_label">Primary Clinical Diagnosis</div>
+              <div class="hero-stat-val" id="diagnosisField">Type 2 DM with Diabetic Foot Ulcer (Right Foot)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Jump Buttons to Sections -->
+        <div style="display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap;">
+          <button class="btn btn-secondary" onclick="switchPortalTab('tab-careplan')" style="font-size:0.88rem;">
+            <span>🩺</span> <span data-i18n="quick_care_plan">Open My Care Plan</span>
+          </button>
+          <button class="btn btn-secondary" onclick="switchPortalTab('tab-medicine')" style="font-size:0.88rem;">
+            <span>⏰</span> <span data-i18n="quick_meds">View 6 Scheduled Medicines</span>
+          </button>
+          <button class="btn btn-secondary" onclick="switchPortalTab('tab-diet')" style="font-size:0.88rem;">
+            <span>🥗</span> <span data-i18n="quick_diet">Diabetic Diet Guidelines</span>
+          </button>
+          <button class="btn btn-secondary" onclick="switchPortalTab('tab-warnings')" style="font-size:0.88rem; color:#dc2626;">
+            <span>⚠️</span> <span data-i18n="quick_warnings">Review Red-Flag Warning Signs</span>
+          </button>
+        </div>
+
+        <!-- Extracted Structured Highlights Grid -->
+        <div class="summary-sections-grid">
+          <!-- Inpatient Treatment -->
+          <div class="summary-section-box">
+            <div class="section-box-header">
+              <div class="section-box-icon" style="background:#e0f2f1; color:#0d7377;">🏥</div>
+              <div>
+                <h4 data-i18n="sec_inpatient_treatment">Inpatient Treatment Rendered</h4>
+                <span class="source-tag source-summary">From Discharge Summary</span>
+              </div>
+            </div>
+            <ul class="summary-content-list">
+              <li><strong>IV Antibiotics:</strong> Piperacillin-Tazobactam administered for 5 full days to combat deep soft-tissue infection.</li>
+              <li><strong>Basal Insulin:</strong> Insulin Glargine 20 units initiated at bedtime for glycemic stabilization.</li>
+              <li><strong>Surgical Intervention:</strong> Wound debridement of right foot ulcer to remove non-viable necrotic tissue.</li>
+              <li><strong>In-Hospital Monitoring:</strong> Blood glucose monitored every 6 hours (q6h) with titration.</li>
+            </ul>
+          </div>
+
+          <!-- Discharge Medications Summary -->
+          <div class="summary-section-box">
+            <div class="section-box-header">
+              <div class="section-box-icon" style="background:#e3f2fd; color:#0288d1;">💊</div>
+              <div>
+                <h4 data-i18n="sec_meds_summary">Discharge Medications (6 Prescribed)</h4>
+                <span class="source-tag source-summary">From Discharge Summary</span>
+              </div>
+            </div>
+            <ul class="summary-content-list">
+              <li><strong>Metformin 500mg:</strong> Twice daily after meals (oral antidiabetic)</li>
+              <li><strong>Insulin Glargine 20 units:</strong> Once daily at bedtime (subcutaneous)</li>
+              <li><strong>Clopidogrel 75mg:</strong> Once daily after breakfast (antiplatelet agent)</li>
+              <li><strong>Amoxicillin-Clavulanate 625mg:</strong> Three times daily after meals for 7 days</li>
+              <li><strong>Pantoprazole 40mg:</strong> Once daily before breakfast (gastro-protection)</li>
+              <li><strong>Multivitamin Tablet:</strong> Once daily after lunch</li>
+            </ul>
+          </div>
+
+          <!-- Dietary Instructions Summary -->
+          <div class="summary-section-box">
+            <div class="section-box-header">
+              <div class="section-box-icon" style="background:#e8f5e9; color:#2e7d32;">🥗</div>
+              <div>
+                <h4 data-i18n="sec_diet_summary">Dietary Instructions</h4>
+                <span class="source-tag source-summary">From Discharge Summary</span>
+              </div>
+            </div>
+            <ul class="summary-content-list">
+              <li>Strict diabetic diet: Strictly avoid refined white sugar, traditional sweets, white polished rice, and maida.</li>
+              <li>Meal frequency: Consume 5 to 6 small, evenly spaced meals to prevent post-prandial glycemic spikes.</li>
+              <li>Hydration & Cooking: Drink 2 to 3 liters of filtered water daily; eliminate fried and deep-oily foods; restrict sodium/salt intake.</li>
+            </ul>
+          </div>
+
+          <!-- Wound Care & Activity -->
+          <div class="summary-section-box">
+            <div class="section-box-header">
+              <div class="section-box-icon" style="background:#fff3e0; color:#e65100;">🩹</div>
+              <div>
+                <h4 data-i18n="sec_wound_summary">Wound Care & Activity Restrictions</h4>
+                <span class="source-tag source-summary">From Discharge Summary</span>
+              </div>
+            </div>
+            <ul class="summary-content-list">
+              <li><strong>Wound Dressing:</strong> Clean right foot ulcer with sterile normal saline daily. Apply prescribed Betadine and Mupirocin ointment. Keep dry and covered.</li>
+              <li><strong>Foot Safety:</strong> Never walk barefoot under any circumstances. Wear cushioned, soft footwear.</li>
+              <li><strong>Activity Rest:</strong> Avoid prolonged standing or walking for 2 weeks. Elevate right foot. No driving for 1 week.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Original OCR Raw Text Collapsible Drawer -->
+        <div class="content-card" style="margin-top:24px; padding:20px;">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div>
+              <strong style="font-size:0.92rem; color:#334155;" data-i18n="raw_ocr_title">📄 Raw Document Extracted OCR Transcript</strong>
+              <div style="font-size:0.78rem; color:#64748b;">Verbatim text recognized from City General Hospital discharge paperwork</div>
+            </div>
+            <button class="btn btn-secondary" id="btnToggleRawOcr" style="font-size:0.8rem; padding:6px 12px;">Show Full Text</button>
+          </div>
+          <div id="rawOcrContainer" style="display:none; margin-top:14px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:16px; font-family:monospace; font-size:0.82rem; white-space:pre-wrap; color:#334155; max-height:260px; overflow-y:auto;">
+PATIENT DISCHARGE SUMMARY - CITY GENERAL HOSPITAL
+==================================================
+Patient Name: Rajesh Kumar | Age: 45 | Gender: Male
+IPD No: CGH-2026-90412 | Bed No: 314-W
+Admission Date: October 05, 2026 | Discharge Date: October 12, 2026
+Department: General Medicine & Endocrine / Diabetic Foot Care Unit
+Primary Consultant: Dr. Vikram Joshi, MD (Diabetology)
+Surgical Consultant: Dr. Anita Rao, MS (Wound Care & Podiatry)
+
+FINAL DIAGNOSIS:
+Type 2 Diabetes Mellitus with Diabetic Foot Ulcer (Right Foot - Grade 2 Meggitt-Wagner)
+
+HOSPITAL COURSE & TREATMENT:
+Patient presented with localized right plantar ulceration with peri-wound erythema. Started on IV Piperacillin-Tazobactam 4.5g q8h for 5 days. Sharp bedside wound debridement performed on Oct 06 with removal of non-viable slough. Basal insulin titration completed. Capillary blood glucose monitored q6h. Vitals stabilized, granulating wound bed observed.
+
+DISCHARGE MEDICATIONS:
+1. Tab. Metformin 500mg - 1 tab twice daily after meals (Breakfast, Dinner)
+2. Inj. Insulin Glargine (Lantus) - 20 units once daily at bedtime (10:00 PM) subcutaneously
+3. Tab. Clopidogrel 75mg - 1 tab once daily after breakfast
+4. Tab. Amoxicillin + Clavulanate 625mg (Augmentin) - 1 tab thrice daily after meals for 7 days
+5. Tab. Pantoprazole 40mg - 1 tab once daily in morning 30 minutes before breakfast
+6. Tab. Multivitamin - 1 tab once daily after lunch for 30 days
+
+DIETARY & LIFESTYLE ADVICE:
+Strict diabetic diet. Avoid white sugar, sweets, white rice, maida. Small frequent meals (5-6/day). Include green vegetables, whole grains, dal. Limit salt. Drink 2-3 liters of water. Avoid fried and oily food.
+
+WOUND CARE PROTOCOL:
+Clean with normal saline daily. Apply Betadine and Mupirocin ointment. Keep dry and covered. Change dressing daily. Never walk barefoot. Wear soft footwear.
+
+ACTIVITY RESTRICTIONS:
+Avoid prolonged standing/walking for 2 weeks. Elevate right foot when seated. No pressure on right foot wound. Light indoor activities only. No vehicle driving for 1 week.
+
+FOLLOW-UP APPOINTMENTS:
+- Wound Care Clinic: October 19, 2026 (10:00 AM)
+- Diabetologist Review: October 26, 2026 (11:30 AM) with fresh HbA1c test and blood sugar log
+
+WARNING SIGNS (RETURN IMMEDIATELY):
+Fever >101°F, increased redness/swelling/pus from wound, blood sugar >300 or <70 mg/dL, sudden chest pain/breathing difficulty, numbness/discoloration of foot, severe headache/vision changes.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: MY CARE PLAN                        -->
+    <!-- ========================================== -->
+    <section id="tab-careplan" class="tab-pane" role="tabpanel">
+      <div class="content-card">
+        <div class="card-header-flex">
+          <div class="card-title-group">
+            <h2 data-i18n="careplan_title">🩺 My Personalized Care Plan</h2>
+            <div class="card-desc" data-i18n="careplan_desc">Complex medical terminology translated into straightforward, everyday steps you and your family can follow at home.</div>
+          </div>
+          <div class="accordion-controls">
+            <button class="btn btn-secondary" id="btnExpandAllCarePlan" style="font-size:0.82rem; padding:6px 14px;">Expand All</button>
+            <button class="btn btn-secondary" id="btnCollapseAllCarePlan" style="font-size:0.82rem; padding:6px 14px;">Collapse All</button>
+          </div>
+        </div>
+
+        <!-- Accordion 1: Diagnosis Explained -->
+        <div class="accordion-item open" id="accItem1">
+          <button class="accordion-header" onclick="toggleAccordion('accItem1')">
+            <div class="accordion-title-flex">
+              <div class="accordion-icon-box">🔍</div>
+              <div>
+                <div class="accordion-title-text" data-i18n="acc_1_title">1. Diagnosis Explained (Simple Language)</div>
+                <div class="accordion-subtitle">What Type 2 Diabetes with a Right Foot Ulcer means for your body</div>
+              </div>
+            </div>
+            <div class="accordion-arrow">▼</div>
+          </button>
+          <div class="accordion-body">
+            <p class="simplified-explanation">
+              <strong>In plain terms:</strong> Diabetes means your body has elevated sugar levels in the bloodstream. Over time, high blood sugar can weaken the nerves and blood circulation in your feet, making it harder to feel minor cuts or pressure. A sore formed on your right foot and developed into an ulcer, which required medical attention to ensure it heals properly without spreading.
+            </p>
+            <div class="step-list">
+              <div class="step-item">
+                <div class="step-number">✓</div>
+                <div class="step-details">
+                  <strong>Why it matters:</strong>
+                  <p>Foot ulcers heal more slowly when blood sugar is high. Controlling both sugar levels and keeping pressure off the foot are equally important for healing.</p>
+                </div>
+              </div>
+            </div>
+            <button class="original-text-toggle-btn" onclick="toggleOriginalText('origText1')">
+              <span>📄</span> <span data-i18n="view_orig_text">View Original Clinical Text</span>
+            </button>
+            <div class="original-text-panel" id="origText1">
+              "Diagnosis: Type 2 Diabetes Mellitus with Diabetic Foot Ulcer (Right Foot - Grade 2 Meggitt-Wagner classification). Neuropathic plantar defect with secondary bacterial micro-environment."
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion 2: What Happened in Hospital -->
+        <div class="accordion-item" id="accItem2">
+          <button class="accordion-header" onclick="toggleAccordion('accItem2')">
+            <div class="accordion-title-flex">
+              <div class="accordion-icon-box">🏥</div>
+              <div>
+                <div class="accordion-title-text" data-i18n="acc_2_title">2. What Happened in the Hospital</div>
+                <div class="accordion-subtitle">Summary of treatments, procedures, and tests completed</div>
+              </div>
+            </div>
+            <div class="accordion-arrow">▼</div>
+          </button>
+          <div class="accordion-body">
+            <p class="simplified-explanation">
+              During your 7-day stay at City General Hospital (Oct 5 – Oct 12), doctors took immediate action to control the infection and stabilize your blood sugar:
+            </p>
+            <div class="step-list">
+              <div class="step-item">
+                <div class="step-number">1</div>
+                <div class="step-details">
+                  <strong>Intravenous (IV) Antibiotics:</strong>
+                  <p>You received Piperacillin-Tazobactam through a drip for 5 straight days to eliminate the bacteria inside the foot wound.</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-number">2</div>
+                <div class="step-details">
+                  <strong>Wound Debridement (Cleaning):</strong>
+                  <p>Dr. Anita Rao carefully cleaned away dead, infected tissue from the ulcer so fresh, healthy new skin can grow.</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-number">3</div>
+                <div class="step-details">
+                  <strong>Insulin Therapy Started:</strong>
+                  <p>To give your pancreas support and bring blood sugar under control, bedtime long-acting Insulin Glargine was started.</p>
+                </div>
+              </div>
+            </div>
+            <button class="original-text-toggle-btn" onclick="toggleOriginalText('origText2')">
+              <span>📄</span> <span data-i18n="view_orig_text">View Original Clinical Text</span>
+            </button>
+            <div class="original-text-panel" id="origText2">
+              "Hospital Course: IV Antibiotics (Piperacillin-Tazobactam) 5 days, Insulin Glargine 20u bedtime, sharp surgical wound debridement, blood sugar monitoring q6h."
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion 3: Home Care Instructions -->
+        <div class="accordion-item" id="accItem3">
+          <button class="accordion-header" onclick="toggleAccordion('accItem3')">
+            <div class="accordion-title-flex">
+              <div class="accordion-icon-box">🏡</div>
+              <div>
+                <div class="accordion-title-text" data-i18n="acc_3_title">3. Home Care Instructions</div>
+                <div class="accordion-subtitle">Your day-to-day routine for steady recovery at home</div>
+              </div>
+            </div>
+            <div class="accordion-arrow">▼</div>
+          </button>
+          <div class="accordion-body">
+            <p class="simplified-explanation">
+              Following a consistent daily rhythm keeps your recovery on track:
+            </p>
+            <div class="step-list">
+              <div class="step-item">
+                <div class="step-number">☀️</div>
+                <div class="step-details">
+                  <strong>Morning Routine:</strong>
+                  <p>Take Pantoprazole 30 mins before breakfast. Eat breakfast, then take morning medicines (Clopidogrel, Metformin, Amoxicillin-Clavulanate). Check fasting blood sugar.</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-number">💧</div>
+                <div class="step-details">
+                  <strong>Hydration & Cleanliness:</strong>
+                  <p>Drink 2 to 3 liters of plain water throughout the day. Keep the foot dressing clean and dry. Avoid getting bath water onto the wound.</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-number">🌙</div>
+                <div class="step-details">
+                  <strong>Nighttime Routine:</strong>
+                  <p>Inject 20 units of Insulin Glargine at 10:00 PM. Check bedtime blood sugar. Keep right foot propped on a pillow while sleeping.</p>
+                </div>
+              </div>
+            </div>
+            <button class="original-text-toggle-btn" onclick="toggleOriginalText('origText3')">
+              <span>📄</span> <span data-i18n="view_orig_text">View Original Clinical Text</span>
+            </button>
+            <div class="original-text-panel" id="origText3">
+              "Home Management: Strictly adhere to oral & subcutaneous dosing. Maintain capillary blood glucose log (FBS/PPBS). Maintain strict hydration and dressing hygiene."
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion 4: Rest & Activity Guidance -->
+        <div class="accordion-item" id="accItem4">
+          <button class="accordion-header" onclick="toggleAccordion('accItem4')">
+            <div class="accordion-title-flex">
+              <div class="accordion-icon-box">🛏️</div>
+              <div>
+                <div class="accordion-title-text" data-i18n="acc_4_title">4. Rest & Activity Guidance</div>
+                <div class="accordion-subtitle">Movement rules to protect your healing foot from friction and pressure</div>
+              </div>
+            </div>
+            <div class="accordion-arrow">▼</div>
+          </button>
+          <div class="accordion-body">
+            <p class="simplified-explanation">
+              Pressure is the biggest enemy of foot ulcer healing. When you stand or walk, body weight presses directly on the delicate granulating tissue.
+            </p>
+            <div class="step-list">
+              <div class="step-item">
+                <div class="step-number">🛑</div>
+                <div class="step-details">
+                  <strong>No Prolonged Standing or Walking (2 Weeks):</strong>
+                  <p>Stay off your feet as much as possible for the first 14 days. Limit movement to essential trips (e.g., bathroom).</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-number">🛋️</div>
+                <div class="step-details">
+                  <strong>Elevate Right Foot:</strong>
+                  <p>Whenever seated or lying down, prop your right leg up on 1-2 soft pillows so your foot is level with or slightly above your heart.</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-number">🚗</div>
+                <div class="step-details">
+                  <strong>No Driving for 1 Week:</strong>
+                  <p>Do not drive any car, motorcycle, or scooter. Braking or pressing the accelerator pedal puts intense friction on the wound.</p>
+                </div>
+              </div>
+            </div>
+            <button class="original-text-toggle-btn" onclick="toggleOriginalText('origText4')">
+              <span>📄</span> <span data-i18n="view_orig_text">View Original Clinical Text</span>
+            </button>
+            <div class="original-text-panel" id="origText4">
+              "Activity Guidance: Avoid prolonged standing/walking 2 weeks, elevate right foot, no pressure on wound, light indoor activities, no driving 1 week."
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion 5: Wound Care Steps -->
+        <div class="accordion-item" id="accItem5">
+          <button class="accordion-header" onclick="toggleAccordion('accItem5')">
+            <div class="accordion-title-flex">
+              <div class="accordion-icon-box">🩹</div>
+              <div>
+                <div class="accordion-title-text" data-i18n="acc_5_title">5. Wound Care Protocol (Step-by-Step)</div>
+                <div class="accordion-subtitle">How to clean, apply ointment, and dress the right foot ulcer</div>
+              </div>
+            </div>
+            <div class="accordion-arrow">▼</div>
+          </button>
+          <div class="accordion-body">
+            <p class="simplified-explanation">
+              Follow this sterile protocol once daily (or if the dressing gets damp or soiled):
+            </p>
+            <div class="step-list">
+              <div class="step-item">
+                <div class="step-number">1</div>
+                <div class="step-details">
+                  <strong>Wash Hands:</strong>
+                  <p>Wash hands with antiseptic soap for 20 seconds. Use clean disposable gloves if a family member is helping you.</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-number">2</div>
+                <div class="step-details">
+                  <strong>Saline Wash:</strong>
+                  <p>Gently remove old dressing. Flush the wound using sterile Normal Saline (0.9% NaCl). Do NOT scrub. Pat dry around the edges with sterile gauze.</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-number">3</div>
+                <div class="step-details">
+                  <strong>Apply Prescribed Ointments:</strong>
+                  <p>Apply Betadine (Povidone-Iodine) around the outer perimeter, and apply a thin layer of Mupirocin ointment directly over the ulcer bed.</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-number">4</div>
+                <div class="step-details">
+                  <strong>Cover & Keep Dry:</strong>
+                  <p>Place sterile non-stick gauze pad over the wound and secure loosely with medical tape. Keep the bandage completely dry.</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-number">5</div>
+                <div class="step-details">
+                  <strong>Never Walk Barefoot:</strong>
+                  <p>Never walk barefoot—even on indoor rugs or bathroom tiles. Always wear soft, seamless diabetic footwear.</p>
+                </div>
+              </div>
+            </div>
+            <button class="original-text-toggle-btn" onclick="toggleOriginalText('origText5')">
+              <span>📄</span> <span data-i18n="view_orig_text">View Original Clinical Text</span>
+            </button>
+            <div class="original-text-panel" id="origText5">
+              "Wound Care: Clean with normal saline daily, apply Betadine and Mupirocin ointment, keep dry and covered, change dressing daily, don't walk barefoot, wear soft footwear."
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion 6: Recovery Timeline -->
+        <div class="accordion-item" id="accItem6">
+          <button class="accordion-header" onclick="toggleAccordion('accItem6')">
+            <div class="accordion-title-flex">
+              <div class="accordion-icon-box">📈</div>
+              <div>
+                <div class="accordion-title-text" data-i18n="acc_6_title">6. Recovery Timeline & Milestones</div>
+                <div class="accordion-subtitle">What to expect over the next 4 to 6 weeks</div>
+              </div>
+            </div>
+            <div class="accordion-arrow">▼</div>
+          </button>
+          <div class="accordion-body">
+            <div class="timeline-milestones">
+              <div class="milestone-item">
+                <div class="milestone-title">Week 1 (Oct 12 – Oct 18): Acute Protection & Antibiotic Course</div>
+                <div class="milestone-desc">Finish your full 7-day course of Amoxicillin-Clavulanate. Keep foot elevated. Swelling should visibly reduce.</div>
+              </div>
+              <div class="milestone-item">
+                <div class="milestone-title">Week 2 (Oct 19): First Clinical Milestone (Wound Clinic)</div>
+                <div class="milestone-desc">Dr. Anita Rao examines wound depth and new tissue formation. Dressing plan may be updated.</div>
+              </div>
+              <div class="milestone-item">
+                <div class="milestone-title">Week 3 (Oct 26): Second Clinical Milestone (Diabetology & HbA1c)</div>
+                <div class="milestone-desc">Dr. Vikram Joshi reviews blood sugar logs and HbA1c lab result to calibrate long-term insulin and oral medication.</div>
+              </div>
+              <div class="milestone-item">
+                <div class="milestone-title">Weeks 4 to 6: Gradual Weight-Bearing</div>
+                <div class="milestone-desc">Once doctor confirms the ulcer has closed, transition to custom orthotic footwear with gradual walking tolerance.</div>
+              </div>
+            </div>
+            <button class="original-text-toggle-btn" onclick="toggleOriginalText('origText6')">
+              <span>📄</span> <span data-i18n="view_orig_text">View Original Clinical Text</span>
+            </button>
+            <div class="original-text-panel" id="origText6">
+              "Follow-up: Wound clinic Oct 19, 2026; Diabetologist Oct 26, 2026; HbA1c test before diabetologist; maintain blood sugar log."
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: MEDICINE SCHEDULE                   -->
+    <!-- ========================================== -->
+    <section id="tab-medicine" class="tab-pane" role="tabpanel">
+      <div class="content-card">
+        <div class="card-header-flex">
+          <div class="card-title-group">
+            <h2 data-i18n="medicine_title">⏰ Visual Daily Medicine Schedule</h2>
+            <div class="card-desc" data-i18n="medicine_desc">Organized by time of day. Click 'Mark Taken' to track your doses today.</div>
+          </div>
+          <div>
+            <button id="btnPrintMedSchedule" class="btn btn-secondary">
+              <span>🖨️</span>
+              <span data-i18n="print_schedule_btn">Print Medicine Schedule</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 1. MORNING (7:30 - 8:30) -->
+        <div class="timeline-period-block">
+          <div class="timeline-period-header">
+            <div class="period-title">
+              <span>🌅</span> <span data-i18n="morning_period">Morning Routine</span>
+            </div>
+            <div class="period-time-badge">7:30 AM – 8:30 AM</div>
+          </div>
+
+          <div class="med-cards-grid">
+            <!-- Med 1: Pantoprazole -->
+            <div class="med-card" id="medCard1">
+              <div>
+                <div class="med-card-top">
+                  <div>
+                    <div class="med-name">Pantoprazole</div>
+                    <div class="med-dose">40 mg • 1 Tablet</div>
+                  </div>
+                  <span class="source-tag source-summary">Summary</span>
+                </div>
+                <span class="food-relation-pill pill-before-food">⚠️ Strictly 30 Mins Before Breakfast (7:30 AM)</span>
+                <div class="med-details-list">
+                  <div><strong>Purpose:</strong> Gastric mucosal protection; prevents antibiotic stomach irritation</div>
+                  <div><strong>Duration:</strong> Daily as advised</div>
+                </div>
+              </div>
+              <div class="med-card-footer">
+                <span class="badge badge-teal">Daily Morning</span>
+                <button class="mark-taken-btn" onclick="toggleMedTaken('medCard1')">
+                  <span>✓</span> <span>Mark Taken</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Med 2: Clopidogrel -->
+            <div class="med-card" id="medCard2">
+              <div>
+                <div class="med-card-top">
+                  <div>
+                    <div class="med-name">Clopidogrel</div>
+                    <div class="med-dose">75 mg • 1 Tablet</div>
+                  </div>
+                  <span class="source-tag source-summary">Summary</span>
+                </div>
+                <span class="food-relation-pill pill-after-food">🍳 Once Daily After Breakfast (8:30 AM)</span>
+                <div class="med-details-list">
+                  <div><strong>Purpose:</strong> Antiplatelet agent; maintains blood flow to lower extremities</div>
+                  <div><strong>Duration:</strong> Ongoing long-term</div>
+                </div>
+              </div>
+              <div class="med-card-footer">
+                <span class="badge badge-blue">Circulation</span>
+                <button class="mark-taken-btn" onclick="toggleMedTaken('medCard2')">
+                  <span>✓</span> <span>Mark Taken</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Med 3: Metformin (Morning) -->
+            <div class="med-card" id="medCard3">
+              <div>
+                <div class="med-card-top">
+                  <div>
+                    <div class="med-name">Metformin</div>
+                    <div class="med-dose">500 mg • 1 Tablet</div>
+                  </div>
+                  <span class="source-tag source-summary">Summary</span>
+                </div>
+                <span class="food-relation-pill pill-after-food">🍳 After Breakfast (Dose 1 of 2)</span>
+                <div class="med-details-list">
+                  <div><strong>Purpose:</strong> Oral blood sugar regulation & insulin sensitivity</div>
+                  <div><strong>Duration:</strong> Twice daily continuous</div>
+                </div>
+              </div>
+              <div class="med-card-footer">
+                <span class="badge badge-green">Diabetes</span>
+                <button class="mark-taken-btn" onclick="toggleMedTaken('medCard3')">
+                  <span>✓</span> <span>Mark Taken</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Med 4: Amoxicillin-Clavulanate (Morning) -->
+            <div class="med-card" id="medCard4">
+              <div>
+                <div class="med-card-top">
+                  <div>
+                    <div class="med-name">Amoxicillin-Clavulanate</div>
+                    <div class="med-dose">625 mg • 1 Tablet</div>
+                  </div>
+                  <span class="source-tag source-summary">Summary</span>
+                </div>
+                <span class="food-relation-pill pill-after-food">🍳 After Breakfast (Dose 1 of 3)</span>
+                <div class="med-details-list">
+                  <div><strong>Purpose:</strong> Oral antibiotic for right foot bacterial ulcer</div>
+                  <div><strong>Duration:</strong> 7 Days Course (Do NOT skip!)</div>
+                </div>
+              </div>
+              <div class="med-card-footer">
+                <span class="badge badge-orange">Antibiotic (Day 1/7)</span>
+                <button class="mark-taken-btn" onclick="toggleMedTaken('medCard4')">
+                  <span>✓</span> <span>Mark Taken</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. AFTERNOON (13:30 - 14:00) -->
+        <div class="timeline-period-block">
+          <div class="timeline-period-header">
+            <div class="period-title">
+              <span>☀️</span> <span data-i18n="afternoon_period">Afternoon Routine</span>
+            </div>
+            <div class="period-time-badge">1:30 PM – 2:00 PM</div>
+          </div>
+
+          <div class="med-cards-grid">
+            <!-- Med 5: Multivitamin -->
+            <div class="med-card" id="medCard5">
+              <div>
+                <div class="med-card-top">
+                  <div>
+                    <div class="med-name">Multivitamin Tablet</div>
+                    <div class="med-dose">1 Tablet</div>
+                  </div>
+                  <span class="source-tag source-summary">Summary</span>
+                </div>
+                <span class="food-relation-pill pill-after-food">🥗 After Lunch (1:30 PM)</span>
+                <div class="med-details-list">
+                  <div><strong>Purpose:</strong> Zinc, Vitamin C & B-complex for wound tissue regeneration</div>
+                  <div><strong>Duration:</strong> 30 Days</div>
+                </div>
+              </div>
+              <div class="med-card-footer">
+                <span class="badge badge-teal">Nutritional Support</span>
+                <button class="mark-taken-btn" onclick="toggleMedTaken('medCard5')">
+                  <span>✓</span> <span>Mark Taken</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Med 6: Amoxicillin-Clavulanate (Afternoon) -->
+            <div class="med-card" id="medCard6">
+              <div>
+                <div class="med-card-top">
+                  <div>
+                    <div class="med-name">Amoxicillin-Clavulanate</div>
+                    <div class="med-dose">625 mg • 1 Tablet</div>
+                  </div>
+                  <span class="source-tag source-summary">Summary</span>
+                </div>
+                <span class="food-relation-pill pill-after-food">🥗 After Lunch (Dose 2 of 3)</span>
+                <div class="med-details-list">
+                  <div><strong>Purpose:</strong> Midday antibiotic dose maintaining therapeutic blood levels</div>
+                  <div><strong>Duration:</strong> 7 Days Course</div>
+                </div>
+              </div>
+              <div class="med-card-footer">
+                <span class="badge badge-orange">Antibiotic</span>
+                <button class="mark-taken-btn" onclick="toggleMedTaken('medCard6')">
+                  <span>✓</span> <span>Mark Taken</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. EVENING (20:00) -->
+        <div class="timeline-period-block">
+          <div class="timeline-period-header">
+            <div class="period-title">
+              <span>🌆</span> <span data-i18n="evening_period">Evening Routine</span>
+            </div>
+            <div class="period-time-badge">8:00 PM (With / After Dinner)</div>
+          </div>
+
+          <div class="med-cards-grid">
+            <!-- Med 7: Metformin (Evening) -->
+            <div class="med-card" id="medCard7">
+              <div>
+                <div class="med-card-top">
+                  <div>
+                    <div class="med-name">Metformin</div>
+                    <div class="med-dose">500 mg • 1 Tablet</div>
+                  </div>
+                  <span class="source-tag source-summary">Summary</span>
+                </div>
+                <span class="food-relation-pill pill-after-food">🍲 After Dinner (Dose 2 of 2)</span>
+                <div class="med-details-list">
+                  <div><strong>Purpose:</strong> Controls nocturnal and morning baseline blood glucose</div>
+                  <div><strong>Duration:</strong> Twice daily continuous</div>
+                </div>
+              </div>
+              <div class="med-card-footer">
+                <span class="badge badge-green">Diabetes</span>
+                <button class="mark-taken-btn" onclick="toggleMedTaken('medCard7')">
+                  <span>✓</span> <span>Mark Taken</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Med 8: Amoxicillin-Clavulanate (Evening) -->
+            <div class="med-card" id="medCard8">
+              <div>
+                <div class="med-card-top">
+                  <div>
+                    <div class="med-name">Amoxicillin-Clavulanate</div>
+                    <div class="med-dose">625 mg • 1 Tablet</div>
+                  </div>
+                  <span class="source-tag source-summary">Summary</span>
+                </div>
+                <span class="food-relation-pill pill-after-food">🍲 After Dinner (Dose 3 of 3)</span>
+                <div class="med-details-list">
+                  <div><strong>Purpose:</strong> Night antibiotic dose for wound healing</div>
+                  <div><strong>Duration:</strong> 7 Days Course</div>
+                </div>
+              </div>
+              <div class="med-card-footer">
+                <span class="badge badge-orange">Antibiotic</span>
+                <button class="mark-taken-btn" onclick="toggleMedTaken('medCard8')">
+                  <span>✓</span> <span>Mark Taken</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. BEDTIME (22:00) -->
+        <div class="timeline-period-block" style="margin-bottom:0;">
+          <div class="timeline-period-header">
+            <div class="period-title">
+              <span>🌙</span> <span data-i18n="bedtime_period">Bedtime Routine</span>
+            </div>
+            <div class="period-time-badge">10:00 PM (Strict Schedule)</div>
+          </div>
+
+          <div class="med-cards-grid">
+            <!-- Med 9: Insulin Glargine -->
+            <div class="med-card" id="medCard9" style="border-left: 4px solid #7c3aed;">
+              <div>
+                <div class="med-card-top">
+                  <div>
+                    <div class="med-name">Insulin Glargine (Lantus)</div>
+                    <div class="med-dose">20 Units • Subcutaneous Injection</div>
+                  </div>
+                  <span class="source-tag source-summary">Summary</span>
+                </div>
+                <span class="food-relation-pill pill-bedtime">💉 10:00 PM Bedtime (Abdomen or Thigh, rotate site)</span>
+                <div class="med-details-list">
+                  <div><strong>Purpose:</strong> 24-hour peakless basal glucose regulation</div>
+                  <div><strong>Special:</strong> Keep unpunctured vials refrigerated (2-8°C). Current pen at room temp &lt;30°C.</div>
+                </div>
+              </div>
+              <div class="med-card-footer">
+                <span class="badge-needs-confirmation">⚠️ Needs Confirmation</span>
+                <button class="mark-taken-btn" onclick="toggleMedTaken('medCard9')">
+                  <span>✓</span> <span>Mark Taken</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: DIET PLAN                           -->
+    <!-- ========================================== -->
+    <section id="tab-diet" class="tab-pane" role="tabpanel">
+      <div class="content-card">
+        <div class="card-header-flex">
+          <div class="card-title-group">
+            <h2 data-i18n="diet_title">🥗 Diabetic & Wound Healing Diet Plan</h2>
+            <div class="card-desc" data-i18n="diet_desc">Specific dietary boundaries extracted from your discharge papers plus evidence-based nutrition to support tissue healing.</div>
+          </div>
+          <div>
+            <button class="btn btn-primary" onclick="switchPortalTab('tab-food-checker')">
+              <span>🔍</span>
+              <span data-i18n="ask_food_checker">Search Specific Foods</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3 Categorized Grids -->
+        <div class="diet-grid">
+          <!-- Recommended Foods (Green) -->
+          <div class="diet-card-group diet-group-recommended">
+            <div class="diet-group-header">
+              <div class="diet-group-title" style="color:#15803d;">
+                <span>🟢</span> <span data-i18n="foods_recommended">Foods Recommended</span>
+              </div>
+              <span class="badge badge-green">Eat Daily</span>
+            </div>
+            <div class="diet-items-list">
+              <div class="diet-item-row">
+                <div class="diet-item-info">
+                  <strong>Green Vegetables & Leafies</strong>
+                  <span>Spinach (palak), methi, bottle gourd, ridge gourd, cabbage, broccoli</span>
+                </div>
+                <span class="source-tag source-summary">Summary</span>
+              </div>
+              <div class="diet-item-row">
+                <div class="diet-item-info">
+                  <strong>Whole Grains & Millets</strong>
+                  <span>Steel-cut oats, broken wheat (dalia), ragi, jowar rotis</span>
+                </div>
+                <span class="source-tag source-summary">Summary</span>
+              </div>
+              <div class="diet-item-row">
+                <div class="diet-item-info">
+                  <strong>Dals & Plant Proteins</strong>
+                  <span>Moong dal, masoor dal, chickpeas, sprouts, paneer</span>
+                </div>
+                <span class="source-tag source-summary">Summary</span>
+              </div>
+              <div class="diet-item-row">
+                <div class="diet-item-info">
+                  <strong>Lean Animal Proteins</strong>
+                  <span>Egg whites, skinless chicken stew, steamed fresh fish (vital for wound healing)</span>
+                </div>
+                <span class="source-tag source-general">General</span>
+              </div>
+              <div class="diet-item-row">
+                <div class="diet-item-info">
+                  <strong>Small Frequent Meals</strong>
+                  <span>Eat 5 to 6 mini-meals per day to avoid blood sugar spikes and crashes</span>
+                </div>
+                <span class="source-tag source-summary">Summary</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Foods to Avoid (Red) -->
+          <div class="diet-card-group diet-group-avoid">
+            <div class="diet-group-header">
+              <div class="diet-group-title" style="color:#b91c1c;">
+                <span>🔴</span> <span data-i18n="foods_avoid">Foods to Avoid</span>
+              </div>
+              <span class="badge badge-red">Strictly Avoid</span>
+            </div>
+            <div class="diet-items-list">
+              <div class="diet-item-row">
+                <div class="diet-item-info">
+                  <strong>Refined Sugar & Sweets</strong>
+                  <span>Table sugar, jaggery, honey, halwa, gulab jamun, laddu, cakes</span>
+                </div>
+                <span class="source-tag source-summary">Summary</span>
+              </div>
+              <div class="diet-item-row">
+                <div class="diet-item-info">
+                  <strong>White Polished Rice</strong>
+                  <span>High glycemic index causes immediate hyperglycemia</span>
+                </div>
+                <span class="source-tag source-summary">Summary</span>
+              </div>
+              <div class="diet-item-row">
+                <div class="diet-item-info">
+                  <strong>Maida / Refined Flour</strong>
+                  <span>White bread, bakery buns, parottas, naans, samosa sheets</span>
+                </div>
+                <span class="source-tag source-summary">Summary</span>
+              </div>
+              <div class="diet-item-row">
+                <div class="diet-item-info">
+                  <strong>Deep Fried & Oily Food</strong>
+                  <span>Pakoras, puris, vadas, french fries, bajjis</span>
+                </div>
+                <span class="source-tag source-summary">Summary</span>
+              </div>
+              <div class="diet-item-row">
+                <div class="diet-item-info">
+                  <strong>Sweetened Beverages</strong>
+                  <span>Colas, sodas, packaged mango drinks, bottled energy drinks</span>
+                </div>
+                <span class="source-tag source-summary">Summary</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Foods to Limit (Yellow) -->
+          <div class="diet-card-group diet-group-limit">
+            <div class="diet-group-header">
+              <div class="diet-group-title" style="color:#b45309;">
+                <span>🟡</span> <span data-i18n="foods_limit">Foods to Limit</span>
+              </div>
+              <span class="badge badge-orange">Controlled Portions</span>
+            </div>
+            <div class="diet-items-list">
+              <div class="diet-item-row">
+                <div class="diet-item-info">
+                  <strong>Table Salt & Pickles</strong>
+                  <span>Limit salt under 1 teaspoon (&lt;5g/day) to prevent foot edema/swelling</span>
+                </div>
+                <span class="source-tag source-summary">Summary</span>
+              </div>
+              <div class="diet-item-row">
+                <div class="diet-item-info">
+                  <strong>High-Sugar Fruits</strong>
+                  <span>Mangoes, bananas, chiku (sapodilla), grapes, custard apple</span>
+                </div>
+                <span class="source-tag source-summary">Summary</span>
+              </div>
+              <div class="diet-item-row">
+                <div class="diet-item-info">
+                  <strong>Cooking Oils & Ghee</strong>
+                  <span>Max 2-3 teaspoons per day of cold-pressed mustard, sunflower, or olive oil</span>
+                </div>
+                <span class="source-tag source-general">General</span>
+              </div>
+              <div class="diet-item-row">
+                <div class="diet-item-info">
+                  <strong>Tea & Coffee</strong>
+                  <span>Max 2 small cups/day; STRICTLY without sugar</span>
+                </div>
+                <span class="source-tag source-general">General</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Instructions Card -->
+        <div style="background:#f0fdfa; border:1px solid #99f6e4; border-radius:var(--radius-md); padding:18px 22px; margin-bottom:28px;">
+          <h4 style="color:#0f766e; margin-bottom:8px; font-weight:700;">💧 Additional Hydration & Routine Directives from Discharge:</h4>
+          <div style="font-size:0.9rem; color:#134e4a; line-height:1.6;">
+            • <strong>Water Intake:</strong> Drink <strong>2 to 3 liters</strong> of clean, boiled or filtered water daily to assist renal clearance of medications and maintain microcirculation.<br>
+            • <strong>Never Skip Meals:</strong> Because you are taking Metformin and bedtime Insulin Glargine, skipping meals poses a serious danger of sudden hypoglycemia (low blood sugar).
+          </div>
+        </div>
+
+        <!-- Sample Daily Meal Plan Table -->
+        <div style="margin-top:10px;">
+          <h3 style="font-size:1.15rem; color:#0f172a; margin-bottom:12px;" data-i18n="meal_schedule_heading">🍽️ Sample Meal Plan for Rajesh Kumar (Strictly adhering to restrictions)</h3>
+          <div style="overflow-x:auto;">
+            <table class="meal-suggestion-table">
+              <thead>
+                <tr>
+                  <th>Meal & Timing</th>
+                  <th>Menu Suggestion</th>
+                  <th>Clinical Rationale</th>
+                  <th>Source</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Early Morning (7:00 AM)</strong></td>
+                  <td>1 glass warm water + 5 soaked almonds (no skin)</td>
+                  <td>Gentle wake-up; prepares stomach for Pantoprazole at 7:30 AM</td>
+                  <td><span class="source-tag source-general">General</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Breakfast (8:15 AM)</strong></td>
+                  <td>2 Multigrain / Methi rotis OR vegetable oats upma + 1 boiled egg white</td>
+                  <td>Complex carbs provide slow glucose release with good protein</td>
+                  <td><span class="source-tag source-summary">Summary</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Mid-Morning (11:00 AM)</strong></td>
+                  <td>1 cup fresh buttermilk with crushed mint & roasted cumin</td>
+                  <td>Natural probiotics; hydrates without glycemic impact</td>
+                  <td><span class="source-tag source-general">General</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Lunch (1:30 PM)</strong></td>
+                  <td>1 cup brown rice or 2 whole wheat rotis + large bowl green salad + 1 cup moong dal + steamed sabzi</td>
+                  <td>High fiber slows digestion; dal & egg supply amino acids for ulcer healing</td>
+                  <td><span class="source-tag source-summary">Summary</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Evening Snack (5:00 PM)</strong></td>
+                  <td>Green tea (no sugar) + 1 small fist of roasted chana</td>
+                  <td>Low GI snack prevents late-afternoon hypoglycemic dip</td>
+                  <td><span class="source-tag source-general">General</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Dinner (8:00 PM)</strong></td>
+                  <td>2 whole wheat rotis + steamed bottle gourd (lauki) sabzi + grilled paneer or fish</td>
+                  <td>Light, easy-to-digest dinner before bedtime insulin</td>
+                  <td><span class="source-tag source-summary">Summary</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Bedtime (9:45 PM)</strong></td>
+                  <td>Half cup warm low-fat milk (no sugar) with a pinch of turmeric</td>
+                  <td>Prevents overnight drop in blood sugar after Insulin Glargine</td>
+                  <td><span class="source-tag source-general">General</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 5: CAN I EAT THIS?                     -->
+    <!-- ========================================== -->
+    <section id="tab-food-checker" class="tab-pane" role="tabpanel">
+      <div class="content-card">
+        <div class="card-header-flex">
+          <div class="card-title-group">
+            <h2 data-i18n="food_checker_title">🍎 Can I Eat This? - Food Safety Finder</h2>
+            <div class="card-desc" data-i18n="food_checker_desc">Type any food or ingredient to see if it is safe, limited, or restricted based on your diabetes and foot ulcer recovery.</div>
+          </div>
+        </div>
+
+        <!-- Search Input Form -->
+        <div class="food-search-box-wrapper">
+          <div class="food-input-group">
+            <span style="font-size:1.2rem; margin-right:8px; color:#64748b;">🔍</span>
+            <input type="text" id="foodSearchInput" class="food-search-input" placeholder="Enter a food item (e.g., rice, banana, milk, eggs, sweets)..." autocomplete="off" />
+            <button class="btn btn-primary" id="btnSearchFood" style="border-radius:var(--radius-full); padding:8px 18px;">
+              <span data-i18n="search_btn">Search</span>
+            </button>
+          </div>
+
+          <!-- Quick Filter Tags -->
+          <div class="food-quick-tags">
+            <span style="font-size:0.8rem; color:#64748b; font-weight:600;">Popular:</span>
+            <button class="food-tag-pill" onclick="quickSearchFood('Rice')">Rice</button>
+            <button class="food-tag-pill" onclick="quickSearchFood('Banana')">Banana</button>
+            <button class="food-tag-pill" onclick="quickSearchFood('Milk')">Milk</button>
+            <button class="food-tag-pill" onclick="quickSearchFood('Eggs')">Eggs</button>
+            <button class="food-tag-pill" onclick="quickSearchFood('Sugar')">Sugar</button>
+            <button class="food-tag-pill" onclick="quickSearchFood('Green vegetables')">Green Vegetables</button>
+            <button class="food-tag-pill" onclick="quickSearchFood('Fried food')">Fried Food</button>
+            <button class="food-tag-pill" onclick="quickSearchFood('Curd')">Curd</button>
+            <button class="food-tag-pill" onclick="quickSearchFood('Biryani')">Biryani</button>
+            <button class="food-tag-pill" onclick="quickSearchFood('Tea without sugar')">Tea</button>
+            <button class="food-tag-pill" onclick="quickSearchFood('Oats')">Oats</button>
+          </div>
+        </div>
+
+        <!-- Result Display Card -->
+        <div class="food-search-result-container">
+          <div class="food-result-card" id="foodResultCard">
+            <div class="result-status-icon" id="resStatusIcon">🟢</div>
+            <div class="result-food-name" id="resFoodName">Item Name</div>
+            <div>
+              <span class="result-status-badge" id="resStatusBadge">Allowed</span>
+            </div>
+            <p class="result-explanation-text" id="resExplanation">Explanation goes here...</p>
+            <div style="display:flex; justify-content:center; align-items:center; gap:12px;">
+              <span class="source-tag" id="resSourceTag">From Discharge Summary</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Complete Database Table View -->
+        <div class="food-all-table">
+          <div style="padding:16px 20px; background:#f8fafc; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
+            <strong style="font-size:0.95rem; color:#0f172a;" data-i18n="full_food_db_title">Browse Full Food Database (22+ Items)</strong>
+            <span class="badge badge-teal" id="foodCountBadge">22 Items</span>
+          </div>
+          <div style="overflow-x:auto; max-height:480px; overflow-y:auto;">
+            <table class="meal-suggestion-table" style="margin-top:0;">
+              <thead>
+                <tr>
+                  <th>Food Item</th>
+                  <th>Safety Status</th>
+                  <th>Clinical Guidance</th>
+                  <th>Source</th>
+                </tr>
+              </thead>
+              <tbody id="foodTableBody">
+                <!-- Dynamically Populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 6: FOLLOW-UP & RECOVERY                -->
+    <!-- ========================================== -->
+    <section id="tab-recovery" class="tab-pane" role="tabpanel">
+      <div class="content-card">
+        <div class="card-header-flex">
+          <div class="card-title-group">
+            <h2 data-i18n="followup_title">📅 Follow-up Appointments & Recovery Roadmap</h2>
+            <div class="card-desc" data-i18n="followup_desc">Do not miss these hospital clinic check-ups. Timely review prevents wound infection relapse.</div>
+          </div>
+        </div>
+
+        <!-- Appointment Cards with Live Countdowns -->
+        <div class="appointment-grid">
+          <!-- Visit 1: Wound Clinic -->
+          <div class="appointment-card">
+            <div class="appointment-header">
+              <div>
+                <div class="appointment-title" data-i18n="app1_title">Wound Care Clinic Follow-up</div>
+                <div class="appointment-doctor">Dr. Anita Rao, MS (Podiatric & Wound Care)</div>
+              </div>
+              <div class="countdown-pill" id="countdownWound">
+                <span>⏱️</span> <span id="woundCountdownVal">Calculating...</span>
+              </div>
+            </div>
+            <div class="appointment-details">
+              <div><strong>📅 Date:</strong> October 19, 2026 at 10:00 AM</div>
+              <div><strong>📍 Location:</strong> City General Hospital, OPD Block B, Room 204</div>
+              <div><strong>📋 Objective:</strong> Clinical inspection of right foot ulcer granulation, dressing change, and evaluate infection resolution.</div>
+              <div><strong>⚠️ Instructions:</strong> Do not wash or apply new ointments at home on the morning of this visit; clinic staff will remove old dressing under sterile conditions.</div>
+            </div>
+            <span class="source-tag source-summary">From Discharge Summary</span>
+          </div>
+
+          <!-- Visit 2: Diabetologist -->
+          <div class="appointment-card">
+            <div class="appointment-header">
+              <div>
+                <div class="appointment-title" data-i18n="app2_title">Diabetologist Review Visit</div>
+                <div class="appointment-doctor">Dr. Vikram Joshi, MD (Senior Diabetology)</div>
+              </div>
+              <div class="countdown-pill" id="countdownEndo">
+                <span>⏱️</span> <span id="endoCountdownVal">Calculating...</span>
+              </div>
+            </div>
+            <div class="appointment-details">
+              <div><strong>📅 Date:</strong> October 26, 2026 at 11:30 AM</div>
+              <div><strong>📍 Location:</strong> City General Hospital, Endocrine Clinic, Room 112</div>
+              <div><strong>📋 Objective:</strong> Evaluate 3-week glycemic trends, review HbA1c test result, and adjust Metformin & Insulin dosages.</div>
+              <div><strong>⚠️ Instructions:</strong> Complete your HbA1c blood test 24-48 hours before this visit. Bring your daily blood sugar log notebook.</div>
+            </div>
+            <span class="source-tag source-summary">From Discharge Summary</span>
+          </div>
+        </div>
+
+        <!-- Required Diagnostic Tests Checklist -->
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:var(--radius-md); padding:20px; margin-bottom:28px;">
+          <h3 style="font-size:1.1rem; color:#0f172a; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+            <span>🧪</span> <span data-i18n="required_tests_title">Required Tests Before Doctor Visits</span>
+          </h3>
+          <div class="step-list">
+            <div class="step-item" style="cursor:pointer;" onclick="toggleTestCheck('test1')">
+              <input type="checkbox" id="test1" style="width:18px; height:18px; cursor:pointer;" />
+              <div class="step-details">
+                <strong>HbA1c (Glycated Hemoglobin) Blood Test</strong>
+                <p>Must be drawn at City General Diagnostic Lab before your Oct 26 visit with Dr. Joshi. Reflects average 90-day sugar levels.</p>
+              </div>
+            </div>
+            <div class="step-item" style="cursor:pointer;" onclick="toggleTestCheck('test2')">
+              <input type="checkbox" id="test2" style="width:18px; height:18px; cursor:pointer;" />
+              <div class="step-details">
+                <strong>Daily Blood Sugar Log (Fasting & Post-Prandial)</strong>
+                <p>Record your capillary fingerstick readings in a notebook: (1) Fasting upon waking, (2) 2 hours after breakfast, (3) 2 hours after lunch, (4) Before bedtime.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity Restrictions with Durations -->
+        <div style="margin-bottom:28px;">
+          <h3 style="font-size:1.1rem; color:#0f172a; margin-bottom:12px;" data-i18n="activity_restrictions_title">🛑 Prescribed Activity Restrictions & Durations</h3>
+          <div class="activity-restriction-list">
+            <div class="restriction-box">
+              <div class="restriction-icon">🛑</div>
+              <div>
+                <strong>No Prolonged Standing/Walking</strong>
+                <div style="font-size:0.8rem; color:#b91c1c; font-weight:700;">Duration: 2 Weeks</div>
+                <div style="font-size:0.84rem; color:#64748b; margin-top:2px;">Restricts shearing forces and microtrauma on healing foot tissue.</div>
+              </div>
+            </div>
+
+            <div class="restriction-box">
+              <div class="restriction-icon">🛋️</div>
+              <div>
+                <strong>Elevate Right Foot</strong>
+                <div style="font-size:0.8rem; color:#0d7377; font-weight:700;">Duration: 2 Weeks (Continuous)</div>
+                <div style="font-size:0.84rem; color:#64748b; margin-top:2px;">Use 2 pillows when lying down to promote venous return & reduce swelling.</div>
+              </div>
+            </div>
+
+            <div class="restriction-box">
+              <div class="restriction-icon">🚗</div>
+              <div>
+                <strong>No Vehicle Driving</strong>
+                <div style="font-size:0.8rem; color:#b91c1c; font-weight:700;">Duration: 1 Week Minimum</div>
+                <div style="font-size:0.84rem; color:#64748b; margin-top:2px;">Pedal pressure on the right foot impairs wound margins and safety.</div>
+              </div>
+            </div>
+
+            <div class="restriction-box">
+              <div class="restriction-icon">🦶</div>
+              <div>
+                <strong>Never Walk Barefoot</strong>
+                <div style="font-size:0.8rem; color:#b91c1c; font-weight:700;">Duration: Permanent / Indefinite</div>
+                <div style="font-size:0.84rem; color:#64748b; margin-top:2px;">Always wear padded diabetic soft-sole footwear, even inside bedroom/home.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual Recovery Roadmap -->
+        <div>
+          <h3 style="font-size:1.1rem; color:#0f172a; margin-bottom:12px;" data-i18n="recovery_roadmap_title">📈 Visual Recovery Roadmap</h3>
+          <div class="timeline-milestones">
+            <div class="milestone-item">
+              <div class="milestone-title">Day 0 (Oct 12): Hospital Discharge</div>
+              <div class="milestone-desc">Transfer home; start oral antibiotic course and bedtime insulin injections.</div>
+            </div>
+            <div class="milestone-item">
+              <div class="milestone-title">Day 7 (Oct 19): Wound Clinic Evaluation</div>
+              <div class="milestone-desc">Ulcer depth assessed; granulation verified; antibiotic therapy completion review.</div>
+            </div>
+            <div class="milestone-item">
+              <div class="milestone-title">Day 14 (Oct 26): Diabetology & HbA1c Calibration</div>
+              <div class="milestone-desc">Review lab parameters; titrate oral hypoglycemic agents and insulin.</div>
+            </div>
+            <div class="milestone-item">
+              <div class="milestone-title">Day 28+: Custom Orthotic Footwear Fitting</div>
+              <div class="milestone-desc">Transition to custom-molded protective diabetic shoes for long-term foot protection.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 7: WARNING SIGNS                       -->
+    <!-- ========================================== -->
+    <section id="tab-warnings" class="tab-pane" role="tabpanel">
+      <div class="content-card">
+        <div class="card-header-flex">
+          <div class="card-title-group">
+            <h2 style="color:#b91c1c;" data-i18n="warning_signs_title">⚠️ Red-Flag Warning Signs - When to Seek Immediate Care</h2>
+            <div class="card-desc" data-i18n="warning_signs_desc">If you experience ANY of the following symptoms, do NOT wait for your scheduled appointment. Go to the nearest emergency room immediately.</div>
+          </div>
+          <div>
+            <span class="source-tag source-summary" style="font-size:0.82rem; padding:6px 12px;">From Your Official Discharge Summary</span>
+          </div>
+        </div>
+
+        <!-- Warning Signs Grid (Red / Orange Alert Cards) -->
+        <div class="warning-signs-grid">
+          <!-- Sign 1: Fever -->
+          <div class="warning-sign-card">
+            <div class="warning-card-head">
+              <div class="warning-icon">🌡️</div>
+              <div class="warning-title" data-i18n="warn_1_title">Fever > 101°F (38.3°C)</div>
+            </div>
+            <div class="warning-desc" data-i18n="warn_1_desc">High body temperature, persistent shivering, or chills indicates systemic spread of infection requiring prompt medical reassessment.</div>
+            <span class="badge badge-red">Emergency Signal</span>
+          </div>
+
+          <!-- Sign 2: Wound Redness/Pus -->
+          <div class="warning-sign-card">
+            <div class="warning-card-head">
+              <div class="warning-icon">🩹</div>
+              <div class="warning-title" data-i18n="warn_2_title">Increased Redness, Swelling or Pus</div>
+            </div>
+            <div class="warning-desc" data-i18n="warn_2_desc">Spreading warmth, throbbing pain, foul-smelling yellow/green drainage, or swelling extending up the ankle from the right foot ulcer.</div>
+            <span class="badge badge-red">Local Infection Spread</span>
+          </div>
+
+          <!-- Sign 3: Critical Blood Sugar -->
+          <div class="warning-sign-card">
+            <div class="warning-card-head">
+              <div class="warning-icon">🩸</div>
+              <div class="warning-title" data-i18n="warn_3_title">Sugar > 300 or < 70 mg/dL</div>
+            </div>
+            <div class="warning-desc" data-i18n="warn_3_desc">Dangerously high blood glucose (>300) risks ketoacidosis. Extremely low sugar (&lt;70) causes shakiness, confusion, and fainting.</div>
+            <span class="badge badge-red">Glycemic Emergency</span>
+          </div>
+
+          <!-- Sign 4: Chest Pain / Breathing -->
+          <div class="warning-sign-card">
+            <div class="warning-card-head">
+              <div class="warning-icon">🫀</div>
+              <div class="warning-title" data-i18n="warn_4_title">Sudden Chest Pain or Breathlessness</div>
+            </div>
+            <div class="warning-desc" data-i18n="warn_4_desc">Tightness, crushing pressure in the chest, pain radiating to the left arm or jaw, or unexplained sudden difficulty breathing.</div>
+            <span class="badge badge-red">Call 108 / 112 Immediately</span>
+          </div>
+
+          <!-- Sign 5: Foot Discoloration -->
+          <div class="warning-sign-card">
+            <div class="warning-card-head">
+              <div class="warning-icon">🦶</div>
+              <div class="warning-title" data-i18n="warn_5_title">Numbness or Dark Discoloration of Foot</div>
+            </div>
+            <div class="warning-desc" data-i18n="warn_5_desc">Right foot or toes turning purple, bluish, black, or suddenly cold and pale, indicating arterial blood flow blockage.</div>
+            <span class="badge badge-red">Vascular Alert</span>
+          </div>
+
+          <!-- Sign 6: Neurological / Vision -->
+          <div class="warning-sign-card">
+            <div class="warning-card-head">
+              <div class="warning-icon">🧠</div>
+              <div class="warning-title" data-i18n="warn_6_title">Severe Headache or Vision Changes</div>
+            </div>
+            <div class="warning-desc" data-i18n="warn_6_desc">Sudden blurry vision, double vision, loss of peripheral sight, intense unusual headache, dizziness, or loss of balance.</div>
+            <span class="badge badge-red">Neurological Alert</span>
+          </div>
+        </div>
+
+        <!-- General Emergency Guidance Section (Separately Labelled) -->
+        <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:var(--radius-md); padding:20px; margin-bottom:28px;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+            <span style="font-size:1.3rem;">💡</span>
+            <strong style="font-size:1rem; color:#92400e;" data-i18n="general_emergency_guidance_title">General First-Aid & Emergency Action Guidance</strong>
+            <span class="source-tag source-general">General Clinical Suggestion</span>
+          </div>
+          <div style="font-size:0.88rem; color:#78350f; line-height:1.6;">
+            • <strong>If Blood Sugar drops below 70 mg/dL (Hypoglycemia):</strong> Immediately consume 15 grams of fast-acting sugar (e.g., 3 teaspoons of sugar dissolved in water, or 1/2 cup fruit juice). Rest for 15 minutes and re-check blood sugar. Repeat if still below 70 mg/dL. Notify doctor.<br>
+            • <strong>If Dressing falls off or gets soaked:</strong> Do not panic. Clean your hands, gently rinse with sterile saline, re-apply prescribed ointment, cover with clean sterile gauze, and keep your foot elevated.
+          </div>
+        </div>
+
+        <!-- Emergency Contacts Hub Banner -->
+        <div class="emergency-hub-banner">
+          <div>
+            <div style="font-size:1.25rem; font-weight:800;" data-i18n="emergency_hub_title">🚨 Emergency Helpline Contacts</div>
+            <div style="font-size:0.85rem; color:#fecaca; margin-top:4px;">Available 24 hours a day, 7 days a week</div>
+          </div>
+
+          <div class="emergency-call-card">
+            <div class="emergency-title">Hospital Emergency Desk</div>
+            <div class="emergency-number">+91 80 2345 6789</div>
+            <div style="font-size:0.75rem; color:#fee2e2;">City General Hospital Casualties</div>
+          </div>
+
+          <div class="emergency-call-card">
+            <div class="emergency-title">Ambulance Emergency</div>
+            <div class="emergency-number">108</div>
+            <div style="font-size:0.75rem; color:#fee2e2;">Toll-Free Emergency Medical Response</div>
+          </div>
+
+          <div class="emergency-call-card">
+            <div class="emergency-title">National Emergency</div>
+            <div class="emergency-number">112</div>
+            <div style="font-size:0.75rem; color:#fee2e2;">Universal Emergency Service</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- DEDICATED PRINTABLE CARE SHEET TEMPLATE (Hidden on screen) -->
+  <!-- ======================================================== -->
+  <div id="printableCareSheet">
+    <div style="border-bottom: 2px solid #0d7377; padding-bottom: 12px; margin-bottom: 20px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h1 style="color:#0d7377; margin:0; font-size:24px;">CareNest • Patient Care Sheet</h1>
+          <p style="margin:2px 0 0 0; color:#555; font-size:14px;">Personalized Post-Discharge Recovery & Medication Roadmap</p>
+        </div>
+        <div style="text-align:right; font-size:12px; color:#555;">
+          <strong>Generated:</strong> <span id="printDateGenerated">Oct 16, 2026</span><br>
+          <strong>Hospital:</strong> City General Hospital
+        </div>
+      </div>
+    </div>
+
+    <!-- Patient Header -->
+    <div style="background:#f4f7f6; border:1px solid #ddd; padding:12px 16px; border-radius:6px; margin-bottom:20px; font-size:13px;">
+      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:12px;">
+        <div><strong>Patient:</strong> Rajesh Kumar (45, M)</div>
+        <div><strong>MRN / IPD:</strong> CGH-2026-90412</div>
+        <div><strong>Admission:</strong> Oct 5, 2026</div>
+        <div><strong>Discharge:</strong> Oct 12, 2026</div>
+      </div>
+      <div style="margin-top:6px;">
+        <strong>Diagnosis:</strong> Type 2 Diabetes Mellitus with Diabetic Foot Ulcer (Right Foot)
+      </div>
+    </div>
+
+    <!-- Medicine Schedule Table -->
+    <h3 style="color:#0d7377; font-size:16px; border-bottom:1px solid #ccc; padding-bottom:4px; margin-bottom:8px;">1. Daily Medication Schedule</h3>
+    <table style="width:100%; border-collapse:collapse; margin-bottom:20px; font-size:12px;" border="1" cellpadding="6">
+      <thead style="background:#eef6f6;">
+        <tr>
+          <th>Timing</th>
+          <th>Medicine Name</th>
+          <th>Dosage</th>
+          <th>Food Instructions</th>
+          <th>Duration & Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Morning (7:30 AM)</strong></td>
+          <td>Pantoprazole</td>
+          <td>40 mg</td>
+          <td>Strictly 30 mins BEFORE breakfast</td>
+          <td>Stomach protection</td>
+        </tr>
+        <tr>
+          <td><strong>Morning (8:30 AM)</strong></td>
+          <td>Clopidogrel</td>
+          <td>75 mg</td>
+          <td>After breakfast</td>
+          <td>Blood thinner / Circulation</td>
+        </tr>
+        <tr>
+          <td><strong>Morning (8:30 AM)</strong></td>
+          <td>Metformin</td>
+          <td>500 mg</td>
+          <td>After breakfast</td>
+          <td>Blood sugar control</td>
+        </tr>
+        <tr>
+          <td><strong>Morning (8:30 AM)</strong></td>
+          <td>Amoxicillin-Clavulanate</td>
+          <td>625 mg</td>
+          <td>After breakfast</td>
+          <td>Antibiotic (Day 1 of 7)</td>
+        </tr>
+        <tr>
+          <td><strong>Afternoon (1:30 PM)</strong></td>
+          <td>Multivitamin</td>
+          <td>1 Tablet</td>
+          <td>After lunch</td>
+          <td>Wound healing support (30 days)</td>
+        </tr>
+        <tr>
+          <td><strong>Afternoon (1:30 PM)</strong></td>
+          <td>Amoxicillin-Clavulanate</td>
+          <td>625 mg</td>
+          <td>After lunch</td>
+          <td>Antibiotic dose 2</td>
+        </tr>
+        <tr>
+          <td><strong>Evening (8:00 PM)</strong></td>
+          <td>Metformin</td>
+          <td>500 mg</td>
+          <td>After dinner</td>
+          <td>Blood sugar control</td>
+        </tr>
+        <tr>
+          <td><strong>Evening (8:00 PM)</strong></td>
+          <td>Amoxicillin-Clavulanate</td>
+          <td>625 mg</td>
+          <td>After dinner</td>
+          <td>Antibiotic dose 3</td>
+        </tr>
+        <tr>
+          <td><strong>Bedtime (10:00 PM)</strong></td>
+          <td>Insulin Glargine (Lantus)</td>
+          <td>20 Units</td>
+          <td>Bedtime (Subcutaneous injection)</td>
+          <td>Rotate injection sites; Keep cool</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Wound Care & Activity -->
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:20px; font-size:12px;">
+      <div style="border:1px solid #ddd; padding:12px; border-radius:6px;">
+        <h4 style="margin-top:0; color:#0d7377;">2. Wound Care Protocol (Daily)</h4>
+        <ol style="margin:0; padding-left:18px; line-height:1.5;">
+          <li>Wash hands thoroughly with soap for 20 seconds.</li>
+          <li>Gently clean ulcer with sterile Normal Saline (0.9%).</li>
+          <li>Apply Betadine around edges and Mupirocin ointment on ulcer.</li>
+          <li>Cover with sterile gauze; keep dry and clean.</li>
+          <li>Never walk barefoot; wear soft diabetic footwear always.</li>
+        </ol>
+      </div>
+
+      <div style="border:1px solid #ddd; padding:12px; border-radius:6px;">
+        <h4 style="margin-top:0; color:#0d7377;">3. Activity & Movement Limits</h4>
+        <ul style="margin:0; padding-left:18px; line-height:1.5;">
+          <li><strong>No standing/walking:</strong> Rest strictly for 2 weeks.</li>
+          <li><strong>Foot elevation:</strong> Prop right leg on pillows when seated/sleeping.</li>
+          <li><strong>No driving:</strong> Avoid driving for 1 week minimum.</li>
+          <li><strong>Diet:</strong> Diabetic diet; 5-6 small meals; 2-3L water; no sugar/sweets/fried foods.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Follow up & Red Flags -->
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; font-size:12px;">
+      <div style="border:1px solid #ddd; padding:12px; border-radius:6px;">
+        <h4 style="margin-top:0; color:#0d7377;">4. Scheduled Follow-up Visits</h4>
+        <p style="margin:4px 0;"><strong>• Oct 19, 2026 (10:00 AM):</strong> Wound Care Clinic - Dr. Anita Rao</p>
+        <p style="margin:4px 0;"><strong>• Oct 26, 2026 (11:30 AM):</strong> Diabetologist - Dr. Vikram Joshi</p>
+        <p style="margin:4px 0; color:#c2410c;"><strong>Tests required:</strong> Complete HbA1c test and bring your 4-times daily sugar log.</p>
+      </div>
+
+      <div style="border:1px solid #fecaca; background:#fffbfb; padding:12px; border-radius:6px;">
+        <h4 style="margin-top:0; color:#b91c1c;">5. Red-Flag Warning Signs (Return Immediately)</h4>
+        <ul style="margin:0; padding-left:18px; line-height:1.4; color:#7f1d1d;">
+          <li>Fever > 101°F or severe chills</li>
+          <li>Increased redness, heat, swelling, or foul pus from wound</li>
+          <li>Blood sugar > 300 mg/dL or < 70 mg/dL</li>
+          <li>Sudden chest tightness or shortness of breath</li>
+          <li>Right foot turns purple/black/cold</li>
+        </ul>
+        <div style="margin-top:8px; font-weight:bold; color:#b91c1c;">
+          Hospital Emergency: +91 80 2345 6789 | Ambulance: 108 / 112
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px; font-size:11px; color:#777; text-align:center; border-top:1px solid #ddd; padding-top:8px;">
+      CareNest Universal Healthcare Portal • Discharge Summary Assistant • Confidential Medical Document
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- JAVASCRIPT LOGIC & STATE ENGINE                          -->
+  <!-- ======================================================== -->
+  <script>
+    /* ==========================================================
+       1. DEMO DATA & FOOD DATABASE (22+ Items)
+       ========================================================== */
+    const FOOD_DATABASE = [
+      {
+        name: "Rice",
+        status: "Limited",
+        explanation: "Avoid white polished rice as it triggers rapid blood sugar surges. Small, measured portions (half cup) of fiber-rich brown rice or red rice are acceptable.",
+        source: "Discharge Summary"
+      },
+      {
+        name: "Banana",
+        status: "Limited",
+        explanation: "Bananas contain high natural sugars and high glycemic load. If consumed, limit to half a small, slightly raw banana earlier in the day.",
+        source: "General Suggestion"
+      },
+      {
+        name: "Milk",
+        status: "Allowed",
+        explanation: "Low-fat or skimmed cow's milk is safe and provides calcium. Strictly avoid adding sugar, flavored powders, or malt.",
+        source: "General Suggestion"
+      },
+      {
+        name: "Eggs",
+        status: "Allowed",
+        explanation: "Excellent source of high-quality protein and amino acids necessary for collagen synthesis and rapid healing of your foot ulcer.",
+        source: "General Suggestion"
+      },
+      {
+        name: "Sugar",
+        status: "Avoid",
+        explanation: "Strictly prohibited in diabetes. Causes severe blood sugar spikes, impairs white blood cell function, and delays wound recovery.",
+        source: "Discharge Summary"
+      },
+      {
+        name: "Green vegetables",
+        status: "Allowed",
+        explanation: "Highly recommended daily (spinach, methi, gourds, broccoli). High in fiber, vitamins, and zinc with negligible glycemic load.",
+        source: "Discharge Summary"
+      },
+      {
+        name: "Fried food",
+        status: "Avoid",
+        explanation: "Specifically restricted in your discharge summary. Deep-fried items exacerbate inflammation, cause lipid imbalance, and compromise arterial healing.",
+        source: "Discharge Summary"
+      },
+      {
+        name: "Curd",
+        status: "Allowed",
+        explanation: "Unsweetened homemade curd or plain yogurt provides valuable probiotics that help balance gut flora while taking oral antibiotics.",
+        source: "General Suggestion"
+      },
+      {
+        name: "Mango",
+        status: "Limited",
+        explanation: "Very high fructose and glycemic index. Should be strictly avoided while treating an active foot ulcer to prevent dangerous sugar spikes.",
+        source: "General Suggestion"
+      },
+      {
+        name: "Dal",
+        status: "Allowed",
+        explanation: "Lentils (moong, masoor, toor) provide plant-based protein, dietary fiber, and complex carbohydrates with steady digestion.",
+        source: "Discharge Summary"
+      },
+      {
+        name: "Sweets",
+        status: "Avoid",
+        explanation: "Strictly forbidden. All traditional Indian sweets (halwa, gulab jamun, laddu) and Western pastries cause acute hyperglycemia.",
+        source: "Discharge Summary"
+      },
+      {
+        name: "Whole wheat roti",
+        status: "Allowed",
+        explanation: "Nutritious complex carbohydrate that releases glucose slowly. Pair with green vegetables or dal for optimal glycemic control.",
+        source: "General Suggestion"
+      },
+      {
+        name: "White bread",
+        status: "Avoid",
+        explanation: "Made with refined maida. High glycemic index with almost zero dietary fiber. Causes rapid glucose fluctuations.",
+        source: "Discharge Summary"
+      },
+      {
+        name: "Chicken",
+        status: "Allowed",
+        explanation: "Skinless, lean chicken (boiled, steamed, or in light soup) provides vital dietary protein essential for rebuilding ulcer tissue.",
+        source: "General Suggestion"
+      },
+      {
+        name: "Fish",
+        status: "Allowed",
+        explanation: "Rich in lean protein and anti-inflammatory Omega-3 fatty acids which improve peripheral blood flow and assist tissue repair.",
+        source: "General Suggestion"
+      },
+      {
+        name: "Biryani",
+        status: "Limited",
+        explanation: "Standard restaurant biryanis are prepared with large quantities of white polished rice and oils/ghee. Avoid or consume only very small homemade portions made with brown rice.",
+        source: "Discharge Summary"
+      },
+      {
+        name: "Tea without sugar",
+        status: "Allowed",
+        explanation: "Black tea, green tea, or spiced tea made strictly WITHOUT sugar or artificial syrups is safe. Limit to 2 cups daily.",
+        source: "General Suggestion"
+      },
+      {
+        name: "Soft drinks",
+        status: "Avoid",
+        explanation: "Completely avoid all sodas, colas, sweetened iced teas, and carbonated beverages. They contain massive concentrations of liquid sugars.",
+        source: "Discharge Summary"
+      },
+      {
+        name: "Fruit juice",
+        status: "Limited",
+        explanation: "Juicing strips the natural fiber and concentrates simple fruit sugars, provoking rapid glycemic spikes. Prefer whole fresh fruits in limited amounts.",
+        source: "General Suggestion"
+      },
+      {
+        name: "Oats",
+        status: "Allowed",
+        explanation: "Plain rolled or steel-cut oats contain beta-glucan soluble fiber that helps improve insulin sensitivity and stabilizes post-meal glucose.",
+        source: "Discharge Summary"
+      },
+      {
+        name: "Ice cream",
+        status: "Avoid",
+        explanation: "High in both saturated fats and refined sugars. Severely disrupts diabetic blood glucose management.",
+        source: "Discharge Summary"
+      },
+      {
+        name: "Coffee without sugar",
+        status: "Allowed",
+        explanation: "Black coffee without sugar is permitted in moderation (1 to 2 cups per day). Drink ample water throughout the day.",
+        source: "General Suggestion"
+      },
+      {
+        name: "Paneer (Cottage Cheese)",
+        status: "Allowed",
+        explanation: "Low-fat fresh paneer is rich in casein protein and calcium. Excellent vegetarian healing food.",
+        source: "General Suggestion"
+      },
+      {
+        name: "Papaya",
+        status: "Limited",
+        explanation: "Moderate glycemic index. A small single slice (approx. 80-100g) is acceptable as an occasional midday snack.",
+        source: "General Suggestion"
+      }
+    ];
+
+    /* ==========================================================
+       2. MULTI-LANGUAGE TRANSLATION DICTIONARY
+       ========================================================== */
+    const TRANSLATIONS = {
+      en: {
+        back_to_dashboard: "Back to Dashboard",
+        portal_title: "Discharge Summary Assistant",
+        portal_subtitle: "AI Clinical Document Decoder & Post-Discharge Navigator",
+        download_care_sheet: "Download Care Sheet",
+        disclaimer_text: "Important Reference Notice: This summary assistant is designed to simplify your hospital discharge records. Translation & interpretations are for reference only. Always adhere strictly to your attending physician's printed advice.",
+        tab_upload: "Upload & Summary",
+        tab_careplan: "My Care Plan",
+        tab_medicine: "Medicine Schedule",
+        tab_diet: "Diet Plan",
+        tab_can_i_eat: "Can I Eat This?",
+        tab_recovery: "Follow-up & Recovery",
+        tab_warnings: "Warning Signs",
+        upload_card_title: "Upload Discharge Summary",
+        upload_card_desc: "Upload your hospital discharge summary (PDF or image). Our clinical engine will extract key medications, diet, and wound care instructions.",
+        try_sample_btn: "Try Sample Summary",
+        drag_drop_text: "Drag and drop your Discharge Summary here",
+        supported_formats: "Supported formats: PDF, JPG, JPEG, PNG (Max file size: 10 MB)",
+        browse_files_btn: "Browse Files",
+        remove_file: "Remove",
+        patient_label: "Patient Name & Demographics",
+        hospital_label: "Treating Hospital",
+        stay_dates_label: "Admission & Discharge Dates",
+        diagnosis_label: "Primary Clinical Diagnosis",
+        sec_inpatient_treatment: "Inpatient Treatment Rendered",
+        sec_meds_summary: "Discharge Medications (6 Prescribed)",
+        sec_diet_summary: "Dietary Instructions",
+        sec_wound_summary: "Wound Care & Activity Restrictions",
+        careplan_title: "My Personalized Care Plan",
+        careplan_desc: "Complex medical terminology translated into straightforward, everyday steps you and your family can follow at home.",
+        acc_1_title: "1. Diagnosis Explained (Simple Language)",
+        acc_2_title: "2. What Happened in the Hospital",
+        acc_3_title: "3. Home Care Instructions",
+        acc_4_title: "4. Rest & Activity Guidance",
+        acc_5_title: "5. Wound Care Protocol (Step-by-Step)",
+        acc_6_title: "6. Recovery Timeline & Milestones",
+        view_orig_text: "View Original Clinical Text",
+        medicine_title: "Visual Daily Medicine Schedule",
+        medicine_desc: "Organized by time of day. Click 'Mark Taken' to track your doses today.",
+        print_schedule_btn: "Print Medicine Schedule",
+        morning_period: "Morning Routine",
+        afternoon_period: "Afternoon Routine",
+        evening_period: "Evening Routine",
+        bedtime_period: "Bedtime Routine",
+        diet_title: "Diabetic & Wound Healing Diet Plan",
+        diet_desc: "Specific dietary boundaries extracted from your discharge papers plus evidence-based nutrition to support tissue healing.",
+        foods_recommended: "Foods Recommended",
+        foods_avoid: "Foods to Avoid",
+        foods_limit: "Foods to Limit",
+        food_checker_title: "Can I Eat This? - Food Safety Finder",
+        food_checker_desc: "Type any food or ingredient to see if it is safe, limited, or restricted based on your diabetes and foot ulcer recovery.",
+        search_btn: "Search",
+        full_food_db_title: "Browse Full Food Database",
+        followup_title: "Follow-up Appointments & Recovery Roadmap",
+        followup_desc: "Do not miss these hospital clinic check-ups. Timely review prevents wound infection relapse.",
+        warning_signs_title: "Red-Flag Warning Signs - When to Seek Immediate Care",
+        warning_signs_desc: "If you experience ANY of the following symptoms, do NOT wait for your scheduled appointment. Go to the nearest emergency room immediately.",
+        warn_1_title: "Fever > 101°F (38.3°C)",
+        warn_2_title: "Increased Redness, Swelling or Pus",
+        warn_3_title: "Sugar > 300 or < 70 mg/dL",
+        warn_4_title: "Sudden Chest Pain or Breathlessness",
+        warn_5_title: "Numbness or Dark Discoloration of Foot",
+        warn_6_title: "Severe Headache or Vision Changes",
+        emergency_hub_title: "Emergency Helpline Contacts"
+      },
+      te: {
+        back_to_dashboard: "డాష్‌బోర్డ్‌కు తిరిగి వెళ్లండి",
+        portal_title: "డిశ్చార్జ్ సారాంశ సహాయకుడు",
+        portal_subtitle: "వైద్య పత్రాల సరళీకరణ మరియు సంరక్షణ మార్గదర్శి",
+        download_care_sheet: "కేర్ షీట్ డౌన్‌లోడ్ చేయండి",
+        disclaimer_text: "ముఖ్యమైన గమనిక: ఈ సారాంశం మీ రికార్డులను సులభంగా అర్థం చేసుకోవడానికి మాత్రమే. అనువాదం కేవలం సూచనార్థం. మీ డాక్టర్ ఇచ్చిన అసలు ముద్రిత పత్రాన్ని మాత్రమే అనుసరించండి.",
+        tab_upload: "అప్‌లోడ్ & సారాంశం",
+        tab_careplan: "నా సంరక్షణ ప్రణాళిక",
+        tab_medicine: "మందుల షెడ్యూల్",
+        tab_diet: "ఆహార ప్రణాళిక",
+        tab_can_i_eat: "నేను ఇది తినవచ్చా?",
+        tab_recovery: "ఫాలో-అప్ & రికవరీ",
+        tab_warnings: "హెచ్చరిక సంకేతాలు",
+        upload_card_title: "డిశ్చార్జ్ సారాంశాన్ని అప్‌లోడ్ చేయండి",
+        upload_card_desc: "మీ ఆసుపత్రి డిశ్చార్జ్ పేపర్లను అప్‌లోడ్ చేయండి. మందులు మరియు గాయం సంరక్షణ వివరాలు స్వయంచాలకంగా చూపబడతాయి.",
+        try_sample_btn: "నమూనా సారాంశాన్ని చూడండి",
+        drag_drop_text: "మీ ఫైల్‌ను ఇక్కడ డ్రాగ్ చేసి వదలండి",
+        supported_formats: "మద్దతు ఫార్మాట్లు: PDF, JPG, PNG (గరిష్ట పరిమాణం: 10 MB)",
+        browse_files_btn: "ఫైళ్ళను ఎంచుకోండి",
+        remove_file: "తొలగించు",
+        patient_label: "రోగి వివరాలు",
+        hospital_label: "చికిత్స అందించిన ఆసుపత్రి",
+        stay_dates_label: "చేరిన మరియు డిశ్చార్జ్ తేదీలు",
+        diagnosis_label: "రోగ నిర్ధారణ",
+        sec_inpatient_treatment: "ఆసుపత్రిలో అందించిన చికిత్స",
+        sec_meds_summary: "డిశ్చార్జ్ మందులు (6 సూచించినవి)",
+        sec_diet_summary: "ఆహార మార్గదర్శకాలు",
+        sec_wound_summary: "గాయం సంరక్షణ & విశ్రాంతి సూచనలు",
+        careplan_title: "నా సంరక్షణ ప్రణాళిక (సరళ భాషలో)",
+        careplan_desc: "క్లిష్టమైన వైద్య పదాలు మీ కుటుంబం సులభంగా అనుసరించడానికి సరళీకరించబడ్డాయి.",
+        acc_1_title: "1. వ్యాధి వివరణ (సులభమైన భాషలో)",
+        acc_2_title: "2. ఆసుపత్రిలో ఏమి జరిగింది",
+        acc_3_title: "3. ఇంట్లో సంరక్షణ సూచనలు",
+        acc_4_title: "4. విశ్రాంతి మరియు నడక పరిమితులు",
+        acc_5_title: "5. గాయం శుభ్రపరిచే పద్ధతి (దశలవారీగా)",
+        acc_6_title: "6. కోలుకునే సమయరేఖ",
+        view_orig_text: "అసలు డాక్టర్ వాక్యాలను చూడండి",
+        medicine_title: "రోజువారీ మందుల సమయ పట్టిక",
+        medicine_desc: "సమయాన్ని బట్టి అమర్చబడింది. తీసుకున్న తర్వాత 'Mark Taken' పై క్లిక్ చేయండి.",
+        print_schedule_btn: "మందుల పట్టికను ప్రింట్ చేయండి",
+        morning_period: "ఉదయం సమయం",
+        afternoon_period: "మధ్యాహ్నం సమయం",
+        evening_period: "సాయంత్రం సమయం",
+        bedtime_period: "రాత్రి పడుకునే ముందు",
+        diet_title: "మధుమేహం & గాయం నయమయ్యే ఆహార ప్రణాళిక",
+        diet_desc: "డిశ్చార్జ్ పత్రాల ప్రకారం తినవలసినవి మరియు నివారించవలసినవి.",
+        foods_recommended: "సిఫార్సు చేయబడిన ఆహారాలు",
+        foods_avoid: "పూర్తిగా నివారించవలసినవి",
+        foods_limit: "పరిమితంగా తీసుకోవలసినవి",
+        food_checker_title: "నేను ఇది తినవచ్చా? - ఆహార భద్రత శోధన",
+        food_checker_desc: "మీరు తినాలనుకుంటున్న ఆహార పేరును టైప్ చేసి భద్రతను తెలుసుకోండి.",
+        search_btn: "వెతకండి",
+        full_food_db_title: "మొత్తం ఆహార జాబితాను బ్రౌజ్ చేయండి",
+        followup_title: "డాక్టర్ పునఃపరిశీలన తేదీలు",
+        followup_desc: "ఆసుపత్రి అపాయింట్‌మెంట్లను మిస్ కావద్దు. సకాలంలో చూపించుకోవడం చాలా ముఖ్యం.",
+        warning_signs_title: "ప్రమాద హెచ్చరిక సంకేతాలు - అత్యవసర జాగ్రత్తలు",
+        warning_signs_desc: "ఈ లక్షణాలు కనిపిస్తే వెంటనే ఆసుపత్రికి వెళ్లండి.",
+        warn_1_title: "తీవ్రమైన జ్వరం > 101°F (38.3°C)",
+        warn_2_title: "గాయం ఎర్రబడటం, వాపు లేదా చీము కారడం",
+        warn_3_title: "షుగర్ > 300 లేదా < 70 mg/dL",
+        warn_4_title: "ఛాతీ నొప్పి లేదా శ్వాస తీసుకోవడంలో ఇబ్బంది",
+        warn_5_title: "కాలు లేదా పాదం మొద్దుబారడం, నల్లబడటం",
+        warn_6_title: "తీవ్రమైన తలనొప్పి లేదా కంటి చూపులో మార్పు",
+        emergency_hub_title: "అత్యవసర హెల్ప్‌లైన్ నంబర్లు"
+      },
+      hi: {
+        back_to_dashboard: "डैशबोर्ड पर वापस जाएं",
+        portal_title: "डिस्चार्ज समरी सहायक",
+        portal_subtitle: "मेडिकल रिकॉर्ड्स का सरल अनुवाद और देखभाल मार्गदर्शिका",
+        download_care_sheet: "केयर शीट डाउनलोड करें",
+        disclaimer_text: "महत्वपूर्ण सूचना: यह सारांश केवल आपकी सुविधा और संदर्भ के लिए है। अनुवाद केवल मार्गदर्शन हेतु है। हमेशा अपने चिकित्सक के लिखित निर्देशों का ही पालन करें।",
+        tab_upload: "अपलोड और सारांश",
+        tab_careplan: "मेरी देखभाल योजना",
+        tab_medicine: "दवाओं का समय",
+        tab_diet: "आहार योजना",
+        tab_can_i_eat: "क्या मैं यह खा सकता हूँ?",
+        tab_recovery: "फॉलो-अप और सुधार",
+        tab_warnings: "खतरे के संकेत",
+        upload_card_title: "डिस्चार्ज सारांश अपलोड करें",
+        upload_card_desc: "अस्पताल का डिस्चार्ज पेपर (PDF या फोटो) अपलोड करें। मुख्य दवाइयां, खान-पान और घाव की देखभाल की जानकारी स्वतः दिखेगी।",
+        try_sample_btn: "नमूना सारांश देखें",
+        drag_drop_text: "अपनी फ़ाइल यहाँ खींचकर छोड़ें",
+        supported_formats: "स्वीकृत प्रारूप: PDF, JPG, PNG (अधिकतम: 10 MB)",
+        browse_files_btn: "फ़ाइलें चुनें",
+        remove_file: "हटाएं",
+        patient_label: "मरीज का विवरण",
+        hospital_label: "अस्पताल का नाम",
+        stay_dates_label: "भर्ती और डिस्चार्ज तिथि",
+        diagnosis_label: "मुख्य बीमारी (डायग्नोसिस)",
+        sec_inpatient_treatment: "अस्पताल में किया गया उपचार",
+        sec_meds_summary: "डिस्चार्ज पर दी गई दवाएं (6 दवाइयां)",
+        sec_diet_summary: "खान-पान के निर्देश",
+        sec_wound_summary: "घाव की देखभाल और आराम के नियम",
+        careplan_title: "मेरी व्यक्तिगत देखभाल योजना",
+        careplan_desc: "कठिन मेडिकल भाषा को सरल घरेलू निर्देशों में बदला गया है ताकि आप और आपका परिवार आसानी से समझ सकें।",
+        acc_1_title: "1. बीमारी का सरल विवरण",
+        acc_2_title: "2. अस्पताल में क्या उपचार हुआ",
+        acc_3_title: "3. घर पर देखभाल के निर्देश",
+        acc_4_title: "4. आराम और चलने-फिरने के नियम",
+        acc_5_title: "5. घाव की ड्रेसिंग के चरण",
+        acc_6_title: "6. ठीक होने की समय-सीमा",
+        view_orig_text: "मूल डॉक्टर का विवरण देखें",
+        medicine_title: "दैनिक दवा समय-सारणी",
+        medicine_desc: "समय के अनुसार व्यवस्थित। खुराक लेने के बाद 'Mark Taken' पर क्लिक करें।",
+        print_schedule_btn: "दवा अनुसूची प्रिंट करें",
+        morning_period: "सुबह का समय",
+        afternoon_period: "दोपहर का समय",
+        evening_period: "शाम का समय",
+        bedtime_period: "सोते समय",
+        diet_title: "डायबिटीज और घाव भरने हेतु डाइट प्लान",
+        diet_desc: "डिस्चार्ज पेपर के अनुसार क्या खाना चाहिए और किन चीजों से पूर्ण परहेज रखना चाहिए।",
+        foods_recommended: "खाने योग्य अनुशंसित खाद्य",
+        foods_avoid: "पूरी तरह वर्जित खाद्य",
+        foods_limit: "सीमित मात्रा में लें",
+        food_checker_title: "क्या मैं यह खा सकता हूँ? - खाद्य सुरक्षा खोज",
+        food_checker_desc: "किसी भी भोजन का नाम लिखें और जानें कि वह आपकी सेहत के लिए सुरक्षित है या नहीं।",
+        search_btn: "खोजें",
+        full_food_db_title: "संपूर्ण खाद्य डेटाबेस ब्राउज़ करें",
+        followup_title: "फॉलो-अप तारीखें और सुधार का रास्ता",
+        followup_desc: "डॉक्टर के चेक-अप की तारीख कभी न भूलें। समय पर जांच संक्रमण को दोबारा होने से रोकती है।",
+        warning_signs_title: "खतरे के लाल संकेत - तुरंत डॉक्टर से संपर्क करें",
+        warning_signs_desc: "यदि इनमें से कोई भी लक्षण दिखाई दे, तो तारीख का इंतजार न करें, तुरंत आपातकालीन विभाग जाएँ।",
+        warn_1_title: "तेज बुखार > 101°F (38.3°C)",
+        warn_2_title: "घाव में लालिमा, सूजन या मवाद बढ़ना",
+        warn_3_title: "ब्लड शुगर > 300 या < 70 mg/dL",
+        warn_4_title: "अचानक सीने में दर्द या सांस फूलना",
+        warn_5_title: "पैर का सुन्न होना या काला पड़ना",
+        warn_6_title: "गंभीर सिरदर्द या धुंधला दिखाई देना",
+        emergency_hub_title: "आपातकालीन संपर्क नंबर"
+      },
+      ta: {
+        back_to_dashboard: "டாஷ்போர்டுக்குத் திரும்பு",
+        portal_title: "டிஸ்சார்ஜ் சுருக்க உதவியாளர்",
+        portal_subtitle: "மருத்துவ ஆவண எளிதாக்கி மற்றும் பராமரிப்பு வழிகாட்டி",
+        download_care_sheet: "பராமரிப்பு தாளைப் பதிவிறக்குக",
+        disclaimer_text: "முக்கிய குறிப்பு: இந்த சுருக்கம் உங்கள் பார்வைக்கு மட்டுமே. மொழிபெயர்ப்பு வழிகாட்டலுக்காக மட்டுமே. எப்போதும் உங்கள் மருத்துவர் வழங்கிய அசல் வழிமுறைகளையே பின்பற்றவும்.",
+        tab_upload: "பதிவேற்றம் & சுருக்கம்",
+        tab_careplan: "எனது பராமரிப்பு திட்டம்",
+        tab_medicine: "மருந்து அட்டவணை",
+        tab_diet: "உணவு முறை திட்டம்",
+        tab_can_i_eat: "இதை நான் சாப்பிடலாமா?",
+        tab_recovery: "பின்தொடர்தல் & குணமடைதல்",
+        tab_warnings: "எச்சரிக்கை அறிகுறிகள்",
+        upload_card_title: "டிஸ்சார்ஜ் சுருக்கத்தை பதிவேற்றுக",
+        upload_card_desc: "உங்கள் மருத்துவமனை டிஸ்சார்ஜ் ஆவணத்தை பதிவேற்றவும். மருந்துகள் மற்றும் காயம் பராமரிப்பு விவரங்கள் தெளிவாக காண்பிக்கப்படும்.",
+        try_sample_btn: "மாதிரி சுருக்கத்தைக் காண்க",
+        drag_drop_text: "உங்கள் கோப்பை இங்கே இழுத்து விடவும்",
+        supported_formats: "ஆதரிக்கப்படும் வடிவங்கள்: PDF, JPG, PNG (அதிகபட்சம்: 10 MB)",
+        browse_files_btn: "கோப்புகளைத் தேர்ந்தெடுக்கவும்",
+        remove_file: "நீக்குக",
+        patient_label: "நோயாளி விவரங்கள்",
+        hospital_label: "சிகிச்சையளித்த மருத்துவமனை",
+        stay_dates_label: "சேர்க்கை மற்றும் விடுவிப்பு தேதிகள்",
+        diagnosis_label: "நோய் கண்டறிதல்",
+        sec_inpatient_treatment: "மருத்துவமனையில் வழங்கப்பட்ட சிகிச்சை",
+        sec_meds_summary: "பரிந்துரைக்கப்பட்ட மருந்துகள் (6 மருந்துகள்)",
+        sec_diet_summary: "உணவு வழிகாட்டுதல்கள்",
+        sec_wound_summary: "காயம் பராமரிப்பு மற்றும் ஓய்வு நெறிமுறைகள்",
+        careplan_title: "எனது பராமரிப்பு திட்டம் (எளிய வடிவில்)",
+        careplan_desc: "கடினமான மருத்துவச் சொற்கள் உங்கள் குடும்பத்தினர் எளிதாகப் புரிந்துகொள்ளும் வகையில் மாற்றப்பட்டுள்ளன.",
+        acc_1_title: "1. நோய் பற்றிய விளக்கம் (எளிய மொழி)",
+        acc_2_title: "2. மருத்துவமனையில் என்ன நடந்தது",
+        acc_3_title: "3. வீட்டில் செய்ய வேண்டிய பராமரிப்பு",
+        acc_4_title: "4. ஓய்வு மற்றும் நடை கட்டுப்பாடுகள்",
+        acc_5_title: "5. காயம் கட்டுதல் படிகள்",
+        acc_6_title: "6. குணமடையும் கால அட்டவணை",
+        view_orig_text: "அசல் மருத்துவ வாக்கியங்களைக் காண்க",
+        medicine_title: "தினசரி மருந்து கால அட்டவணை",
+        medicine_desc: "நேரத்தின் அடிப்படையில் ஒழுங்கமைக்கப்பட்டுள்ளது. மருந்து சாப்பிட்ட பின் 'Mark Taken' கிளிக் செய்யவும்.",
+        print_schedule_btn: "மருந்து அட்டவணையை அச்சிடுக",
+        morning_period: "காலை நேரம்",
+        afternoon_period: "மதிய நேரம்",
+        evening_period: "மாலை நேரம்",
+        bedtime_period: "இரவு படுக்கும் முன்",
+        diet_title: "சர்க்கரை நோய் & காயம் குணமடையும் உணவு திட்டம்",
+        diet_desc: "டிஸ்சார்ஜ் ஆவணத்தின்படி சாப்பிட வேண்டியவை மற்றும் தவிர்க்க வேண்டிய உணவுகள்.",
+        foods_recommended: "பரிந்துரைக்கப்பட்ட உணவுகள்",
+        foods_avoid: "முற்றிலும் தவிர்க்க வேண்டியவை",
+        foods_limit: "அளவோடு உட்கொள்ள வேண்டியவை",
+        food_checker_title: "இதை நான் சாப்பிடலாமா? - உணவு பாதுகாப்பு தேடல்",
+        food_checker_desc: "நீங்கள் விரும்பும் உணவின் பெயரை உள்ளிட்டு அது பாதுகாப்பானதா என அறியவும்.",
+        search_btn: "தேடுக",
+        full_food_db_title: "முழு உணவு பட்டியலை உலாவவும்",
+        followup_title: "மருத்துவர் மறுபரிசீலனை தேதிகள்",
+        followup_desc: "மருத்துவமனை சந்திப்புகளைத் தவறவிடாதீர்கள். சரியான நேரத்தில் மறுபரிசோதனை காயத்தை விரைவில் குணமாக்கும்.",
+        warning_signs_title: "ஆபத்து எச்சரிக்கை அறிகுறிகள் - உடனடி மருத்துவ உதவி",
+        warning_signs_desc: "இந்த அறிகுறிகள் தென்பட்டால் உடனடியாக அவசர சிகிச்சைப் பிரிவுக்குச் செல்லவும்.",
+        warn_1_title: "கடும் காய்ச்சல் > 101°F (38.3°C)",
+        warn_2_title: "காயத்தில் வீக்கம், வலி அல்லது சீழ் வடிதல்",
+        warn_3_title: "சர்க்கரை அளவு > 300 அல்லது < 70 mg/dL",
+        warn_4_title: "திடீர் நெஞ்சு வலி அல்லது மூச்சுத்திணறல்",
+        warn_5_title: "பாதம் உணர்ச்சியற்று போதல் அல்லது கருத்தல்",
+        warn_6_title: "கடுமையான தலைவலி அல்லது பார்வை மங்குதல்",
+        emergency_hub_title: "அவசர உதவி எண்கள்"
+      }
+    };
+
+    /* ==========================================================
+       3. INITIALIZATION & AUTH HANDLING
+       ========================================================== */
+    document.addEventListener("DOMContentLoaded", function () {
+      initAuthAndUserData();
+      initTabs();
+      initFileUpload();
+      initAccordions();
+      initFoodChecker();
+      initLanguageSelector();
+      initCountdownTimers();
+      initPrintHandlers();
+      initMedicineCheckmarks();
+
+      // Check if sample data is loaded in localStorage, or auto-load sample data
+      const storedData = localStorage.getItem("carenest_discharge_data");
+      if (storedData) {
+        try {
+          const parsed = JSON.parse(storedData);
+          applyDischargeData(parsed);
+        } catch (e) {
+          loadSampleDischargeData();
+        }
+      } else {
+        // Auto-populate with sample discharge data on initial load
+        loadSampleDischargeData();
+      }
+    });
+
+    function initAuthAndUserData() {
+      // Check existing user session in localStorage or initialize default demo session
+      let user = null;
+      try {
+        const rawUser = localStorage.getItem("carenest_user");
+        if (rawUser) user = JSON.parse(rawUser);
+      } catch (e) {
+        console.warn("User parse error", e);
+      }
+
+      if (!user) {
+        user = {
+          name: "Rajesh Kumar",
+          email: "rajesh.kumar@example.com",
+          role: "Patient",
+          patientId: "CN-88421",
+          hospital: "City General Hospital"
+        };
+        localStorage.setItem("carenest_user", JSON.stringify(user));
+      }
+
+      const nameEl = document.getElementById("userNameSmall");
+      const avatarEl = document.getElementById("userAvatarText");
+      const roleEl = document.getElementById("userRoleSmall");
+      if (nameEl && user.name) nameEl.textContent = user.name;
+      if (roleEl && user.patientId) roleEl.textContent = "Patient #" + user.patientId;
+      if (avatarEl && user.name) {
+        const parts = user.name.trim().split(" ");
+        const initials = parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : parts[0].slice(0, 2).toUpperCase();
+        avatarEl.textContent = initials;
+      }
+    }
+
+    /* ==========================================================
+       4. TAB SWITCHING SYSTEM
+       ========================================================== */
+    function initTabs() {
+      const tabButtons = document.querySelectorAll(".portal-tab-btn");
+      tabButtons.forEach(btn => {
+        btn.addEventListener("click", function () {
+          const targetTabId = this.getAttribute("data-tab");
+          switchPortalTab(targetTabId);
+        });
+      });
+
+      // Restore last active tab if stored
+      const lastTab = localStorage.getItem("carenest_active_tab");
+      if (lastTab && document.getElementById(lastTab)) {
+        switchPortalTab(lastTab);
+      }
+    }
+
+    function switchPortalTab(tabId) {
+      const tabButtons = document.querySelectorAll(".portal-tab-btn");
+      const tabPanes = document.querySelectorAll(".tab-pane");
+
+      tabButtons.forEach(btn => {
+        if (btn.getAttribute("data-tab") === tabId) {
+          btn.classList.add("active");
+          btn.setAttribute("aria-selected", "true");
+        } else {
+          btn.classList.remove("active");
+          btn.setAttribute("aria-selected", "false");
+        }
+      });
+
+      tabPanes.forEach(pane => {
+        if (pane.id === tabId) {
+          pane.classList.add("active");
+        } else {
+          pane.classList.remove("active");
+        }
+      });
+
+      localStorage.setItem("carenest_active_tab", tabId);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    /* ==========================================================
+       5. FILE UPLOAD & SAMPLE DATA LOADER
+       ========================================================== */
+    function initFileUpload() {
+      const dropZone = document.getElementById("dropZone");
+      const fileInput = document.getElementById("fileUploadInput");
+      const btnBrowse = document.getElementById("btnBrowseFiles");
+      const btnSample = document.getElementById("btnTrySampleSummary");
+      const btnRemove = document.getElementById("btnRemoveFile");
+      const fileStatusCard = document.getElementById("fileStatusCard");
+      const progressContainer = document.getElementById("uploadProgressBarContainer");
+      const progressFill = document.getElementById("uploadProgressBarFill");
+      const progressText = document.getElementById("uploadProgressText");
+      const errorAlert = document.getElementById("uploadErrorAlert");
+      const errorMsg = document.getElementById("uploadErrorMsg");
+
+      btnBrowse.addEventListener("click", () => fileInput.click());
+      dropZone.addEventListener("click", (e) => {
+        if (e.target !== btnBrowse && !btnBrowse.contains(e.target)) {
+          fileInput.click();
+        }
+      });
+
+      // Drag and drop events
+      ["dragenter", "dragover"].forEach(evtName => {
+        dropZone.addEventListener(evtName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropZone.classList.add("dragover");
+        });
+      });
+
+      ["dragleave", "drop"].forEach(evtName => {
+        dropZone.addEventListener(evtName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropZone.classList.remove("dragover");
+        });
+      });
+
+      dropZone.addEventListener("drop", (e) => {
+        const files = e.dataTransfer.files;
+        if (files && files.length > 0) {
+          handleFileSelection(files[0]);
+        }
+      });
+
+      fileInput.addEventListener("change", function () {
+        if (this.files && this.files.length > 0) {
+          handleFileSelection(this.files[0]);
+        }
+      });
+
+      btnSample.addEventListener("click", () => {
+        loadSampleDischargeData();
+        showNotificationToast("Sample Discharge Summary for Rajesh Kumar loaded successfully!");
+      });
+
+      btnRemove.addEventListener("click", () => {
+        fileInput.value = "";
+        fileStatusCard.style.display = "none";
+        progressContainer.style.display = "none";
+        progressText.style.display = "none";
+        errorAlert.style.display = "none";
+        showNotificationToast("File removed. You can upload a new summary anytime.");
+      });
+
+      const btnToggleRaw = document.getElementById("btnToggleRawOcr");
+      const rawContainer = document.getElementById("rawOcrContainer");
+      if (btnToggleRaw && rawContainer) {
+        btnToggleRaw.addEventListener("click", () => {
+          const isOpen = rawContainer.style.display === "block";
+          rawContainer.style.display = isOpen ? "none" : "block";
+          btnToggleRaw.textContent = isOpen ? "Show Full Text" : "Hide Raw Text";
+        });
+      }
+    }
+
+    function handleFileSelection(file) {
+      const allowedTypes = ["application/pdf", "image/jpeg", "image/jpg", "image/png"];
+      const allowedExts = [".pdf", ".jpg", ".jpeg", ".png"];
+      const maxSizeBytes = 10 * 1024 * 1024; // 10 MB
+
+      const errorAlert = document.getElementById("uploadErrorAlert");
+      const errorMsg = document.getElementById("uploadErrorMsg");
+      const fileStatusCard = document.getElementById("fileStatusCard");
+      const fileNameDisplay = document.getElementById("fileNameDisplay");
+      const fileMetaDisplay = document.getElementById("fileMetaDisplay");
+      const progressContainer = document.getElementById("uploadProgressBarContainer");
+      const progressFill = document.getElementById("uploadProgressBarFill");
+      const progressText = document.getElementById("uploadProgressText");
+
+      errorAlert.style.display = "none";
+
+      const fileExt = "." + file.name.split(".").pop().toLowerCase();
+      const isAllowedType = allowedTypes.includes(file.type) || allowedExts.includes(fileExt);
+
+      if (!isAllowedType) {
+        errorMsg.textContent = "Unsupported file format. Please upload a PDF, JPG, JPEG, or PNG document.";
+        errorAlert.style.display = "flex";
+        return;
+      }
+
+      if (file.size > maxSizeBytes) {
+        errorMsg.textContent = "File size exceeds 10 MB limit (" + (file.size / (1024 * 1024)).toFixed(1) + " MB). Please choose a smaller file.";
+        errorAlert.style.display = "flex";
+        return;
+      }
+
+      // Show file card & simulate progress
+      fileNameDisplay.textContent = file.name;
+      fileMetaDisplay.textContent = (file.size / (1024 * 1024)).toFixed(2) + " MB • Processing...";
+      fileStatusCard.style.display = "flex";
+      progressContainer.style.display = "block";
+      progressText.style.display = "block";
+      progressFill.style.width = "0%";
+
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += 15;
+        if (progress > 100) progress = 100;
+        progressFill.style.width = progress + "%";
+
+        if (progress < 40) {
+          progressText.textContent = "Uploading document (" + progress + "%)...";
+        } else if (progress < 80) {
+          progressText.textContent = "Clinical OCR & entity recognition in progress (" + progress + "%)...";
+        } else if (progress < 100) {
+          progressText.textContent = "Synthesizing medications, diet, and wound schedule (" + progress + "%)...";
+        } else {
+          clearInterval(interval);
+          progressText.textContent = "Extraction complete! Summary loaded.";
+          progressFill.style.backgroundColor = "#4caf50";
+          fileMetaDisplay.textContent = (file.size / (1024 * 1024)).toFixed(2) + " MB • Analysis complete";
+          loadSampleDischargeData();
+          showNotificationToast("Discharge summary analyzed successfully!");
+        }
+      }, 200);
+    }
+
+    function loadSampleDischargeData() {
+      const sampleData = {
+        patient: "Rajesh Kumar, 45, Male",
+        hospital: "City General Hospital",
+        dates: "Oct 5, 2026 → Oct 12, 2026 (7 Days)",
+        diagnosis: "Type 2 Diabetes Mellitus with Diabetic Foot Ulcer (Right Foot)",
+        loadedAt: new Date().toISOString()
+      };
+      localStorage.setItem("carenest_discharge_data", JSON.stringify(sampleData));
+      applyDischargeData(sampleData);
+    }
+
+    function applyDischargeData(data) {
+      const pField = document.getElementById("patientNameField");
+      const hField = document.getElementById("hospitalNameField");
+      const dField = document.getElementById("datesField");
+      const diagField = document.getElementById("diagnosisField");
+
+      if (pField && data.patient) pField.textContent = data.patient;
+      if (hField && data.hospital) hField.textContent = data.hospital;
+      if (dField && data.dates) dField.textContent = data.dates;
+      if (diagField && data.diagnosis) diagField.textContent = data.diagnosis;
+    }
+
+    /* ==========================================================
+       6. ACCORDION SYSTEM (CARE PLAN)
+       ========================================================== */
+    function initAccordions() {
+      const btnExpandAll = document.getElementById("btnExpandAllCarePlan");
+      const btnCollapseAll = document.getElementById("btnCollapseAllCarePlan");
+
+      if (btnExpandAll) {
+        btnExpandAll.addEventListener("click", () => {
+          document.querySelectorAll(".accordion-item").forEach(item => item.classList.add("open"));
+        });
+      }
+
+      if (btnCollapseAll) {
+        btnCollapseAll.addEventListener("click", () => {
+          document.querySelectorAll(".accordion-item").forEach(item => item.classList.remove("open"));
+        });
+      }
+    }
+
+    function toggleAccordion(itemId) {
+      const el = document.getElementById(itemId);
+      if (el) {
+        el.classList.toggle("open");
+      }
+    }
+
+    function toggleOriginalText(panelId) {
+      const panel = document.getElementById(panelId);
+      if (panel) {
+        panel.classList.toggle("open");
+      }
+    }
+
+    /* ==========================================================
+       7. MEDICINE TRACKER & CHECKMARKS
+       ========================================================== */
+    function initMedicineCheckmarks() {
+      const stored = localStorage.getItem("carenest_meds_taken");
+      if (stored) {
+        try {
+          const list = JSON.parse(stored);
+          list.forEach(id => {
+            const card = document.getElementById(id);
+            if (card) {
+              card.classList.add("checked");
+              const btn = card.querySelector(".mark-taken-btn");
+              if (btn) btn.innerHTML = "<span>✓</span> <span>Taken</span>";
+            }
+          });
+        } catch (e) {}
+      }
+    }
+
+    function toggleMedTaken(cardId) {
+      const card = document.getElementById(cardId);
+      if (!card) return;
+
+      card.classList.toggle("checked");
+      const isTaken = card.classList.contains("checked");
+      const btn = card.querySelector(".mark-taken-btn");
+      if (btn) {
+        btn.innerHTML = isTaken ? "<span>✓</span> <span>Taken</span>" : "<span>✓</span> <span>Mark Taken</span>";
+      }
+
+      // Persist in localStorage
+      let takenList = [];
+      const stored = localStorage.getItem("carenest_meds_taken");
+      if (stored) {
+        try { takenList = JSON.parse(stored); } catch (e) {}
+      }
+
+      if (isTaken) {
+        if (!takenList.includes(cardId)) takenList.push(cardId);
+      } else {
+        takenList = takenList.filter(id => id !== cardId);
+      }
+      localStorage.setItem("carenest_meds_taken", JSON.stringify(takenList));
+    }
+
+    /* ==========================================================
+       8. CAN I EAT THIS? (FOOD SEARCH ENGINE)
+       ========================================================== */
+    function initFoodChecker() {
+      const searchInput = document.getElementById("foodSearchInput");
+      const searchBtn = document.getElementById("btnSearchFood");
+
+      if (searchBtn && searchInput) {
+        searchBtn.addEventListener("click", () => {
+          executeFoodSearch(searchInput.value.trim());
+        });
+
+        searchInput.addEventListener("keyup", (e) => {
+          if (e.key === "Enter") {
+            executeFoodSearch(searchInput.value.trim());
+          } else {
+            // Live instant search
+            if (searchInput.value.trim().length >= 2) {
+              executeFoodSearch(searchInput.value.trim());
+            }
+          }
+        });
+      }
+
+      populateFullFoodTable();
+    }
+
+    function quickSearchFood(term) {
+      const searchInput = document.getElementById("foodSearchInput");
+      if (searchInput) {
+        searchInput.value = term;
+        executeFoodSearch(term);
+      }
+    }
+
+    function executeFoodSearch(query) {
+      if (!query) return;
+
+      const q = query.toLowerCase();
+      // Find matching food item
+      const match = FOOD_DATABASE.find(item => {
+        const nameMatch = item.name.toLowerCase().includes(q) || q.includes(item.name.toLowerCase());
+        return nameMatch;
+      });
+
+      const resCard = document.getElementById("foodResultCard");
+      const resIcon = document.getElementById("resStatusIcon");
+      const resName = document.getElementById("resFoodName");
+      const resBadge = document.getElementById("resStatusBadge");
+      const resExp = document.getElementById("resExplanation");
+      const resSource = document.getElementById("resSourceTag");
+
+      resCard.style.display = "block";
+      resCard.className = "food-result-card";
+
+      if (match) {
+        resName.textContent = match.name;
+        resExp.textContent = match.explanation;
+        resSource.textContent = match.source === "Discharge Summary" ? "From Discharge Summary" : "General Clinical Guideline";
+        resSource.className = "source-tag " + (match.source === "Discharge Summary" ? "source-summary" : "source-general");
+
+        if (match.status === "Allowed") {
+          resCard.classList.add("status-allowed");
+          resIcon.textContent = "🟢";
+          resIcon.className = "result-status-icon icon-allowed";
+          resBadge.textContent = "Allowed / Recommended";
+          resBadge.className = "result-status-badge result-badge-allowed";
+        } else if (match.status === "Avoid") {
+          resCard.classList.add("status-avoid");
+          resIcon.textContent = "🔴";
+          resIcon.className = "result-status-icon icon-avoid";
+          resBadge.textContent = "Avoid / Restricted";
+          resBadge.className = "result-status-badge result-badge-avoid";
+        } else {
+          resCard.classList.add("status-limited");
+          resIcon.textContent = "🟡";
+          resIcon.className = "result-status-icon icon-limited";
+          resBadge.textContent = "Limited / Controlled Portion";
+          resBadge.className = "result-status-badge result-badge-limited";
+        }
+      } else {
+        // Generic fallback for unlisted items
+        resCard.classList.add("status-limited");
+        resIcon.textContent = "🔍";
+        resIcon.className = "result-status-icon icon-limited";
+        resName.textContent = query;
+        resBadge.textContent = "Consult Doctor / Eat with Caution";
+        resBadge.className = "result-status-badge result-badge-limited";
+        resExp.textContent = "This item is not explicitly listed in your discharge paper. As a general rule for Type 2 Diabetes and foot recovery, avoid foods with added refined sugars, high saturated fat, and excessive salt. Choose whole, steamed, high-fiber preparations.";
+        resSource.textContent = "General Safety Rule";
+        resSource.className = "source-tag source-general";
+      }
+
+      resCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    function populateFullFoodTable() {
+      const tbody = document.getElementById("foodTableBody");
+      const countBadge = document.getElementById("foodCountBadge");
+      if (!tbody) return;
+
+      tbody.innerHTML = "";
+      if (countBadge) countBadge.textContent = FOOD_DATABASE.length + " Items";
+
+      FOOD_DATABASE.forEach(item => {
+        const tr = document.createElement("tr");
+
+        let statusBadgeHtml = "";
+        if (item.status === "Allowed") {
+          statusBadgeHtml = '<span class="badge badge-green">🟢 Allowed</span>';
+        } else if (item.status === "Avoid") {
+          statusBadgeHtml = '<span class="badge badge-red">🔴 Avoid</span>';
+        } else {
+          statusBadgeHtml = '<span class="badge badge-orange">🟡 Limited</span>';
+        }
+
+        const sourceClass = item.source === "Discharge Summary" ? "source-summary" : "source-general";
+
+        tr.innerHTML = `
+          <td><strong>${item.name}</strong></td>
+          <td>${statusBadgeHtml}</td>
+          <td>${item.explanation}</td>
+          <td><span class="source-tag ${sourceClass}">${item.source}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    /* ==========================================================
+       9. COUNTDOWN TIMERS (FOLLOW-UP APPOINTMENTS)
+       ========================================================== */
+    function initCountdownTimers() {
+      // Wound Clinic Appointment: Oct 19, 2026, 10:00:00
+      // Diabetologist Appointment: Oct 26, 2026, 11:30:00
+      const woundDate = new Date("2026-10-19T10:00:00");
+      const endoDate = new Date("2026-10-26T11:30:00");
+
+      function updateTimers() {
+        const now = new Date();
+
+        const woundDiff = woundDate - now;
+        const endoDiff = endoDate - now;
+
+        const woundEl = document.getElementById("woundCountdownVal");
+        const endoEl = document.getElementById("endoCountdownVal");
+
+        if (woundEl) {
+          woundEl.textContent = formatCountdown(woundDiff, "3 Days Remaining");
+        }
+        if (endoEl) {
+          endoEl.textContent = formatCountdown(endoDiff, "10 Days Remaining");
+        }
+      }
+
+      updateTimers();
+      setInterval(updateTimers, 60000); // update every minute
+    }
+
+    function formatCountdown(diffMs, fallbackText) {
+      if (diffMs <= 0) {
+        return "Scheduled Visit Today";
+      }
+      const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      if (days > 0) {
+        return days + "d " + hours + "h left";
+      } else {
+        return hours + "h left";
+      }
+    }
+
+    function toggleTestCheck(checkboxId) {
+      const chk = document.getElementById(checkboxId);
+      if (chk) {
+        chk.checked = !chk.checked;
+      }
+    }
+
+    /* ==========================================================
+       10. LANGUAGE SELECTOR & REAL-TIME TRANSLATION
+       ========================================================== */
+    function initLanguageSelector() {
+      const langSelect = document.getElementById("languageSelect");
+      if (!langSelect) return;
+
+      const savedLang = localStorage.getItem("carenest_lang") || "en";
+      langSelect.value = savedLang;
+      applyLanguage(savedLang);
+
+      langSelect.addEventListener("change", function () {
+        const selected = this.value;
+        localStorage.setItem("carenest_lang", selected);
+        applyLanguage(selected);
+        showNotificationToast("Language updated to " + this.options[this.selectedIndex].text);
+      });
+    }
+
+    function applyLanguage(langCode) {
+      const dict = TRANSLATIONS[langCode] || TRANSLATIONS["en"];
+
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key]) {
+          el.textContent = dict[key];
+        }
+      });
+    }
+
+    /* ==========================================================
+       11. PRINT & DOWNLOAD CARE SHEET
+       ========================================================== */
+    function initPrintHandlers() {
+      const btnCareSheet = document.getElementById("downloadCareSheetBtn");
+      const btnMedSchedule = document.getElementById("btnPrintMedSchedule");
+
+      if (btnCareSheet) {
+        btnCareSheet.addEventListener("click", () => {
+          const dateEl = document.getElementById("printDateGenerated");
+          if (dateEl) {
+            const today = new Date();
+            dateEl.textContent = today.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+          }
+          window.print();
+        });
+      }
+
+      if (btnMedSchedule) {
+        btnMedSchedule.addEventListener("click", () => {
+          // Switch to Medicine tab if not already, then invoke clean print
+          switchPortalTab("tab-medicine");
+          window.print();
+        });
+      }
+    }
+
+    /* ==========================================================
+       12. TOAST NOTIFICATION HELPER
+       ========================================================== */
+    function showNotificationToast(msg) {
+      let toast = document.getElementById("carenestToast");
+      if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "carenestToast";
+        toast.style.position = "fixed";
+        toast.style.bottom = "24px";
+        toast.style.right = "24px";
+        toast.style.background = "#0f172a";
+        toast.style.color = "#ffffff";
+        toast.style.padding = "12px 20px";
+        toast.style.borderRadius = "8px";
+        toast.style.boxShadow = "0 8px 24px rgba(0,0,0,0.2)";
+        toast.style.zIndex = "99999";
+        toast.style.fontSize = "0.9rem";
+        toast.style.fontWeight = "600";
+        toast.style.display = "flex";
+        toast.style.alignItems = "center";
+        toast.style.gap = "8px";
+        toast.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+        document.body.appendChild(toast);
+      }
+
+      toast.innerHTML = "<span>🔔</span> <span>" + msg + "</span>";
+      toast.style.opacity = "1";
+      toast.style.transform = "translateY(0)";
+
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transform = "translateY(8px)";
+      }, 3500);
+    }
+  </script>
+</body>
+</html>

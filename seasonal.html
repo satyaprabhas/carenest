@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareNest - Seasonal Disease Prevention</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .portal-container {
+      max-width: 1540px;
+      width: calc(100% - 32px);
+      margin: 0 auto;
+      padding: 24px 16px 80px;
+    }
+    .portal-banner {
+      background: linear-gradient(135deg, #0d7377 0%, #14919b 100%);
+      color: #ffffff;
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 32px;
+      box-shadow: 0 10px 25px rgba(13, 115, 119, 0.18);
+    }
+    .portal-banner h1 {
+      margin: 0 0 8px 0;
+      font-size: 28px;
+      font-weight: 800;
+    }
+    .portal-banner p {
+      margin: 0;
+      opacity: 0.92;
+      font-size: 15px;
+      max-width: 700px;
+    }
+
+    .season-indicator-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .disease-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      margin-bottom: 36px;
+    }
+    .disease-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .risk-high { border-top: 5px solid #ef4444; }
+    .risk-mod { border-top: 5px solid #f59e0b; }
+
+    .checklist-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 14px;
+      color: #334155;
+    }
+    .check-item:last-child { border-bottom: none; }
+    .check-item input {
+      width: 18px;
+      height: 18px;
+      accent-color: #0d7377;
+    }
+  </style>
+</head>
+<body class="portal-layout">
+
+  <!-- Portal Header -->
+  <header class="portal-header">
+    <div class="portal-header-left">
+      <a href="dashboard.html" class="btn-back-dashboard">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back to Dashboard
+      </a>
+      <div class="portal-title-badge">
+        <span style="font-size: 20px;">🛡️</span>
+        <span style="font-weight: 700; font-size: 16px; color: #0d7377;">Seasonal Disease Prevention</span>
+      </div>
+    </div>
+    <div class="portal-header-right">
+      <button class="btn btn-secondary btn-sm" onclick="window.print()" style="margin-right: 12px;">Print Health Guide</button>
+      <div class="user-avatar-circle" style="width: 36px; height: 36px; border-radius: 50%; background: #0d7377; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">SK</div>
+    </div>
+  </header>
+
+  <main class="portal-container">
+    <div class="portal-banner">
+      <h1>Seasonal Health Alerts & Disease Prevention</h1>
+      <p>Stay ahead of weather-triggered illnesses, vector-borne infections, and seasonal risks with verified prevention protocols, self-care checklists, and emergency guidance.</p>
+    </div>
+
+    <!-- Active Season Alert -->
+    <div class="season-indicator-pill">
+      <span>🍂 Active Season:</span>
+      <span>Post-Monsoon & Autumn Health Advisory (India Region)</span>
+    </div>
+
+    <!-- 6 Disease Cards -->
+    <div class="disease-grid">
+
+      <!-- Dengue -->
+      <div class="disease-card risk-high">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background: #fee2e2; display: flex; align-items: center; justify-content: center;">
+              <svg viewBox="0 0 24 24" style="width: 26px; height: 26px; stroke: #e11d48; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round;">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 3v4M12 17v4M3 12h4M17 12h4"/>
+                <circle cx="12" cy="12" r="3" fill="#e11d48"/>
+              </svg>
+            </div>
+            <span style="background: #fee2e2; color: #b91c1c; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;">HIGH RISK • MONSOON</span>
+          </div>
+          <h3 style="font-size: 18px; font-weight: 700; color: #1e293b; margin: 0 0 6px 0;">Dengue Fever</h3>
+          <p style="font-size: 13px; color: #64748b; line-height: 1.5;">Transmitted by day-biting <em>Aedes</em> mosquitoes breeding in stagnant freshwater containers.</p>
+          
+          <div style="font-size: 12px; margin-top: 10px;">
+            <strong>🚨 Key Symptoms:</strong> High fever (104°F), retro-orbital eye pain, severe joint & muscle aches, petechial rash, low platelets.
+          </div>
+          <div style="font-size: 12px; margin-top: 8px; color: #0d7377;">
+            <strong>🛡️ Prevention:</strong> Clear flowerpot/cooler water weekly, apply DEET mosquito repellents, sleep under bed nets.
+          </div>
+        </div>
+        <div style="margin-top: 18px; padding-top: 12px; border-top: 1px solid #f1f5f9; font-size: 11px; color: #dc2626;">
+          ⚠️ <strong>When to see a Doctor:</strong> Persistent vomiting, mucosal gum bleeding, or extreme lethargy.
+        </div>
+      </div>
+
+      <!-- Malaria -->
+      <div class="disease-card risk-mod">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background: #fef3c7; display: flex; align-items: center; justify-content: center;">
+              <svg viewBox="0 0 24 24" style="width: 26px; height: 26px; stroke: #d97706; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round;">
+                <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Z"/>
+                <path d="M12 6a6 6 0 1 0 6 6 6 6 0 0 0-6-6Z"/>
+                <circle cx="12" cy="12" r="2" fill="#d97706"/>
+              </svg>
+            </div>
+            <span style="background: #fef3c7; color: #b45309; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;">MODERATE RISK • MONSOON</span>
+          </div>
+          <h3 style="font-size: 18px; font-weight: 700; color: #1e293b; margin: 0 0 6px 0;">Malaria</h3>
+          <p style="font-size: 13px; color: #64748b; line-height: 1.5;">Parasitic <em>Plasmodium</em> infection spread through night-biting <em>Anopheles</em> mosquitoes.</p>
+          
+          <div style="font-size: 12px; margin-top: 10px;">
+            <strong>🚨 Key Symptoms:</strong> Shaking rigors (chills), high fever cycles, profuse sweating, fatigue, anemia.
+          </div>
+          <div style="font-size: 12px; margin-top: 8px; color: #0d7377;">
+            <strong>🛡️ Prevention:</strong> Use insecticide-treated bed nets (ITNs), install window wire meshes, wear long sleeves.
+          </div>
+        </div>
+        <div style="margin-top: 18px; padding-top: 12px; border-top: 1px solid #f1f5f9; font-size: 11px; color: #dc2626;">
+          ⚠️ <strong>When to see a Doctor:</strong> Fever with shivering, dark colored urine, or yellowing eyes.
+        </div>
+      </div>
+
+      <!-- Influenza -->
+      <div class="disease-card risk-mod">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background: #e0f2fe; display: flex; align-items: center; justify-content: center;">
+              <svg viewBox="0 0 24 24" style="width: 26px; height: 26px; stroke: #0284c7; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round;">
+                <path d="M12 3a9 9 0 0 0-9 9c0 2.5 1 4.8 2.7 6.4L12 21l6.3-2.6A8.9 8.9 0 0 0 21 12a9 9 0 0 0-9-9Z"/>
+                <path d="M9 10h.01M15 10h.01M9.5 15a3.5 3.5 0 0 0 5 0"/>
+              </svg>
+            </div>
+            <span style="background: #e0f2fe; color: #0369a1; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;">MODERATE RISK • WINTER</span>
+          </div>
+          <h3 style="font-size: 18px; font-weight: 700; color: #1e293b; margin: 0 0 6px 0;">Viral Influenza (Flu)</h3>
+          <p style="font-size: 13px; color: #64748b; line-height: 1.5;">Airborne respiratory virus spreading through droplets and enclosed indoor crowds.</p>
+          
+          <div style="font-size: 12px; margin-top: 10px;">
+            <strong>🚨 Key Symptoms:</strong> Sudden fever, dry barking cough, sore throat, severe body ache, nasal congestion.
+          </div>
+          <div style="font-size: 12px; margin-top: 8px; color: #0d7377;">
+            <strong>🛡️ Prevention:</strong> Annual flu vaccination, mask in crowded spaces, frequent 20-second hand washing.
+          </div>
+        </div>
+        <div style="margin-top: 18px; padding-top: 12px; border-top: 1px solid #f1f5f9; font-size: 11px; color: #dc2626;">
+          ⚠️ <strong>When to see a Doctor:</strong> Shortness of breath, chest pressure, or fever lasting > 4 days.
+        </div>
+      </div>
+
+      <!-- Cholera / Waterborne -->
+      <div class="disease-card risk-high">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background: #ccfbf1; display: flex; align-items: center; justify-content: center;">
+              <svg viewBox="0 0 24 24" style="width: 26px; height: 26px; stroke: #0d9488; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round;">
+                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                <path d="M12 11v4M12 18h.01"/>
+              </svg>
+            </div>
+            <span style="background: #fee2e2; color: #b91c1c; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;">HIGH RISK • MONSOON</span>
+          </div>
+          <h3 style="font-size: 18px; font-weight: 700; color: #1e293b; margin: 0 0 6px 0;">Cholera & Waterborne Illness</h3>
+          <p style="font-size: 13px; color: #64748b; line-height: 1.5;">Bacterial contamination of drinking water and street food after heavy rainfall.</p>
+          
+          <div style="font-size: 12px; margin-top: 10px;">
+            <strong>🚨 Key Symptoms:</strong> Profuse watery diarrhea ("rice-water stools"), rapid dehydration, nausea.
+          </div>
+          <div style="font-size: 12px; margin-top: 8px; color: #0d7377;">
+            <strong>🛡️ Prevention:</strong> Drink only rolling-boiled water, avoid roadside ice/cut fruits, consume warm home meals.
+          </div>
+        </div>
+        <div style="margin-top: 18px; padding-top: 12px; border-top: 1px solid #f1f5f9; font-size: 11px; color: #dc2626;">
+          ⚠️ <strong>When to see a Doctor:</strong> Inability to retain fluids, sunken eyes, dry mouth, or tachycardia.
+        </div>
+      </div>
+
+      <!-- Heat Illnesses -->
+      <div class="disease-card risk-mod">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background: #fff3e0; display: flex; align-items: center; justify-content: center;">
+              <svg viewBox="0 0 24 24" style="width: 26px; height: 26px; stroke: #ea580c; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round;">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/>
+                <line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/>
+                <line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+              </svg>
+            </div>
+            <span style="background: #fef3c7; color: #b45309; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;">MODERATE RISK • SUMMER</span>
+          </div>
+          <h3 style="font-size: 18px; font-weight: 700; color: #1e293b; margin: 0 0 6px 0;">Heat Exhaustion & Heatstroke</h3>
+          <p style="font-size: 13px; color: #64748b; line-height: 1.5;">Hyperthermia caused by prolonged exposure to high ambient temperatures and humidity.</p>
+          
+          <div style="font-size: 12px; margin-top: 10px;">
+            <strong>🚨 Key Symptoms:</strong> Dizziness, headache, muscle cramps, intense thirst, confusion, cessation of sweating.
+          </div>
+          <div style="font-size: 12px; margin-top: 8px; color: #0d7377;">
+            <strong>🛡️ Prevention:</strong> Drink 3-4 liters water/ORS daily, avoid outdoor exposure between 12-4 PM, wear light cottons.
+          </div>
+        </div>
+        <div style="margin-top: 18px; padding-top: 12px; border-top: 1px solid #f1f5f9; font-size: 11px; color: #dc2626;">
+          ⚠️ <strong>When to see a Doctor:</strong> Body temperature > 104°F, confusion, loss of consciousness, or seizures.
+        </div>
+      </div>
+
+      <!-- Chikungunya -->
+      <div class="disease-card risk-mod">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background: #f3e8ff; display: flex; align-items: center; justify-content: center;">
+              <svg viewBox="0 0 24 24" style="width: 26px; height: 26px; stroke: #9333ea; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round;">
+                <circle cx="9" cy="9" r="4"/>
+                <circle cx="15" cy="15" r="4"/>
+                <path d="M12 9l3 3M9 12l3 3"/>
+              </svg>
+            </div>
+            <span style="background: #fef3c7; color: #b45309; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;">MODERATE RISK • MONSOON</span>
+          </div>
+          <h3 style="font-size: 18px; font-weight: 700; color: #1e293b; margin: 0 0 6px 0;">Chikungunya</h3>
+          <p style="font-size: 13px; color: #64748b; line-height: 1.5;">Viral illness characterized by debilitating polyarthralgia and joint swelling.</p>
+          
+          <div style="font-size: 12px; margin-top: 10px;">
+            <strong>🚨 Key Symptoms:</strong> Severe bilateral joint stiffness, high fever, macular skin rash, morning wrist/ankle pain.
+          </div>
+          <div style="font-size: 12px; margin-top: 8px; color: #0d7377;">
+            <strong>🛡️ Prevention:</strong> Strict vector control, eliminate stagnant water in tires/pots, use outdoor mosquito coils.
+          </div>
+        </div>
+        <div style="margin-top: 18px; padding-top: 12px; border-top: 1px solid #f1f5f9; font-size: 11px; color: #dc2626;">
+          ⚠️ <strong>When to see a Doctor:</strong> Inability to walk or perform daily activities due to acute joint swelling.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Interactive Prevention Checklist -->
+    <div class="checklist-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="margin: 0; font-size: 18px; color: #1e293b;">📋 Household Seasonal Prevention Checklist</h3>
+        <span style="font-size: 13px; font-weight: 700; color: #0d7377;" id="checklist-progress-text">0 / 6 Completed</span>
+      </div>
+      <div id="checklist-items">
+        <label class="check-item"><input type="checkbox" onchange="updateChecklist()"> Empty and dry all air coolers, plant saucers, and discarded containers.</label>
+        <label class="check-item"><input type="checkbox" onchange="updateChecklist()"> Sleep under insecticide-treated bed nets or keep window meshes sealed.</label>
+        <label class="check-item"><input type="checkbox" onchange="updateChecklist()"> Boil drinking water for at least 3-5 minutes during monsoon weeks.</label>
+        <label class="check-item"><input type="checkbox" onchange="updateChecklist()"> Avoid raw unpeeled street vegetables and roadside ice.</label>
+        <label class="check-item"><input type="checkbox" onchange="updateChecklist()"> Receive the annual seasonal influenza vaccine (especially seniors & diabetic patients).</label>
+        <label class="check-item"><input type="checkbox" onchange="updateChecklist()"> Keep oral rehydration salts (ORS) and a digital thermometer stocked at home.</label>
+      </div>
+    </div>
+
+    <!-- Emergency Contacts -->
+    <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 20px; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 16px; text-align: center;">
+      <div>
+        <div style="font-size: 24px;">🚑</div>
+        <div style="font-size: 16px; font-weight: 700; color: #b91c1c;">108 / 112</div>
+        <div style="font-size: 11px; color: #64748b;">National Emergency & Ambulance</div>
+      </div>
+      <div>
+        <div style="font-size: 24px;">🩺</div>
+        <div style="font-size: 16px; font-weight: 700; color: #0d7377;">1075</div>
+        <div style="font-size: 11px; color: #64748b;">National Health Helpline (MoHFW)</div>
+      </div>
+      <div>
+        <div style="font-size: 24px;">🏥</div>
+        <div style="font-size: 16px; font-weight: 700; color: #0284c7;">City General SOS</div>
+        <div style="font-size: 11px; color: #64748b;">080-4567-8900 (Hospital Casualty)</div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function updateChecklist() {
+      const inputs = document.querySelectorAll('#checklist-items input');
+      let checked = 0;
+      inputs.forEach(i => { if (i.checked) checked++; });
+      document.getElementById('checklist-progress-text').innerText = `${checked} / ${inputs.length} Completed`;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const userStr = localStorage.getItem('carenest_user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          const initials = user.name ? user.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase() : 'SK';
+          document.querySelector('.user-avatar-circle').innerText = initials;
+        } catch(e) {}
+      }
+    });
+  </script>
+</body>
+</html>

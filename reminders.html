@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareNest - Medicine Reminders & Tablet Alarms</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background: #f8fafc;
+      margin: 0;
+      color: #1e293b;
+    }
+
+    .portal-container {
+      max-width: 1540px;
+      width: calc(100% - 32px);
+      margin: 0 auto;
+      padding: 24px 16px 80px;
+    }
+
+    .portal-banner {
+      background: linear-gradient(135deg, #074346 0%, #0d7377 60%, #14919b 100%);
+      color: #ffffff;
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 25px rgba(13, 115, 119, 0.18);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .banner-text h1 {
+      margin: 0 0 8px 0;
+      font-size: 26px;
+      font-weight: 800;
+    }
+
+    .banner-text p {
+      margin: 0;
+      opacity: 0.92;
+      font-size: 14px;
+      max-width: 650px;
+      line-height: 1.5;
+    }
+
+    /* Demo Alarm Action Box */
+    .demo-alarm-trigger-box {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(8px);
+      border-radius: 14px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-demo-alarm-now {
+      background: #f59e0b;
+      color: #78350f;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+      transition: all 0.2s;
+    }
+
+    .btn-demo-alarm-now:hover {
+      background: #fbbf24;
+      transform: translateY(-2px);
+    }
+
+    .btn-countdown-alarm {
+      background: #ffffff;
+      color: #0d7377;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-countdown-alarm:hover {
+      background: #e6f4f4;
+      transform: translateY(-2px);
+    }
+
+    /* Adherence & Stats */
+    .stats-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .stat-box {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+
+    .stat-icon-wrap {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    /* Dayparts */
+    .daypart-section {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      margin-bottom: 24px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    }
+
+    .daypart-header {
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #f1f5f9;
+      background: #f8fafc;
+    }
+
+    .daypart-morning { border-top: 4px solid #f59e0b; }
+    .daypart-afternoon { border-top: 4px solid #f97316; }
+    .daypart-evening { border-top: 4px solid #8b5cf6; }
+    .daypart-night { border-top: 4px solid #334155; }
+
+    /* Medicine Item Row with Tablet Photo */
+    .med-item-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px;
+      border-bottom: 1px solid #f1f5f9;
+      gap: 16px;
+      transition: background 0.15s;
+    }
+
+    .med-item-card:last-child {
+      border-bottom: none;
+    }
+
+    .med-item-card:hover {
+      background: #fafafa;
+    }
+
+    .med-item-card.taken {
+      background: #f0fdf4;
+    }
+
+    .med-left-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: 1;
+    }
+
+    .tablet-photo-frame {
+      width: 58px;
+      height: 58px;
+      border-radius: 14px;
+      border: 1.5px solid #e2e8f0;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      flex-shrink: 0;
+    }
+
+    .tablet-photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .tablet-svg-art {
+      width: 44px;
+      height: 44px;
+    }
+
+    .med-details h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .med-dosage-tag {
+      background: #e0f2f1;
+      color: #0d7377;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    .med-meta-line {
+      font-size: 13px;
+      color: #64748b;
+      margin: 4px 0 0 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .meal-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #f1f5f9;
+      color: #475569;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .med-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-take-dose {
+      background: #22c55e;
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-take-dose:hover {
+      background: #16a34a;
+    }
+
+    .btn-skip-dose {
+      background: #f1f5f9;
+      color: #64748b;
+      border: 1px solid #cbd5e1;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-skip-dose:hover {
+      background: #e2e8f0;
+      color: #334155;
+    }
+
+    /* REAL-TIME ALARM MODAL WITH TABLET PHOTO */
+    .alarm-modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+      animation: alarmPulseBackdrop 1.5s infinite alternate;
+    }
+
+    @keyframes alarmPulseBackdrop {
+      from { background: rgba(15, 23, 42, 0.82); }
+      to { background: rgba(185, 28, 28, 0.75); }
+    }
+
+    .alarm-box {
+      background: #ffffff;
+      border-radius: 24px;
+      max-width: 520px;
+      width: 100%;
+      padding: 32px;
+      text-align: center;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+      position: relative;
+      animation: alarmBounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes alarmBounce {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .alarm-bell-icon {
+      width: 72px;
+      height: 72px;
+      background: #fee2e2;
+      color: #ef4444;
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      animation: ringRattle 0.35s infinite;
+    }
+
+    @keyframes ringRattle {
+      0% { transform: rotate(-15deg); }
+      50% { transform: rotate(15deg); }
+      100% { transform: rotate(-15deg); }
+    }
+
+    .alarm-tablet-img-display {
+      width: 110px;
+      height: 110px;
+      border-radius: 20px;
+      border: 3px solid #0d7377;
+      margin: 16px auto;
+      overflow: hidden;
+      background: #f8fffe;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(13, 115, 119, 0.25);
+    }
+
+    .alarm-tablet-img-display img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ADD MEDICINE MODAL */
+    .add-modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 5000;
+      padding: 16px;
+    }
+
+    .add-modal-card {
+      background: #ffffff;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 580px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+
+    .tablet-photo-picker-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .tablet-preset-option {
+      width: 54px;
+      height: 54px;
+      border-radius: 12px;
+      border: 2px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: #f8fafc;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .tablet-preset-option:hover {
+      border-color: #0d7377;
+    }
+
+    .tablet-preset-option.active {
+      border-color: #0d7377;
+      background: #e6f4f4;
+      box-shadow: 0 0 0 2px #0d7377;
+    }
+  </style>
+</head>
+<body class="portal-layout">
+
+  <!-- Portal Header -->
+  <header class="portal-header">
+    <div class="portal-header-left">
+      <a href="dashboard.html" class="btn-back-dashboard">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back to Dashboard
+      </a>
+      <div class="portal-title-badge">
+        <span style="font-size: 20px;">⏰</span>
+        <span style="font-weight: 700; font-size: 16px; color: #0d7377;">Medicine Reminders & Tablet Alarms</span>
+      </div>
+    </div>
+    <div class="portal-header-right">
+      <button class="btn btn-secondary btn-sm" onclick="speakCurrentSchedule()">
+        🔊 Voice Timetable
+      </button>
+      <button class="btn btn-primary btn-sm" onclick="openAddMedicineModal()" style="margin: 0 10px;">
+        + Add Medicine & Tablet Photo
+      </button>
+      <div class="user-avatar-circle" style="width: 36px; height: 36px; border-radius: 50%; background: #0d7377; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">SK</div>
+    </div>
+  </header>
+
+  <main class="portal-container">
+    
+    <!-- Top Hero Banner with Live Alarm Test Buttons -->
+    <div class="portal-banner">
+      <div class="banner-text">
+        <h1>Prescription Dosing Schedule & Visual Alarms</h1>
+        <p>Never miss a dose. Track medications by exact administration times, preview verified tablet photos, and test the realistic audible alarm with pill visuals.</p>
+      </div>
+
+      <!-- Demo Alarm Testing Actions -->
+      <div class="demo-alarm-trigger-box">
+        <div>
+          <div style="font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.85); text-transform: uppercase; margin-bottom: 2px;">
+            🔔 Interactive Demo Alarm
+          </div>
+          <div style="font-size: 13px; font-weight: 600; color: #ffffff;">
+            Test the Alarm System with Tablet Photo
+          </div>
+        </div>
+        <button class="btn-demo-alarm-now" onclick="triggerAlarmNow(MEDICINES[0])">
+          🚨 Test Alarm Now
+        </button>
+        <button class="btn-countdown-alarm" onclick="startCountdownAlarm(5)">
+          ⏱️ 5s Countdown
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Countdown Banner (when countdown alarm is running) -->
+    <div id="countdown-banner" style="display: none; background: #fef3c7; border: 1.5px solid #f59e0b; border-radius: 12px; padding: 14px 20px; margin-bottom: 24px; display: none; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 22px;">⏳</span>
+        <span style="font-weight: 700; color: #92400e;">Demo Alarm Set! Ringing in: <span id="countdown-seconds" style="font-size: 18px; color: #b45309;">5</span> seconds...</span>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="cancelCountdown()">Cancel Alarm</button>
+    </div>
+
+    <!-- Stats Strip -->
+    <div class="stats-strip">
+      <div class="stat-box">
+        <div class="stat-icon-wrap" style="background: #e0f2f1; color: #0d7377;">📈</div>
+        <div>
+          <div style="font-size: 12px; color: #64748b; font-weight: 600;">WEEKLY COMPLIANCE</div>
+          <div style="font-size: 20px; font-weight: 800; color: #0d7377;">96% Adherence</div>
+          <div style="font-size: 12px; color: #22c55e;">🔥 6-Day Consecutive Streak</div>
+        </div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-icon-wrap" style="background: #e0f2fe; color: #0284c7;">💊</div>
+        <div>
+          <div style="font-size: 12px; color: #64748b; font-weight: 600;">ACTIVE MEDICINES</div>
+          <div style="font-size: 20px; font-weight: 800; color: #1e293b;" id="active-med-counter">6 Prescriptions</div>
+          <div style="font-size: 12px; color: #64748b;">With tablet photos & alerts</div>
+        </div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-icon-wrap" style="background: #fef3c7; color: #d97706;">⏰</div>
+        <div>
+          <div style="font-size: 12px; color: #64748b; font-weight: 600;">NEXT SCHEDULED DOSE</div>
+          <div style="font-size: 17px; font-weight: 800; color: #b45309;" id="next-med-title">Metformin 500mg</div>
+          <div style="font-size: 12px; color: #64748b;" id="next-med-timing">Today at 08:30 AM (After Food)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dayparts Schedule Section -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h2 style="font-size: 20px; font-weight: 800; color: #0f172a; margin: 0;">Today's Prescription Medication Schedule</h2>
+      <button class="btn btn-primary btn-sm" onclick="openAddMedicineModal()">+ Add New Medicine</button>
+    </div>
+
+    <!-- 🌅 Morning Schedule -->
+    <div class="daypart-section daypart-morning">
+      <div class="daypart-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 22px;">🌅</span>
+          <span style="font-weight: 700; color: #92400e; font-size: 16px;">Morning Schedule (6:00 AM – 12:00 PM)</span>
+        </div>
+        <span style="background: #fef3c7; color: #b45309; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700;">Morning Doses</span>
+      </div>
+      <div id="slot-morning-list"></div>
+    </div>
+
+    <!-- ☀️ Afternoon Schedule -->
+    <div class="daypart-section daypart-afternoon">
+      <div class="daypart-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 22px;">☀️</span>
+          <span style="font-weight: 700; color: #c2410c; font-size: 16px;">Afternoon Schedule (12:00 PM – 5:00 PM)</span>
+        </div>
+        <span style="background: #ffedd5; color: #c2410c; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700;">Afternoon Doses</span>
+      </div>
+      <div id="slot-afternoon-list"></div>
+    </div>
+
+    <!-- 🌆 Evening Schedule -->
+    <div class="daypart-section daypart-evening">
+      <div class="daypart-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 22px;">🌆</span>
+          <span style="font-weight: 700; color: #6d28d9; font-size: 16px;">Evening Schedule (5:00 PM – 9:00 PM)</span>
+        </div>
+        <span style="background: #ede9fe; color: #6d28d9; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700;">Evening Doses</span>
+      </div>
+      <div id="slot-evening-list"></div>
+    </div>
+
+    <!-- 🌙 Night Schedule -->
+    <div class="daypart-section daypart-night">
+      <div class="daypart-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 22px;">🌙</span>
+          <span style="font-weight: 700; color: #1e293b; font-size: 16px;">Night / Bedtime (9:00 PM – 6:00 AM)</span>
+        </div>
+        <span style="background: #f1f5f9; color: #475569; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700;">Bedtime Doses</span>
+      </div>
+      <div id="slot-night-list"></div>
+    </div>
+
+  </main>
+
+  <!-- =========================================================================
+       AUDIO & VISUAL ALARM POPUP MODAL (WITH TABLET PHOTO & NAME)
+       ========================================================================= -->
+  <div class="alarm-modal-backdrop" id="alarmModal">
+    <div class="alarm-box">
+      <div class="alarm-bell-icon">🔔</div>
+      <span style="background: #fee2e2; color: #dc2626; font-size: 12px; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.05em;">
+        🚨 MEDICATION ALARM RINGING
+      </span>
+
+      <!-- Tablet Photo in Alarm Display -->
+      <div class="alarm-tablet-img-display" id="alarm-tablet-photo-wrap">
+        <img id="alarm-tablet-img" src="" alt="Tablet Photo">
+      </div>
+
+      <h2 id="alarm-med-name" style="font-size: 24px; font-weight: 800; color: #0f172a; margin: 8px 0 4px 0;">Metformin</h2>
+      <div id="alarm-med-dosage" style="font-size: 16px; font-weight: 700; color: #0d7377;">500mg Tablet</div>
+      
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; margin: 16px 0; font-size: 13px; color: #475569;">
+        🕒 <strong>Scheduled Time:</strong> <span id="alarm-med-time">08:30 AM</span><br>
+        🍽️ <strong>Instruction:</strong> <span id="alarm-med-instruction">Take with a glass of water after breakfast</span>
+      </div>
+
+      <div style="display: flex; gap: 12px; justify-content: center; margin-top: 20px;">
+        <button class="btn btn-secondary" onclick="snoozeAlarm()" style="padding: 12px 20px; font-weight: 700;">
+          ⏰ Snooze 5 Mins
+        </button>
+        <button class="btn btn-success" onclick="takeAlarmMedicine()" style="padding: 12px 28px; font-weight: 800; font-size: 15px; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);">
+          ✓ Take Medicine Now
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       ADD MEDICINE MODAL (NAME, TIME, MEAL & TABLET PHOTO SELECTION/UPLOAD)
+       ========================================================================= -->
+  <div class="add-modal-backdrop" id="addMedicineModal">
+    <div class="add-modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0;">
+        <h2 style="margin: 0; font-size: 20px; font-weight: 800; color: #0f172a;">+ Add Medicine Reminder</h2>
+        <button onclick="closeAddMedicineModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #94a3b8;">&times;</button>
+      </div>
+
+      <form onsubmit="handleSaveNewMedicine(event)">
+        
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px;">Medicine Name *</label>
+          <input type="text" id="new-med-name" class="form-control" placeholder="e.g. Atorvastatin, Metformin, Dolo 650" required>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+          <div>
+            <label style="display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px;">Prescribed Dosage *</label>
+            <input type="text" id="new-med-dose" class="form-control" placeholder="e.g. 500mg, 1 Tablet, 10ml" required>
+          </div>
+          <div>
+            <label style="display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px;">Time of Day *</label>
+            <input type="time" id="new-med-time" class="form-control" value="08:30" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+          <div>
+            <label style="display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px;">Daypart Schedule *</label>
+            <select id="new-med-slot" class="form-control">
+              <option value="morning">🌅 Morning (6 AM - 12 PM)</option>
+              <option value="afternoon">☀️ Afternoon (12 PM - 5 PM)</option>
+              <option value="evening">🌆 Evening (5 PM - 9 PM)</option>
+              <option value="night">🌙 Night / Bedtime (9 PM - 6 AM)</option>
+            </select>
+          </div>
+          <div>
+            <label style="display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px;">Meal Instruction *</label>
+            <select id="new-med-meal" class="form-control">
+              <option value="After Food">After Food</option>
+              <option value="Before Food (Empty Stomach)">Before Food (Empty Stomach)</option>
+              <option value="With Food">With Food</option>
+              <option value="At Bedtime">At Bedtime</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Tablet Photo Selection & Upload -->
+        <div style="margin-bottom: 18px; padding: 16px; background: #f8fffe; border: 1.5px dashed #0d7377; border-radius: 14px;">
+          <label style="display: block; font-size: 13px; font-weight: 700; color: #0d7377; margin-bottom: 4px;">
+            📸 Tablet / Capsule Photo
+          </label>
+          <p style="font-size: 12px; color: #64748b; margin: 0 0 10px 0;">
+            Upload a photo of your tablet or select a realistic medical tablet preset:
+          </p>
+
+          <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px;">
+            <input type="file" id="custom-tablet-file" accept="image/*" onchange="handleCustomTabletUpload(event)" style="display: none;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('custom-tablet-file').click()">
+              📷 Upload Custom Photo
+            </button>
+            <span style="font-size: 12px; color: #94a3b8;">or pick a preset:</span>
+          </div>
+
+          <!-- Presets -->
+          <div class="tablet-photo-picker-row" id="preset-tablet-row">
+            <div class="tablet-preset-option active" data-img="pill-white-round" onclick="selectTabletPreset(this, 'pill-white-round')">
+              <svg viewBox="0 0 40 40" class="tablet-svg-art"><circle cx="20" cy="20" r="16" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/><line x1="20" y1="6" x2="20" y2="34" stroke="#cbd5e1" stroke-width="2"/></svg>
+            </div>
+            <div class="tablet-preset-option" data-img="capsule-blue-white" onclick="selectTabletPreset(this, 'capsule-blue-white')">
+              <svg viewBox="0 0 40 40" class="tablet-svg-art"><rect x="10" y="6" width="20" height="28" rx="10" fill="#38bdf8"/><path d="M10 20h20v14a10 10 0 0 1-20 0Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/></svg>
+            </div>
+            <div class="tablet-preset-option" data-img="pill-yellow-oval" onclick="selectTabletPreset(this, 'pill-yellow-oval')">
+              <svg viewBox="0 0 40 40" class="tablet-svg-art"><ellipse cx="20" cy="20" rx="18" ry="11" fill="#fef08a" stroke="#ca8a04" stroke-width="2"/></svg>
+            </div>
+            <div class="tablet-preset-option" data-img="pill-red-round" onclick="selectTabletPreset(this, 'pill-red-round')">
+              <svg viewBox="0 0 40 40" class="tablet-svg-art"><circle cx="20" cy="20" r="16" fill="#f87171" stroke="#dc2626" stroke-width="2"/><circle cx="20" cy="20" r="8" fill="#ef4444"/></svg>
+            </div>
+            <div class="tablet-preset-option" data-img="capsule-green" onclick="selectTabletPreset(this, 'capsule-green')">
+              <svg viewBox="0 0 40 40" class="tablet-svg-art"><rect x="10" y="6" width="20" height="28" rx="10" fill="#4ade80"/><path d="M10 20h20v14a10 10 0 0 1-20 0Z" fill="#15803d"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px;">Clinical Purpose / Doctor Notes</label>
+          <input type="text" id="new-med-notes" class="form-control" placeholder="e.g. For blood sugar control after meals">
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" class="btn btn-secondary" onclick="closeAddMedicineModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="padding: 10px 24px;">Save & Set Alarm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // High-resolution SVG data-URI presets for realistic tablet photos
+    const TABLET_PHOTOS = {
+      'pill-white-round': 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="%23f8fafc" stroke="%2394a3b8" stroke-width="4"/><line x1="50" y1="12" x2="50" y2="88" stroke="%23cbd5e1" stroke-width="4"/><circle cx="50" cy="50" r="28" fill="%23ffffff"/></svg>',
+      'capsule-blue-white': 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="25" y="14" width="50" height="72" rx="25" fill="%230284c7"/><path d="M25 50h50v36a25 25 0 0 1-50 0Z" fill="%23ffffff" stroke="%23cbd5e1" stroke-width="3"/><rect x="25" y="14" width="50" height="72" rx="25" fill="none" stroke="%230369a1" stroke-width="3"/></svg>',
+      'pill-yellow-oval': 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="44" ry="28" fill="%23fef08a" stroke="%23eab308" stroke-width="4"/><line x1="50" y1="24" x2="50" y2="76" stroke="%23ca8a04" stroke-width="3"/></svg>',
+      'pill-red-round': 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="%23ef4444" stroke="%23b91c1c" stroke-width="4"/><circle cx="50" cy="50" r="24" fill="%23dc2626"/></svg>',
+      'capsule-green': 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="25" y="14" width="50" height="72" rx="25" fill="%2322c55e"/><path d="M25 50h50v36a25 25 0 0 1-50 0Z" fill="%2315803d"/><rect x="25" y="14" width="50" height="72" rx="25" fill="none" stroke="%23166534" stroke-width="3"/></svg>'
+    };
+
+    // Medication Database with Prescribed Times & Tablet Photos
+    let MEDICINES = [
+      {
+        id: 1,
+        name: 'Pantoprazole',
+        dose: '40mg Tablet',
+        time: '07:30 AM',
+        slot: 'morning',
+        meal: 'Before Food (30 mins before breakfast)',
+        notes: 'Gastric acid suppression & stomach protection',
+        photo: TABLET_PHOTOS['pill-yellow-oval'],
+        status: 'taken'
+      },
+      {
+        id: 2,
+        name: 'Metformin',
+        dose: '500mg Tablet',
+        time: '08:30 AM',
+        slot: 'morning',
+        meal: 'After Food (Breakfast)',
+        notes: 'Type 2 Diabetes glucose management',
+        photo: TABLET_PHOTOS['pill-white-round'],
+        status: 'pending'
+      },
+      {
+        id: 3,
+        name: 'Clopidogrel',
+        dose: '75mg Coated Pill',
+        time: '08:30 AM',
+        slot: 'morning',
+        meal: 'After Food',
+        notes: 'Cardiovascular antiplatelet blood thinner',
+        photo: TABLET_PHOTOS['pill-red-round'],
+        status: 'pending'
+      },
+      {
+        id: 4,
+        name: 'Multivitamin',
+        dose: '1 Capsule',
+        time: '01:30 PM',
+        slot: 'afternoon',
+        meal: 'After Food (Lunch)',
+        notes: 'Zinc, B-Complex & essential daily micro-nutrients',
+        photo: TABLET_PHOTOS['capsule-blue-white'],
+        status: 'pending'
+      },
+      {
+        id: 5,
+        name: 'Metformin (Evening)',
+        dose: '500mg Tablet',
+        time: '08:30 PM',
+        slot: 'evening',
+        meal: 'After Food (Dinner)',
+        notes: 'Evening post-prandial glycemic control',
+        photo: TABLET_PHOTOS['pill-white-round'],
+        status: 'pending'
+      },
+      {
+        id: 6,
+        name: 'Insulin Glargine',
+        dose: '20 Units (Pen)',
+        time: '10:00 PM',
+        slot: 'night',
+        meal: 'At Bedtime',
+        notes: 'Long-acting basal insulin subcutaneous injection',
+        photo: TABLET_PHOTOS['capsule-green'],
+        status: 'pending'
+      }
+    ];
+
+    let selectedPresetKey = 'pill-white-round';
+    let uploadedCustomPhotoData = null;
+    let audioContext = null;
+    let alarmInterval = null;
+    let activeAlarmMed = null;
+    let countdownTimer = null;
+
+    // Synthesized Two-Tone Medical Alarm Chime using Web Audio API
+    function playAlarmChime() {
+      try {
+        if (!audioContext) {
+          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioContext.state === 'suspended') {
+          audioContext.resume();
+        }
+
+        const now = audioContext.currentTime;
+        // Tone 1
+        const osc1 = audioContext.createOscillator();
+        const gain1 = audioContext.createGain();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(880, now); // A5
+        osc1.frequency.setValueAtTime(1174.66, now + 0.15); // D6
+        gain1.gain.setValueAtTime(0.3, now);
+        gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+        osc1.connect(gain1);
+        gain1.connect(audioContext.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.45);
+
+        // Tone 2
+        const osc2 = audioContext.createOscillator();
+        const gain2 = audioContext.createGain();
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(1760, now + 0.18);
+        gain2.gain.setValueAtTime(0.2, now + 0.18);
+        gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
+        osc2.connect(gain2);
+        gain2.connect(audioContext.destination);
+        osc2.start(now + 0.18);
+        osc2.stop(now + 0.48);
+      } catch (err) {
+        console.log("Audio alert fallback", err);
+      }
+    }
+
+    function renderSchedules() {
+      const slots = ['morning', 'afternoon', 'evening', 'night'];
+      slots.forEach(slot => {
+        const listEl = document.getElementById(`slot-${slot}-list`);
+        const meds = MEDICINES.filter(m => m.slot === slot);
+
+        if (meds.length === 0) {
+          listEl.innerHTML = `<div style="padding: 20px 24px; color: #94a3b8; font-size: 13px;">No prescriptions scheduled for this window.</div>`;
+          return;
+        }
+
+        listEl.innerHTML = meds.map(m => `
+          <div class="med-item-card ${m.status === 'taken' ? 'taken' : ''}" id="med-card-${m.id}">
+            <div class="med-left-group">
+              <div class="tablet-photo-frame" title="Prescribed Tablet Photo">
+                <img src="${m.photo}" alt="${m.name} Tablet">
+              </div>
+              <div class="med-details">
+                <h3>
+                  <span>${m.name}</span>
+                  <span class="med-dosage-tag">${m.dose}</span>
+                </h3>
+                <div class="med-meta-line">
+                  <span>🕒 <strong>${m.time}</strong></span>
+                  <span class="meal-badge">🍽️ ${m.meal}</span>
+                  <span>• ${m.notes}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="med-actions">
+              <button class="btn btn-secondary btn-sm" onclick="triggerAlarmNow(MEDICINES.find(x => x.id === ${m.id}))" title="Trigger Alarm for this medicine">
+                🔔 Test Alarm
+              </button>
+              ${m.status === 'taken' ? `
+                <span style="color: #16a34a; font-weight: 700; font-size: 13px; display: inline-flex; align-items: center; gap: 4px; margin-left: 8px;">
+                  ✓ Taken
+                </span>
+                <button class="btn btn-secondary btn-sm" onclick="toggleTake(${m.id}, 'pending')">Undo</button>
+              ` : `
+                <button class="btn-take-dose" onclick="toggleTake(${m.id}, 'taken')">
+                  ✓ Take Dose
+                </button>
+                <button class="btn-skip-dose" onclick="toggleTake(${m.id}, 'skipped')">Skip</button>
+              `}
+            </div>
+          </div>
+        `).join('');
+      });
+
+      document.getElementById('active-med-counter').innerText = `${MEDICINES.length} Prescriptions`;
+    }
+
+    function toggleTake(id, status) {
+      const med = MEDICINES.find(m => m.id === id);
+      if (med) {
+        med.status = status;
+        renderSchedules();
+      }
+    }
+
+    // --- ALARM SYSTEM WITH TABLET PHOTO & SOUND ---
+    function triggerAlarmNow(med) {
+      if (!med) med = MEDICINES[0];
+      activeAlarmMed = med;
+
+      document.getElementById('alarm-med-name').innerText = med.name;
+      document.getElementById('alarm-med-dosage').innerText = med.dose;
+      document.getElementById('alarm-med-time').innerText = med.time;
+      document.getElementById('alarm-med-instruction').innerText = med.meal;
+      document.getElementById('alarm-tablet-img').src = med.photo;
+
+      document.getElementById('alarmModal').style.display = 'flex';
+
+      // Ring chime immediately and loop every 1.4 seconds
+      playAlarmChime();
+      if (alarmInterval) clearInterval(alarmInterval);
+      alarmInterval = setInterval(playAlarmChime, 1400);
+
+      // Voice announcement using speech synthesis
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const speech = new SpeechSynthesisUtterance(`CareNest Alert: Time to take your medicine, ${med.name}, ${med.dose}, ${med.meal}`);
+        speech.rate = 0.95;
+        window.speechSynthesis.speak(speech);
+      }
+    }
+
+    function takeAlarmMedicine() {
+      if (activeAlarmMed) {
+        toggleTake(activeAlarmMed.id, 'taken');
+      }
+      stopAlarm();
+      alert(`✅ Confirmed! You logged ${activeAlarmMed.name} as taken. Your adherence streak is updated!`);
+    }
+
+    function snoozeAlarm() {
+      stopAlarm();
+      alert(`⏰ Alarm snoozed for 5 minutes.`);
+    }
+
+    function stopAlarm() {
+      if (alarmInterval) clearInterval(alarmInterval);
+      document.getElementById('alarmModal').style.display = 'none';
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    }
+
+    // Countdown Alarm
+    function startCountdownAlarm(sec) {
+      let remaining = sec;
+      const banner = document.getElementById('countdown-banner');
+      const secEl = document.getElementById('countdown-seconds');
+      banner.style.display = 'flex';
+      secEl.innerText = remaining;
+
+      if (countdownTimer) clearInterval(countdownTimer);
+      countdownTimer = setInterval(() => {
+        remaining--;
+        secEl.innerText = remaining;
+        if (remaining <= 0) {
+          clearInterval(countdownTimer);
+          banner.style.display = 'none';
+          triggerAlarmNow(MEDICINES[1] || MEDICINES[0]); // Trigger for Metformin
+        }
+      }, 1000);
+    }
+
+    function cancelCountdown() {
+      if (countdownTimer) clearInterval(countdownTimer);
+      document.getElementById('countdown-banner').style.display = 'none';
+    }
+
+    // Voice Schedule
+    function speakCurrentSchedule() {
+      if ('speechSynthesis' in window) {
+        const text = "CareNest Daily Schedule: You have Metformin 500 milligrams and Clopidogrel scheduled in the morning, Multivitamin after lunch, and Insulin Glargine at bedtime.";
+        const utterance = new SpeechSynthesisUtterance(text);
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    // Add Medicine Modal Controls
+    function openAddMedicineModal() {
+      document.getElementById('addMedicineModal').style.display = 'flex';
+    }
+
+    function closeAddMedicineModal() {
+      document.getElementById('addMedicineModal').style.display = 'none';
+    }
+
+    function selectTabletPreset(element, key) {
+      document.querySelectorAll('.tablet-preset-option').forEach(el => el.classList.remove('active'));
+      element.classList.add('active');
+      selectedPresetKey = key;
+      uploadedCustomPhotoData = null;
+    }
+
+    function handleCustomTabletUpload(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          uploadedCustomPhotoData = evt.target.result;
+          alert("📸 Custom tablet photo uploaded successfully!");
+          document.querySelectorAll('.tablet-preset-option').forEach(el => el.classList.remove('active'));
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function handleSaveNewMedicine(e) {
+      e.preventDefault();
+      const name = document.getElementById('new-med-name').value.trim();
+      const dose = document.getElementById('new-med-dose').value.trim();
+      const timeVal = document.getElementById('new-med-time').value;
+      const slot = document.getElementById('new-med-slot').value;
+      const meal = document.getElementById('new-med-meal').value;
+      const notes = document.getElementById('new-med-notes').value.trim();
+
+      // Format time (HH:MM to 12-hour AM/PM)
+      let timeFormatted = timeVal;
+      if (timeVal) {
+        const [h, m] = timeVal.split(':');
+        const hour = parseInt(h);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        const h12 = hour % 12 || 12;
+        timeFormatted = `${String(h12).padStart(2, '0')}:${m} ${ampm}`;
+      }
+
+      const photoToUse = uploadedCustomPhotoData || TABLET_PHOTOS[selectedPresetKey] || TABLET_PHOTOS['pill-white-round'];
+
+      const newMedicine = {
+        id: Date.now(),
+        name,
+        dose,
+        time: timeFormatted,
+        slot,
+        meal,
+        notes: notes || 'Prescribed medication',
+        photo: photoToUse,
+        status: 'pending'
+      };
+
+      MEDICINES.push(newMedicine);
+      renderSchedules();
+      closeAddMedicineModal();
+
+      alert(`✅ "${name}" has been added with tablet photo and active alarm!`);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderSchedules();
+      const userStr = localStorage.getItem('carenest_user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          const initials = user.name ? user.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase() : 'SK';
+          document.querySelector('.user-avatar-circle').innerText = initials;
+        } catch(e) {}
+      }
+    });
+  </script>
+</body>
+</html>

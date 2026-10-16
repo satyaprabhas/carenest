@@ -1,0 +1,1830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareNest - Portal Selection Dashboard</title>
+  
+  <!-- Universal Stylesheet Link -->
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    /* ==========================================================================
+       Dashboard Specific Styles (Self-Contained & Supplementary to styles.css)
+       Theme: Deep Teal (#0d7377), Soft Green (#4caf50), Light Blue (#e3f2fd)
+       ========================================================================== */
+
+    :root {
+      --primary: #0d7377;
+      --primary-hover: #085356;
+      --primary-light: #14919b;
+      --primary-soft: #e0f2f1;
+      --primary-glow: rgba(13, 115, 119, 0.22);
+      
+      --accent-green: #4caf50;
+      --accent-green-dark: #2e7d32;
+      --accent-green-soft: #e8f5e9;
+
+      --accent-blue: #0288d1;
+      --accent-blue-soft: #e3f2fd;
+
+      --accent-orange: #e65100;
+      --accent-orange-soft: #fff3e0;
+
+      --accent-purple: #7b1fa2;
+      --accent-purple-soft: #f3e5f5;
+
+      --accent-dark-teal: #004d40;
+      --accent-dark-teal-soft: #e0f4f5;
+
+      --bg-page: #f8fafc;
+      --surface-card: #ffffff;
+      --text-heading: #0f172a;
+      --text-body: #475569;
+      --text-muted: #64748b;
+      --border-light: #e2e8f0;
+      --border-card-hover: #0d7377;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-body);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* --------------------------------------------------------------------------
+       1. Top Bar (Simple, Clean, No Sidebar)
+       -------------------------------------------------------------------------- */
+    .topbar {
+      background-color: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-light);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    }
+
+    .topbar-container {
+      max-width: 1540px;
+      width: calc(100% - 32px);
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Left: Brand */
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand-logo-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #0d7377 0%, #14919b 100%);
+      box-shadow: 0 4px 10px rgba(13, 115, 119, 0.25);
+    }
+
+    .brand-logo-icon svg {
+      width: 24px;
+      height: 24px;
+      fill: none;
+      stroke: #ffffff;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .brand-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-name {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .brand-tagline {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* Right: User Avatar, Name, Profile link, Logout button */
+    .user-nav-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .user-profile-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 5px 12px 5px 6px;
+      background: #f1f5f9;
+      border-radius: 9999px;
+      border: 1px solid #e2e8f0;
+      transition: all 0.2s ease;
+    }
+
+    .user-avatar-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0d7377 0%, #085356 100%);
+      color: #ffffff;
+      font-size: 0.88rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-transform: uppercase;
+      box-shadow: 0 2px 5px rgba(13, 115, 119, 0.3);
+      user-select: none;
+    }
+
+    .user-display-name {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-heading);
+      max-width: 140px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+      line-height: 1;
+    }
+
+    .nav-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke-width: 2;
+    }
+
+    .nav-btn-profile {
+      background: #ffffff;
+      color: var(--primary);
+      border-color: #cbd5e1;
+    }
+
+    .nav-btn-profile:hover {
+      background: var(--primary-soft);
+      border-color: var(--primary);
+      color: var(--primary-hover);
+    }
+
+    .nav-btn-logout {
+      background: #fff1f2;
+      color: #e11d48;
+      border-color: #fecdd3;
+    }
+
+    .nav-btn-logout:hover {
+      background: #e11d48;
+      color: #ffffff;
+      border-color: #e11d48;
+      box-shadow: 0 2px 8px rgba(225, 29, 72, 0.25);
+    }
+
+    /* --------------------------------------------------------------------------
+       2. Welcome Section
+       -------------------------------------------------------------------------- */
+    .main-content {
+      flex: 1;
+      padding-bottom: 60px;
+    }
+
+    .welcome-section {
+      padding: 40px 0 28px;
+      text-align: center;
+      position: relative;
+    }
+
+    .welcome-container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .welcome-date-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 9999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+      margin-bottom: 16px;
+    }
+
+    .welcome-date-pill svg {
+      width: 15px;
+      height: 15px;
+      stroke: var(--primary);
+      stroke-width: 2;
+    }
+
+    .welcome-title {
+      font-size: 2.35rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      letter-spacing: -0.025em;
+      margin-bottom: 14px;
+      line-height: 1.2;
+    }
+
+    .welcome-title span {
+      color: var(--primary);
+    }
+
+    .welcome-desc {
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: var(--text-muted);
+      margin: 0 auto;
+      max-width: 780px;
+    }
+
+    /* --------------------------------------------------------------------------
+       3. Six Portal Cards (The Centerpiece Grid)
+       - All 6 cards exactly equal size, weight, alignment
+       - 3 cols desktop, 2 cols tablet, 1 col mobile
+       -------------------------------------------------------------------------- */
+    .portals-section {
+      padding: 10px 0 48px;
+    }
+
+    .portals-container {
+      max-width: 1540px;
+      width: calc(100% - 32px);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .portals-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .portal-card {
+      background: var(--surface-card);
+      border: 1.5px solid var(--border-light);
+      border-radius: 18px;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.05), 0 2px 4px -1px rgba(15, 23, 42, 0.03);
+      transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  box-shadow 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  border-color 0.25s ease;
+      position: relative;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      box-sizing: border-box;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .portal-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--border-card-hover);
+      box-shadow: 0 20px 32px -8px var(--primary-glow),
+                  0 8px 16px -4px rgba(13, 115, 119, 0.12),
+                  0 0 0 1px rgba(13, 115, 119, 0.15);
+    }
+
+    /* Illustrated Header Banner for each Portal */
+    .portal-card-banner {
+      width: 100%;
+      height: 135px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .portal-card-banner svg.banner-art {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .portal-badge-chip {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border-radius: 20px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      z-index: 2;
+    }
+
+    .portal-card-body {
+      padding: 22px 22px 22px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      text-align: left;
+    }
+
+    .portal-header-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .portal-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.25s ease;
+    }
+
+    .portal-card:hover .portal-icon-box {
+      transform: scale(1.08);
+    }
+
+    .portal-icon-box svg {
+      width: 22px;
+      height: 22px;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    /* Color variations for icons and badges */
+    .theme-teal .portal-card-banner { background: linear-gradient(135deg, #e6f4f1 0%, #cce8e2 100%); }
+    .theme-teal .portal-icon-box { background: #e6f4f1; border: 1.5px solid rgba(13, 115, 119, 0.25); }
+    .theme-teal .portal-icon-box svg { stroke: #0d7377; }
+    .theme-teal .portal-badge-chip { background: #0d7377; color: #ffffff; }
+
+    .theme-green .portal-card-banner { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); }
+    .theme-green .portal-icon-box { background: #e8f5e9; border: 1.5px solid rgba(46, 125, 50, 0.25); }
+    .theme-green .portal-icon-box svg { stroke: #2e7d32; }
+    .theme-green .portal-badge-chip { background: #2e7d32; color: #ffffff; }
+
+    .theme-blue .portal-card-banner { background: linear-gradient(135deg, #e1f5fe 0%, #b3e5fc 100%); }
+    .theme-blue .portal-icon-box { background: #e1f5fe; border: 1.5px solid rgba(2, 136, 209, 0.25); }
+    .theme-blue .portal-icon-box svg { stroke: #0288d1; }
+    .theme-blue .portal-badge-chip { background: #0288d1; color: #ffffff; }
+
+    .theme-orange .portal-card-banner { background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); }
+    .theme-orange .portal-icon-box { background: #fff3e0; border: 1.5px solid rgba(230, 81, 0, 0.25); }
+    .theme-orange .portal-icon-box svg { stroke: #e65100; }
+    .theme-orange .portal-badge-chip { background: #e65100; color: #ffffff; }
+
+    .theme-purple .portal-card-banner { background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); }
+    .theme-purple .portal-icon-box { background: #f3e5f5; border: 1.5px solid rgba(123, 31, 162, 0.25); }
+    .theme-purple .portal-icon-box svg { stroke: #7b1fa2; }
+    .theme-purple .portal-badge-chip { background: #7b1fa2; color: #ffffff; }
+
+    .theme-darkteal .portal-card-banner { background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%); }
+    .theme-darkteal .portal-icon-box { background: #e0f2f1; border: 1.5px solid rgba(0, 77, 64, 0.25); }
+    .theme-darkteal .portal-icon-box svg { stroke: #004d40; }
+    .theme-darkteal .portal-badge-chip { background: #004d40; color: #ffffff; }
+
+    /* Title below banner */
+    .portal-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      margin: 0;
+    }
+
+    /* Short description text */
+    .portal-desc {
+      font-size: 0.88rem;
+      color: var(--text-body);
+      line-height: 1.55;
+      margin-bottom: 14px;
+      flex-grow: 1;
+    }
+
+    /* Feature checkmarks list */
+    .portal-features-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 18px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      border-top: 1px dashed var(--border-light);
+      padding-top: 12px;
+    }
+
+    .portal-feature-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.8rem;
+      color: #475569;
+      font-weight: 600;
+    }
+
+    .portal-feature-item svg {
+      width: 14px;
+      height: 14px;
+      stroke: #10b981;
+      stroke-width: 2.5;
+      flex-shrink: 0;
+    }
+
+    /* 'Open →' button at bottom */
+    .portal-btn {
+      width: 100%;
+      padding: 12px 18px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 10px;
+      background: #f1f5f9;
+      color: var(--primary);
+      border: 1.5px solid #cbd5e1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.22s ease;
+      box-sizing: border-box;
+    }
+
+    .portal-card:hover .portal-btn {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 14px rgba(13, 115, 119, 0.3);
+    }
+
+    .portal-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke-width: 2.2;
+      transition: transform 0.22s ease;
+    }
+
+    .portal-card:hover .portal-btn svg {
+      transform: translateX(4px);
+    }
+
+    /* --------------------------------------------------------------------------
+       4. Seasonal Health Section (Below the 6 Cards)
+       -------------------------------------------------------------------------- */
+    .seasonal-section {
+      padding: 30px 0 20px;
+    }
+
+    .seasonal-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .seasonal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .seasonal-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .live-alert-pulse {
+      display: inline-flex;
+      position: relative;
+      width: 12px;
+      height: 12px;
+    }
+
+    .live-alert-pulse::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: #ef4444;
+      animation: pulseAlert 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+
+    .live-alert-pulse::after {
+      content: '';
+      position: relative;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #dc2626;
+    }
+
+    @keyframes pulseAlert {
+      0% { transform: scale(1); opacity: 0.9; }
+      75% { transform: scale(2.4); opacity: 0; }
+      100% { transform: scale(2.4); opacity: 0; }
+    }
+
+    .seasonal-heading {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      letter-spacing: -0.01em;
+      margin: 0;
+    }
+
+    .seasonal-view-all {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--primary);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      background: #ffffff;
+      border: 1px solid var(--border-light);
+      transition: all 0.2s ease;
+    }
+
+    .seasonal-view-all:hover {
+      background: var(--primary-soft);
+      border-color: var(--primary);
+      color: var(--primary-hover);
+    }
+
+    .seasonal-view-all svg {
+      width: 15px;
+      height: 15px;
+      stroke-width: 2.2;
+      transition: transform 0.2s ease;
+    }
+
+    .seasonal-view-all:hover svg {
+      transform: translateX(3px);
+    }
+
+    /* Horizontal Cards Grid for Seasonal Health (4 items) */
+    .seasonal-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .seasonal-card {
+      background: #ffffff;
+      border: 1px solid var(--border-light);
+      border-radius: 14px;
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+      transition: all 0.22s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .seasonal-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px -4px rgba(15, 23, 42, 0.08);
+      border-color: #cbd5e1;
+    }
+
+    .seasonal-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .seasonal-icon-mini {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .seasonal-icon-mini svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    .seasonal-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .seasonal-card-title {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      margin-bottom: 6px;
+    }
+
+    .seasonal-card-tip {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin: 0;
+      flex: 1;
+    }
+
+    /* Seasonal themes */
+    .season-dengue .seasonal-icon-mini { background: #ffe4e6; }
+    .season-dengue .seasonal-icon-mini svg { stroke: #e11d48; }
+    .season-dengue .seasonal-badge { background: #ffe4e6; color: #e11d48; }
+
+    .season-malaria .seasonal-icon-mini { background: #fef3c7; }
+    .season-malaria .seasonal-icon-mini svg { stroke: #d97706; }
+    .season-malaria .seasonal-badge { background: #fef3c7; color: #b45309; }
+
+    .season-flu .seasonal-icon-mini { background: #e0f2fe; }
+    .season-flu .seasonal-icon-mini svg { stroke: #0284c7; }
+    .season-flu .seasonal-badge { background: #e0f2fe; color: #0369a1; }
+
+    .season-water .seasonal-icon-mini { background: #ccfbf1; }
+    .season-water .seasonal-icon-mini svg { stroke: #0d9488; }
+    .season-water .seasonal-badge { background: #ccfbf1; color: #0f766e; }
+
+    /* --------------------------------------------------------------------------
+       5. Footer
+       -------------------------------------------------------------------------- */
+    .dashboard-footer {
+      background: #ffffff;
+      border-top: 1px solid var(--border-light);
+      margin-top: auto;
+      padding: 32px 0 28px;
+    }
+
+    .footer-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .footer-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-copy {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer-link {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.18s ease;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    .footer-link:hover {
+      color: var(--primary);
+    }
+
+    .footer-disclaimer {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      text-align: center;
+      max-width: 860px;
+      line-height: 1.5;
+      padding-top: 12px;
+      border-top: 1px dashed #e2e8f0;
+      width: 100%;
+    }
+
+    /* Modal Backdrop and Content */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.25s ease;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-box {
+      background: #ffffff;
+      border-radius: 16px;
+      max-width: 540px;
+      width: 100%;
+      padding: 30px;
+      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+      position: relative;
+      transform: translateY(20px);
+      transition: transform 0.25s ease;
+    }
+
+    .modal-overlay.active .modal-box {
+      transform: translateY(0);
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #f1f5f9;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.18s ease;
+    }
+
+    .modal-close-btn:hover {
+      background: #e2e8f0;
+      color: var(--text-heading);
+    }
+
+    .modal-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      margin-bottom: 12px;
+    }
+
+    .modal-content {
+      font-size: 0.92rem;
+      color: var(--text-body);
+      line-height: 1.6;
+    }
+
+    /* --------------------------------------------------------------------------
+       Responsive Breakpoints
+       - Desktop: 3 columns
+       - Tablet: 2 columns
+       - Mobile: 1 column
+       -------------------------------------------------------------------------- */
+    @media (max-width: 1024px) {
+      .portals-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 22px;
+      }
+      .seasonal-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .topbar-container {
+        height: auto;
+        padding: 14px 18px;
+        flex-direction: column;
+        gap: 14px;
+        align-items: stretch;
+      }
+      .brand-group {
+        justify-content: center;
+      }
+      .user-nav-group {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .welcome-title {
+        font-size: 1.85rem;
+      }
+      .welcome-desc {
+        font-size: 0.96rem;
+      }
+      .portals-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .portal-card {
+        padding: 28px 20px 22px;
+      }
+      .seasonal-grid {
+        grid-template-columns: 1fr;
+      }
+      .footer-top-row {
+        flex-direction: column;
+        text-align: center;
+        gap: 14px;
+      }
+      .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       1. TOP BAR (Simple, Clean, No Sidebar)
+       ======================================================================== -->
+  <header class="topbar" role="banner">
+    <div class="topbar-container">
+      <!-- Left: CareNest SVG Logo + CareNest Text -->
+      <a href="dashboard.html" class="brand-group" aria-label="CareNest Dashboard Home">
+        <div class="brand-logo-icon">
+          <!-- Medical Shield / Caring Nest SVG -->
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="M12 8v8"/>
+            <path d="M8 12h8"/>
+          </svg>
+        </div>
+        <div class="brand-info">
+          <span class="brand-name">CareNest</span>
+          <span class="brand-tagline">Healthcare Hub</span>
+        </div>
+      </a>
+
+      <!-- Center: Empty as specified -->
+
+      <!-- Right: User avatar circle, user name, Profile link, Logout button -->
+      <div class="user-nav-group">
+        <div class="user-profile-badge" title="Active CareNest Account">
+          <div class="user-avatar-circle" id="user-avatar-initials" aria-label="User Initials">SK</div>
+          <span class="user-display-name" id="user-display-name">Santhosh Kumar</span>
+        </div>
+
+        <a href="profile.html" class="nav-btn nav-btn-profile" title="View & Edit Profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span>Profile</span>
+        </a>
+
+        <button type="button" id="logout-btn" class="nav-btn nav-btn-logout" title="Sign out of CareNest">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          <span>Logout</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content" role="main">
+    <!-- ======================================================================
+         2. WELCOME SECTION
+         ====================================================================== -->
+    <section class="welcome-section" aria-labelledby="welcome-heading">
+      <div class="welcome-container">
+        <!-- Current Date Display -->
+        <div class="welcome-date-pill" id="current-date-pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <span id="current-date-text">Loading current date...</span>
+        </div>
+
+        <!-- Heading -->
+        <h1 class="welcome-title" id="welcome-heading">Welcome to CareNest!</h1>
+
+        <!-- Description -->
+        <p class="welcome-desc">
+          Choose a service to manage your healthcare needs, understand medical information, plan your diet, and organise your health records.
+        </p>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         3. SIX PORTAL CARDS — THE MAIN CONTENT
+         ====================================================================== -->
+    <section class="portals-section" aria-label="CareNest Portals">
+      <div class="portals-container">
+        <div class="portals-grid">
+
+          <!-- CARD 1: Discharge Summary Assistant -->
+          <article class="portal-card theme-teal" data-href="discharge.html" tabindex="0" role="link" aria-label="Discharge Summary Assistant">
+            <div class="portal-card-banner">
+              <span class="portal-badge-chip">✨ AI Document OCR</span>
+              <!-- Bespoke Medical Summary Illustration -->
+              <svg class="banner-art" viewBox="0 0 360 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="360" height="140" fill="url(#teal-grad)"/>
+                <defs>
+                  <linearGradient id="teal-grad" x1="0" y1="0" x2="360" y2="140" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#0d7377" stop-opacity="0.12"/>
+                    <stop stop-color="#085356" stop-opacity="0.28"/>
+                  </linearGradient>
+                </defs>
+                <!-- Background Hospital Cross Watermark -->
+                <path d="M280 25h30v25h25v30h-25v25h-30v-25h-25v-30h25z" fill="#0d7377" fill-opacity="0.08"/>
+                <!-- Pulse Line ECG -->
+                <path d="M10 70h60l10-25 15 50 15-40 10 25 10-10h40" stroke="#0d7377" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.35"/>
+                <!-- Medical Clipboard -->
+                <g transform="translate(195, 18)">
+                  <rect x="0" y="8" width="80" height="104" rx="8" fill="#ffffff" stroke="#0d7377" stroke-width="2.5" filter="drop-shadow(0 4px 10px rgba(13,115,119,0.18))"/>
+                  <!-- Clip Header -->
+                  <rect x="24" y="2" width="32" height="12" rx="3" fill="#0d7377"/>
+                  <circle cx="40" cy="8" r="3" fill="#ffffff"/>
+                  <!-- Document Lines -->
+                  <rect x="12" y="24" width="40" height="5" rx="2" fill="#0d7377"/>
+                  <rect x="12" y="34" width="56" height="3" rx="1.5" fill="#94a3b8"/>
+                  <rect x="12" y="42" width="50" height="3" rx="1.5" fill="#94a3b8"/>
+                  <rect x="12" y="50" width="45" height="3" rx="1.5" fill="#94a3b8"/>
+                  <!-- Clinical Checkmark Badge -->
+                  <circle cx="56" cy="86" r="16" fill="#10b981"/>
+                  <path d="m50 86 4 4 8-8" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </g>
+                <!-- Stethoscope Vector -->
+                <path d="M45 40c0 28 16 46 38 46s38-18 38-46" stroke="#085356" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="45" cy="38" r="4.5" fill="#085356"/>
+                <circle cx="121" cy="38" r="4.5" fill="#085356"/>
+                <path d="M83 86v18a12 12 0 0 0 12 12h10" stroke="#085356" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="111" cy="116" r="8" fill="#0d7377" stroke="#ffffff" stroke-width="2"/>
+              </svg>
+            </div>
+            
+            <div class="portal-card-body">
+              <div class="portal-header-row">
+                <div class="portal-icon-box">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                    <path d="M9 12h6"/>
+                    <path d="M9 16h4"/>
+                    <path d="M12 8v0.01"/>
+                  </svg>
+                </div>
+                <div class="portal-title-box">
+                  <h2 class="portal-title">Discharge Summary Assistant</h2>
+                </div>
+              </div>
+
+              <p class="portal-desc">
+                Understand hospital discharge documents, prescribed medicines, dietary instructions, recovery guidance, and follow-up information in simple language.
+              </p>
+
+              <ul class="portal-features-list">
+                <li class="portal-feature-item">
+                  <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Upload PDF, JPG & Hospital papers</span>
+                </li>
+                <li class="portal-feature-item">
+                  <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Extracted care plan & color-coded schedule</span>
+                </li>
+                <li class="portal-feature-item">
+                  <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Interactive "Can I Eat This?" query checker</span>
+                </li>
+              </ul>
+
+              <a href="discharge.html" class="portal-btn" tabindex="-1">
+                <span>Open Assistant</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
+            </div>
+          </article>
+
+          <!-- CARD 2: Generic Medicine Finder -->
+          <article class="portal-card theme-green" data-href="medicine-finder.html" tabindex="0" role="link" aria-label="Generic Medicine Finder">
+            <div class="portal-card-banner">
+              <span class="portal-badge-chip">💰 Up to 85% Savings</span>
+              <!-- Bespoke Medicine & Blister Strip Illustration -->
+              <svg class="banner-art" viewBox="0 0 360 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="360" height="140" fill="url(#green-grad)"/>
+                <defs>
+                  <linearGradient id="green-grad" x1="0" y1="0" x2="360" y2="140" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#2e7d32" stop-opacity="0.12"/>
+                    <stop stop-color="#1b5e20" stop-opacity="0.25"/>
+                  </linearGradient>
+                </defs>
+                <!-- Blister Pack Strip Graphic -->
+                <g transform="translate(180, 20)">
+                  <rect x="0" y="0" width="120" height="96" rx="10" fill="#f8fafc" stroke="#2e7d32" stroke-width="2" filter="drop-shadow(0 4px 12px rgba(46,125,50,0.18))"/>
+                  <!-- Foil Pockets -->
+                  <circle cx="30" cy="28" r="14" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+                  <circle cx="90" cy="28" r="14" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+                  <circle cx="30" cy="68" r="14" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+                  <circle cx="90" cy="68" r="14" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+                  <line x1="60" y1="8" x2="60" y2="88" stroke="#cbd5e1" stroke-dasharray="4 3"/>
+                  <line x1="8" y1="48" x2="112" y2="48" stroke="#cbd5e1" stroke-dasharray="4 3"/>
+                </g>
+                <!-- Large Two-Tone Capsule -->
+                <g transform="translate(60, 40) rotate(-28)">
+                  <rect x="0" y="0" width="70" height="28" rx="14" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
+                  <path d="M35 0h21a14 14 0 0 1 14 14 14 14 0 0 1-14 14H35Z" fill="#ffffff" stroke="#0284c7" stroke-width="2"/>
+                  <line x1="35" y1="0" x2="35" y2="28" stroke="#0284c7" stroke-width="2"/>
+                </g>
+                <!-- Price Tag Badge -->
+                <g transform="translate(40, 75)">
+                  <rect x="0" y="0" width="90" height="30" rx="15" fill="#15803d"/>
+                  <text x="45" y="19" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle" font-family="sans-serif">₹8 vs ₹68</text>
+                </g>
+              </svg>
+            </div>
+
+            <div class="portal-card-body">
+              <div class="portal-header-row">
+                <div class="portal-icon-box">
+                  <svg viewBox="0 0 24 24">
+                    <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/>
+                    <path d="m8.5 8.5 7 7"/>
+                  </svg>
+                </div>
+                <div class="portal-title-box">
+                  <h2 class="portal-title">Generic Medicine Finder</h2>
+                </div>
+              </div>
+
+              <p class="portal-desc">
+                Explore generic medicine alternatives, compare verified medicine information, and review available price differences.
+              </p>
+
+              <ul class="portal-features-list">
+                <li class="portal-feature-item">
+                  <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Jan Aushadhi bioequivalent search</span>
+                </li>
+                <li class="portal-feature-item">
+                  <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Brand vs Generic price comparison table</span>
+                </li>
+                <li class="portal-feature-item">
+                  <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Savings calculator & medicine scanner</span>
+                </li>
+              </ul>
+
+              <a href="medicine-finder.html" class="portal-btn" tabindex="-1">
+                <span>Find Medicines</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
+            </div>
+          </article>
+
+          <!-- CARD 3: Daily Diet Planner -->
+          <article class="portal-card theme-blue" data-href="diet-planner.html" tabindex="0" role="link" aria-label="Daily Diet Planner">
+            <div class="portal-card-banner">
+              <span class="portal-badge-chip">🥗 Macro & Calorie Engine</span>
+              <!-- Bespoke Nutrition & Meal Bowl Illustration -->
+              <svg class="banner-art" viewBox="0 0 360 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="360" height="140" fill="url(#blue-grad)"/>
+                <defs>
+                  <linearGradient id="blue-grad" x1="0" y1="0" x2="360" y2="140" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#0288d1" stop-opacity="0.12"/>
+                    <stop stop-color="#01579b" stop-opacity="0.25"/>
+                  </linearGradient>
+                </defs>
+                <!-- Nutrition Salad Bowl -->
+                <g transform="translate(185, 24)">
+                  <!-- Bowl Base -->
+                  <path d="M10 50c0 30 25 50 55 50s55-20 55-50H10Z" fill="#ffffff" stroke="#0284c7" stroke-width="2.5" filter="drop-shadow(0 4px 10px rgba(2,132,199,0.18))"/>
+                  <!-- Salad Greens -->
+                  <path d="M18 50c0-14 12-24 26-24 10 0 18 5 22 13 4-8 12-13 22-13 14 0 26 10 26 24H18Z" fill="#4ade80"/>
+                  <!-- Tomatoes & Avocado -->
+                  <circle cx="45" cy="40" r="9" fill="#ef4444"/>
+                  <circle cx="85" cy="38" r="9" fill="#facc15"/>
+                  <path d="M60 25c6 0 12 6 12 14s-6 12-12 12-12-6-12-14 6-12 12-12Z" fill="#15803d"/>
+                </g>
+                <!-- Calorie Dial / Ring -->
+                <g transform="translate(60, 28)">
+                  <circle cx="40" cy="40" r="32" fill="#ffffff" stroke="#e0f2fe" stroke-width="8"/>
+                  <circle cx="40" cy="40" r="32" fill="none" stroke="#0284c7" stroke-width="8" stroke-dasharray="140 200" stroke-linecap="round"/>
+                  <text x="40" y="38" fill="#0f172a" font-size="12" font-weight="800" text-anchor="middle" font-family="sans-serif">1,850</text>
+                  <text x="40" y="50" fill="#64748b" font-size="9" font-weight="600" text-anchor="middle" font-family="sans-serif">KCAL</text>
+                </g>
+              </svg>
+            </div>
+
+            <div class="portal-card-body">
+              <div class="portal-header-row">
+                <div class="portal-icon-box">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M12 21a9 9 0 0 0 9-9H3a9 9 0 0 0 9 9Z"/>
+                    <path d="M7 12V8a5 5 0 0 1 10 0v4"/>
+                    <path d="M12 3v3"/>
+                  </svg>
+                </div>
+                <div class="portal-title-box">
+                  <h2 class="portal-title">Daily Diet Planner</h2>
+                </div>
+              </div>
+
+              <p class="portal-desc">
+                Create a daily meal plan based on dietary preferences, food allergies, lifestyle, and relevant user-provided information.
+              </p>
+
+              <ul class="portal-features-list">
+                <li class="portal-feature-item">
+                  <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Age, height, weight & condition profiling</span>
+                </li>
+                <li class="portal-feature-item">
+                  <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Meal previews with 1-click equal nutrient swap</span>
+                </li>
+                <li class="portal-feature-item">
+                  <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>End-of-day nutrient gain & deficiency report</span>
+                </li>
+              </ul>
+
+              <a href="diet-planner.html" class="portal-btn" tabindex="-1">
+                <span>Plan Diet</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
+            </div>
+          </article>
+
+          <!-- CARD 4: Disease-Based Food Advice -->
+          <article class="portal-card theme-orange" data-href="food-advice.html" tabindex="0" role="link" aria-label="Disease-Based Food Advice">
+            <div class="portal-card-banner">
+              <span class="portal-badge-chip">🩺 8 Clinical Conditions</span>
+              <!-- Bespoke Health Condition & Nutrition Shield Illustration -->
+              <svg class="banner-art" viewBox="0 0 360 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="360" height="140" fill="url(#orange-grad)"/>
+                <defs>
+                  <linearGradient id="orange-grad" x1="0" y1="0" x2="360" y2="140" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#e65100" stop-opacity="0.12"/>
+                    <stop stop-color="#bf360c" stop-opacity="0.25"/>
+                  </linearGradient>
+                </defs>
+                <!-- Medical Nutrition Shield -->
+                <g transform="translate(195, 20)">
+                  <path d="M50 8l40 18v34c0 32-24 50-40 56-16-6-40-24-40-56V26l40-18Z" fill="#ffffff" stroke="#e65100" stroke-width="2.5" filter="drop-shadow(0 4px 10px rgba(230,81,0,0.18))"/>
+                  <path d="M50 40v30M35 55h30" stroke="#e65100" stroke-width="4" stroke-linecap="round"/>
+                </g>
+                <!-- Heart with Cardiac Pulse -->
+                <g transform="translate(55, 32)">
+                  <path d="M40 68s-28-18-28-36a16 16 0 0 1 28-11 16 16 0 0 1 28 11c0 18-28 36-28 36Z" fill="#f87171" stroke="#dc2626" stroke-width="2"/>
+                  <path d="M22 36h12l4-10 6 18 5-12 4 4h9" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </g>
+                <!-- 3 Badges: Safe, Limit, Avoid -->
+                <g transform="translate(50, 96)">
+                  <rect x="0" y="0" width="38" height="18" rx="9" fill="#16a34a"/>
+                  <text x="19" y="13" fill="#ffffff" font-size="8.5" font-weight="bold" text-anchor="middle" font-family="sans-serif">SAFE</text>
+                  <rect x="44" y="0" width="38" height="18" rx="9" fill="#ca8a04"/>
+                  <text x="63" y="13" fill="#ffffff" font-size="8.5" font-weight="bold" text-anchor="middle" font-family="sans-serif">LIMIT</text>
+                  <rect x="88" y="0" width="40" height="18" rx="9" fill="#dc2626"/>
+                  <text x="108" y="13" fill="#ffffff" font-size="8.5" font-weight="bold" text-anchor="middle" font-family="sans-serif">AVOID</text>
+                </g>
+              </svg>
+            </div>
+
+            <div class="portal-card-body">
+              <div class="portal-header-row">
+                <div class="portal-icon-box">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"/>
+                    <path d="M10 2c1 .5 2 2 2 5"/>
+                  </svg>
+                </div>
+                <div class="portal-title-box">
+                  <h2 class="portal-title">Disease-Based Food Advice</h2>
+                </div>
+              </div>
+
+              <p class="portal-desc">
+                Explore educational food guidance for supported health conditions and check available recommendations for individual food items.
+              </p>
+
+              <ul class="portal-features-list">
+                <li class="portal-feature-item">
+                  <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Diabetes, BP, Kidney, Heart & Cholesterol</span>
+                </li>
+                <li class="portal-feature-item">
+                  <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>3-tier Recommended, Limit & Avoid breakdown</span>
+                </li>
+                <li class="portal-feature-item">
+                  <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Interactive instant food safety query search</span>
+                </li>
+              </ul>
+
+              <a href="food-advice.html" class="portal-btn" tabindex="-1">
+                <span>Get Advice</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
+            </div>
+          </article>
+
+          <!-- CARD 5: Medicine Reminders -->
+          <article class="portal-card theme-purple" data-href="reminders.html" tabindex="0" role="link" aria-label="Medicine Reminders">
+            <div class="portal-card-banner">
+              <span class="portal-badge-chip">🔔 Audio-Visual Alarms</span>
+              <!-- Bespoke Pill Bottle, Clock & Alarm Illustration -->
+              <svg class="banner-art" viewBox="0 0 360 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="360" height="140" fill="url(#purple-grad)"/>
+                <defs>
+                  <linearGradient id="purple-grad" x1="0" y1="0" x2="360" y2="140" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#7b1fa2" stop-opacity="0.12"/>
+                    <stop stop-color="#4a148c" stop-opacity="0.25"/>
+                  </linearGradient>
+                </defs>
+                <!-- Smart Alarm Clock -->
+                <g transform="translate(190, 22)">
+                  <circle cx="48" cy="52" r="38" fill="#ffffff" stroke="#7b1fa2" stroke-width="2.5" filter="drop-shadow(0 4px 10px rgba(123,31,162,0.18))"/>
+                  <!-- Bells on top -->
+                  <path d="M22 20a10 10 0 0 1 14-8" stroke="#7b1fa2" stroke-width="3" stroke-linecap="round"/>
+                  <path d="M74 20a10 10 0 0 0-14-8" stroke="#7b1fa2" stroke-width="3" stroke-linecap="round"/>
+                  <!-- Clock Hands -->
+                  <circle cx="48" cy="52" r="4" fill="#7b1fa2"/>
+                  <line x1="48" y1="52" x2="48" y2="30" stroke="#7b1fa2" stroke-width="3" stroke-linecap="round"/>
+                  <line x1="48" y1="52" x2="64" y2="52" stroke="#7b1fa2" stroke-width="2.5" stroke-linecap="round"/>
+                  <!-- Sound wave rings -->
+                  <path d="M92 38c6 8 6 18 0 26" stroke="#a855f7" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M98 32c10 12 10 28 0 40" stroke="#a855f7" stroke-width="2" stroke-linecap="round"/>
+                </g>
+                <!-- Pill Organizer & Tablet Photo Frame -->
+                <g transform="translate(50, 30)">
+                  <rect x="0" y="0" width="85" height="55" rx="10" fill="#ffffff" stroke="#9333ea" stroke-width="2"/>
+                  <!-- Pill Inside -->
+                  <circle cx="42" cy="27" r="16" fill="#fef08a" stroke="#ca8a04" stroke-width="2"/>
+                  <line x1="42" y1="13" x2="42" y2="41" stroke="#ca8a04" stroke-width="2"/>
+                </g>
+                <g transform="translate(45, 96)">
+                  <rect x="0" y="0" width="95" height="20" rx="10" fill="#ede9fe"/>
+                  <text x="47" y="14" fill="#6d28d9" font-size="10" font-weight="700" text-anchor="middle" font-family="sans-serif">⏰ 08:30 AM DOSE</text>
+                </g>
+              </svg>
+            </div>
+
+            <div class="portal-card-body">
+              <div class="portal-header-row">
+                <div class="portal-icon-box">
+                  <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="13" r="8"/>
+                    <path d="M12 9v4l2.5 2.5"/>
+                    <path d="M5 3 2 6"/>
+                    <path d="m22 6-3-3"/>
+                    <path d="M6.38 18.7 4 21"/>
+                    <path d="M17.64 18.67 20 21"/>
+                  </svg>
+                </div>
+                <div class="portal-title-box">
+                  <h2 class="portal-title">Medicine Reminders</h2>
+                </div>
+              </div>
+
+              <p class="portal-desc">
+                Organise prescribed medicine schedules and use reminders to help follow existing treatment instructions.
+              </p>
+
+              <ul class="portal-features-list">
+                <li class="portal-feature-item">
+                  <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>4 daypart timelines (Morning, Afternoon, Evening, Night)</span>
+                </li>
+                <li class="portal-feature-item">
+                  <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Tablet photo presets & custom photo uploads</span>
+                </li>
+                <li class="portal-feature-item">
+                  <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Web Audio synthesized chime & test alarm demo</span>
+                </li>
+              </ul>
+
+              <a href="reminders.html" class="portal-btn" tabindex="-1">
+                <span>Set Reminders</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
+            </div>
+          </article>
+
+          <!-- CARD 6: Medical Document Vault -->
+          <article class="portal-card theme-darkteal" data-href="document-vault.html" tabindex="0" role="link" aria-label="Medical Document Vault">
+            <div class="portal-card-banner">
+              <span class="portal-badge-chip">🔒 AES-256 Vault</span>
+              <!-- Bespoke Encrypted Vault & Dossier Illustration -->
+              <svg class="banner-art" viewBox="0 0 360 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="360" height="140" fill="url(#darkteal-grad)"/>
+                <defs>
+                  <linearGradient id="darkteal-grad" x1="0" y1="0" x2="360" y2="140" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#004d40" stop-opacity="0.12"/>
+                    <stop stop-color="#00251a" stop-opacity="0.25"/>
+                  </linearGradient>
+                </defs>
+                <!-- High-Security Vault Folder -->
+                <g transform="translate(185, 20)">
+                  <!-- Folder Back -->
+                  <path d="M10 20h35l10 10h55a8 8 0 0 1 8 8v50a8 8 0 0 1-8 8H10a8 8 0 0 1-8-8V28a8 8 0 0 1 8-8Z" fill="#ffffff" stroke="#004d40" stroke-width="2.5" filter="drop-shadow(0 4px 10px rgba(0,77,64,0.18))"/>
+                  <!-- Sheet sticking out -->
+                  <rect x="20" y="8" width="65" height="40" rx="4" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.5"/>
+                  <line x1="28" y1="16" x2="60" y2="16" stroke="#0f766e" stroke-width="2"/>
+                  <line x1="28" y1="24" x2="75" y2="24" stroke="#0f766e" stroke-width="2"/>
+                  <!-- Lock Padlock Shield -->
+                  <circle cx="60" cy="65" r="18" fill="#004d40"/>
+                  <rect x="53" y="60" width="14" height="12" rx="2" fill="#ffffff"/>
+                  <path d="M56 60v-4a4 4 0 0 1 8 0v4" stroke="#ffffff" stroke-width="2" fill="none"/>
+                </g>
+                <!-- Digital Cloud & Shield -->
+                <g transform="translate(50, 35)">
+                  <path d="M30 50h40a16 16 0 0 0 0-32 20 20 0 0 0-38-6 14 14 0 0 0-14 14c0 14 12 24 12 24Z" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+                  <path d="M38 32l10-8 10 8v10c0 8-10 14-10 14s-10-6-10-14V32Z" fill="#14b8a6"/>
+                </g>
+                <g transform="translate(45, 96)">
+                  <rect x="0" y="0" width="95" height="20" rx="10" fill="#ccfbf1"/>
+                  <text x="47" y="14" fill="#0f766e" font-size="10" font-weight="700" text-anchor="middle" font-family="sans-serif">ENCRYPTED ARCHIVE</text>
+                </g>
+              </svg>
+            </div>
+
+            <div class="portal-card-body">
+              <div class="portal-header-row">
+                <div class="portal-icon-box">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    <path d="M12 11v6"/>
+                    <path d="M9 14h6"/>
+                  </svg>
+                </div>
+                <div class="portal-title-box">
+                  <h2 class="portal-title">Medical Document Vault</h2>
+                </div>
+              </div>
+
+              <p class="portal-desc">
+                Upload, organise, search, preview, and manage medical reports, prescriptions, discharge summaries, and other health documents.
+              </p>
+
+              <ul class="portal-features-list">
+                <li class="portal-feature-item">
+                  <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Drag-and-drop reports & prescriptions</span>
+                </li>
+                <li class="portal-feature-item">
+                  <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>In-browser live preview for PDF and images</span>
+                </li>
+                <li class="portal-feature-item">
+                  <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Encrypted organization by category & date</span>
+                </li>
+              </ul>
+
+              <a href="document-vault.html" class="portal-btn" tabindex="-1">
+                <span>Manage Documents</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         4. SEASONAL HEALTH SECTION (Below the 6 cards)
+         ====================================================================== -->
+    <section class="seasonal-section" aria-labelledby="seasonal-heading">
+      <div class="seasonal-container">
+        <div class="seasonal-header">
+          <div class="seasonal-title-wrap">
+            <span class="live-alert-pulse" aria-hidden="true"></span>
+            <h2 class="seasonal-heading" id="seasonal-heading">Seasonal Health Alerts</h2>
+          </div>
+          <a href="seasonal.html" class="seasonal-view-all">
+            <span>View All</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+        </div>
+
+        <div class="seasonal-grid">
+          <!-- Item 1: Dengue -->
+          <a href="seasonal.html" class="seasonal-card season-dengue" title="Learn more about Dengue precautions">
+            <div class="seasonal-top">
+              <div class="seasonal-icon-mini">
+                <svg viewBox="0 0 24 24">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                  <line x1="12" y1="9" x2="12" y2="13"/>
+                  <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+              </div>
+              <span class="seasonal-badge">High Alert</span>
+            </div>
+            <h3 class="seasonal-card-title">Dengue Advisory</h3>
+            <p class="seasonal-card-tip">
+              Eliminate stagnant water around plant pots and coolers. Monitor for acute fever, joint ache, or platelet changes.
+            </p>
+          </a>
+
+          <!-- Item 2: Malaria -->
+          <a href="seasonal.html" class="seasonal-card season-malaria" title="Learn more about Malaria prevention">
+            <div class="seasonal-top">
+              <div class="seasonal-icon-mini">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              </div>
+              <span class="seasonal-badge">Precaution</span>
+            </div>
+            <h3 class="seasonal-card-title">Malaria Safeguards</h3>
+            <p class="seasonal-card-tip">
+              Use mosquito netting and insect repellents during twilight hours. Arrange rapid diagnostic testing if cyclic chills occur.
+            </p>
+          </a>
+
+          <!-- Item 3: Seasonal Flu -->
+          <a href="seasonal.html" class="seasonal-card season-flu" title="Learn more about Seasonal Flu">
+            <div class="seasonal-top">
+              <div class="seasonal-icon-mini">
+                <svg viewBox="0 0 24 24">
+                  <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+                </svg>
+              </div>
+              <span class="seasonal-badge">Seasonal</span>
+            </div>
+            <h3 class="seasonal-card-title">Viral Flu & Cough</h3>
+            <p class="seasonal-card-tip">
+              Frequent handwashing and wearing masks in congested clinics lowers transmission. Stay well-hydrated with warm broths.
+            </p>
+          </a>
+
+          <!-- Item 4: Waterborne Diseases -->
+          <a href="seasonal.html" class="seasonal-card season-water" title="Learn more about Waterborne safety">
+            <div class="seasonal-top">
+              <div class="seasonal-icon-mini">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                </svg>
+              </div>
+              <span class="seasonal-badge">Food & Water</span>
+            </div>
+            <h3 class="seasonal-card-title">Waterborne Hygiene</h3>
+            <p class="seasonal-card-tip">
+              Drink boiled or certified filtered water. Avoid raw street snacks and unpeeled fruits to prevent acute gastroenteritis.
+            </p>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       5. FOOTER
+       ======================================================================== -->
+  <footer class="dashboard-footer" role="contentinfo">
+    <div class="footer-container">
+      <div class="footer-top-row">
+        <p class="footer-copy">
+          &copy; 2026 CareNest. Your Personal Healthcare Companion
+        </p>
+
+        <ul class="footer-links">
+          <li><button type="button" class="footer-link" onclick="openInfoModal('about')">About</button></li>
+          <li><button type="button" class="footer-link" onclick="openInfoModal('privacy')">Privacy</button></li>
+          <li><button type="button" class="footer-link" onclick="openInfoModal('terms')">Terms</button></li>
+          <li><button type="button" class="footer-link" onclick="openInfoModal('support')">Support</button></li>
+        </ul>
+      </div>
+
+      <p class="footer-disclaimer">
+        Disclaimer: CareNest is an informational and organizational wellness suite designed to assist patients in navigating healthcare details. It does not replace emergency clinical diagnosis, prescription alterations, or physician consultations. In life-threatening emergencies, please call your local emergency department immediately.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Informative Modal for Footer Links -->
+  <div class="modal-overlay" id="info-modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-box">
+      <button type="button" class="modal-close-btn" onclick="closeInfoModal()" aria-label="Close dialog">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <h3 class="modal-title" id="info-modal-title">CareNest Information</h3>
+      <div class="modal-content" id="info-modal-body">
+        Modal content goes here.
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       JAVASCRIPT LOGIC
+       - Auth check: if carenest_logged_in !== 'true', redirect to index.html
+       - Read user name from localStorage for greeting
+       - Generate avatar initials
+       - Logout: clear localStorage, redirect to index.html
+       - Current date display
+       - Card hover & click behaviors
+       ======================================================================== -->
+  <script>
+    (function initDashboard() {
+      'use strict';
+
+      // 1. Auth Check
+      // Spec: if carenest_logged_in !== 'true', redirect to index.html
+      const urlParams = new URLSearchParams(window.location.search);
+      const isDemoMode = urlParams.get('demo') === '1' || urlParams.get('preview') === '1';
+
+      if (isDemoMode) {
+        localStorage.setItem('carenest_logged_in', 'true');
+        if (!localStorage.getItem('carenest_user_name')) {
+          localStorage.setItem('carenest_user_name', 'Santhosh Kumar');
+        }
+      }
+
+      const isLoggedIn = localStorage.getItem('carenest_logged_in');
+      if (isLoggedIn !== 'true') {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // 2. Read User Name from localStorage
+      let userName = localStorage.getItem('carenest_user_name') || 
+                     localStorage.getItem('userName') || 
+                     localStorage.getItem('user_name');
+
+      if (!userName) {
+        const userJson = localStorage.getItem('carenest_user');
+        if (userJson) {
+          try {
+            const parsed = JSON.parse(userJson);
+            userName = parsed.name || parsed.fullName || parsed.username;
+          } catch (e) {
+            console.warn('Unable to parse carenest_user object', e);
+          }
+        }
+      }
+
+      if (!userName || userName.trim() === '') {
+        userName = 'Santhosh Kumar';
+        localStorage.setItem('carenest_user_name', userName);
+      }
+
+      // Update UI with user name
+      const userNameEl = document.getElementById('user-display-name');
+      if (userNameEl) {
+        userNameEl.textContent = userName;
+      }
+
+      // 3. Generate Avatar Initials
+      function computeInitials(name) {
+        if (!name) return 'CN';
+        // Clean prefixes like Dr., Mr., Mrs.
+        const cleanName = name.trim().replace(/^(dr|mr|mrs|ms)\.?\s+/i, '');
+        const parts = cleanName.split(/\s+/).filter(Boolean);
+        if (parts.length === 0) return 'CN';
+        if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+        return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+      }
+
+      const avatarEl = document.getElementById('user-avatar-initials');
+      if (avatarEl) {
+        avatarEl.textContent = computeInitials(userName);
+      }
+
+      // 4. Current Date Display
+      function renderCurrentDate() {
+        const now = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = now.toLocaleDateString('en-US', options);
+        const dateEl = document.getElementById('current-date-text');
+        if (dateEl) {
+          dateEl.textContent = formattedDate;
+        }
+      }
+      renderCurrentDate();
+
+      // 5. Logout Button Handler
+      // Spec: clear localStorage, redirect to index.html
+      const logoutBtn = document.getElementById('logout-btn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const confirmLogout = window.confirm('Are you sure you want to log out of CareNest?');
+          if (confirmLogout) {
+            localStorage.removeItem('carenest_logged_in');
+            localStorage.removeItem('carenest_user_name');
+            localStorage.removeItem('carenest_user');
+            window.location.href = 'index.html';
+          }
+        });
+      }
+
+      // 6. Interactive Card Navigation & Keyboard Accessibility
+      const cards = document.querySelectorAll('.portal-card');
+      cards.forEach(card => {
+        // Click on entire card navigates to destination
+        card.addEventListener('click', function(e) {
+          // If clicked directly on the anchor, let standard navigation proceed
+          if (e.target.closest('a')) return;
+          const href = this.getAttribute('data-href');
+          if (href) {
+            window.location.href = href;
+          }
+        });
+
+        // Enter or Space key navigation
+        card.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            const href = this.getAttribute('data-href');
+            if (href) {
+              window.location.href = href;
+            }
+          }
+        });
+      });
+
+    })();
+
+    // 7. Footer Information Modals Helper
+    const modalData = {
+      about: {
+        title: 'About CareNest',
+        content: `
+          <p><strong>CareNest</strong> is an all-in-one personal healthcare companion engineered to help individuals and families navigate medical data with complete confidence and simplicity.</p>
+          <br>
+          <p>With intuitive discharge document interpretation, generic medication comparisons, personalized nutritional guidance, timely medicine reminders, and a secure health vault, CareNest makes everyday healthcare management seamless.</p>
+        `
+      },
+      privacy: {
+        title: 'Privacy & Security Standards',
+        content: `
+          <p>CareNest adheres to high privacy ethics inspired by healthcare confidentiality standards. Your health records, medication schedules, and dietary data are stored locally on your device within your secure browser storage.</p>
+          <br>
+          <p>We do not sell, rent, or distribute personal health information to third-party ad networks or data brokers.</p>
+        `
+      },
+      terms: {
+        title: 'Terms of Service',
+        content: `
+          <p>The information, diet recommendations, generic medicine alternatives, and document interpretations provided by CareNest are intended solely for educational, organizational, and preventative wellness purposes.</p>
+          <br>
+          <p>Always review changes to prescribed medication regimens and diets with qualified medical specialists and your treating physicians.</p>
+        `
+      },
+      support: {
+        title: 'CareNest Patient Support',
+        content: `
+          <p>Need assistance navigating your CareNest portal or organizing your documents?</p>
+          <br>
+          <p><strong>Email Support:</strong> support@carenest.health<br>
+          <strong>Helpline:</strong> 1800-CARE-NEST (Mon - Sat, 8:00 AM - 8:00 PM)<br>
+          <strong>Emergency:</strong> For critical medical distress, dial 112 / 911 immediately.</p>
+        `
+      }
+    };
+
+    function openInfoModal(type) {
+      const data = modalData[type];
+      if (!data) return;
+
+      document.getElementById('info-modal-title').textContent = data.title;
+      document.getElementById('info-modal-body').innerHTML = data.content;
+
+      const overlay = document.getElementById('info-modal-overlay');
+      overlay.classList.add('active');
+      overlay.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeInfoModal() {
+      const overlay = document.getElementById('info-modal-overlay');
+      overlay.classList.remove('active');
+      overlay.setAttribute('aria-hidden', 'true');
+    }
+
+    // Close modal on background click
+    document.getElementById('info-modal-overlay').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeInfoModal();
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeInfoModal();
+      }
+    });
+  </script>
+</body>
+</html>

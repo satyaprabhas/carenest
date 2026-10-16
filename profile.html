@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareNest - User Profile & Health Settings</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .portal-container {
+      max-width: 1400px;
+      width: calc(100% - 32px);
+      margin: 0 auto;
+      padding: 24px 16px 80px;
+    }
+    .profile-hero {
+      background: linear-gradient(135deg, #0d7377 0%, #14919b 100%);
+      color: #ffffff;
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      box-shadow: 0 10px 25px rgba(13, 115, 119, 0.18);
+    }
+    .avatar-large {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #0d7377;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: 800;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      flex-shrink: 0;
+    }
+    .profile-section {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 28px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    }
+    .profile-section h3 {
+      margin: 0 0 18px 0;
+      font-size: 18px;
+      color: #1e293b;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+    }
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #cbd5e1;
+      transition: .3s;
+      border-radius: 24px;
+    }
+    .slider:before {
+      position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+    input:checked + .slider { background-color: #0d7377; }
+    input:checked + .slider:before { transform: translateX(20px); }
+  </style>
+</head>
+<body class="portal-layout">
+
+  <!-- Portal Header -->
+  <header class="portal-header">
+    <div class="portal-header-left">
+      <a href="dashboard.html" class="btn-back-dashboard">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back to Dashboard
+      </a>
+      <div class="portal-title-badge">
+        <span style="font-size: 20px;">👤</span>
+        <span style="font-weight: 700; font-size: 16px; color: #0d7377;">User Profile & Settings</span>
+      </div>
+    </div>
+    <div class="portal-header-right">
+      <button class="btn btn-secondary btn-sm" onclick="handleLogout()">
+        🚪 Log Out
+      </button>
+    </div>
+  </header>
+
+  <main class="portal-container">
+    
+    <!-- Profile Hero -->
+    <div class="profile-hero">
+      <div class="avatar-large" id="avatar-initials-hero">SK</div>
+      <div>
+        <h1 id="profile-name-hero" style="margin: 0 0 4px 0; font-size: 26px; font-weight: 800;">Santhosh Kumar</h1>
+        <div style="font-size: 14px; opacity: 0.9;">demo@carenest.com &nbsp;•&nbsp; Member since Jan 15, 2026</div>
+        <div style="margin-top: 10px; display: flex; gap: 8px;">
+          <span style="background: rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 12px; font-size: 12px;">Verified User</span>
+          <span style="background: rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 12px; font-size: 12px;">Demo Account</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: Personal Information -->
+    <div class="profile-section">
+      <h3><span>📋</span> Personal Health Information</h3>
+      <div class="grid-2">
+        <div>
+          <label style="font-size: 12px; font-weight: 600; color: #475569; display: block; margin-bottom: 4px;">Full Name *</label>
+          <input type="text" id="prof-name" class="form-control" value="Santhosh Kumar">
+        </div>
+        <div>
+          <label style="font-size: 12px; font-weight: 600; color: #475569; display: block; margin-bottom: 4px;">Registered Email</label>
+          <input type="email" id="prof-email" class="form-control" value="demo@carenest.com" disabled style="background: #f1f5f9;">
+        </div>
+        <div>
+          <label style="font-size: 12px; font-weight: 600; color: #475569; display: block; margin-bottom: 4px;">Contact Phone</label>
+          <input type="text" id="prof-phone" class="form-control" value="+91 98765 43210">
+        </div>
+        <div>
+          <label style="font-size: 12px; font-weight: 600; color: #475569; display: block; margin-bottom: 4px;">Date of Birth</label>
+          <input type="date" id="prof-dob" class="form-control" value="1995-05-15">
+        </div>
+        <div>
+          <label style="font-size: 12px; font-weight: 600; color: #475569; display: block; margin-bottom: 4px;">Gender</label>
+          <select id="prof-gender" class="form-control">
+            <option value="male" selected>Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size: 12px; font-weight: 600; color: #475569; display: block; margin-bottom: 4px;">Blood Group</label>
+          <select id="prof-blood" class="form-control">
+            <option value="B+" selected>B Positive (B+)</option>
+            <option value="O+">O Positive (O+)</option>
+            <option value="A+">A Positive (A+)</option>
+            <option value="AB+">AB Positive (AB+)</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid #f1f5f9;">
+        <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #1e293b;">🚨 Emergency Contact</h4>
+        <div class="grid-2">
+          <div>
+            <label style="font-size: 12px; font-weight: 600; color: #475569; display: block; margin-bottom: 4px;">Contact Name</label>
+            <input type="text" id="prof-emerg-name" class="form-control" value="Priya Kumar">
+          </div>
+          <div>
+            <label style="font-size: 12px; font-weight: 600; color: #475569; display: block; margin-bottom: 4px;">Contact Phone</label>
+            <input type="text" id="prof-emerg-phone" class="form-control" value="+91 98765 43211">
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; text-align: right;">
+        <button class="btn btn-primary" onclick="savePersonalInfo()">Save Profile Changes</button>
+      </div>
+    </div>
+
+    <!-- Section: Preferences -->
+    <div class="profile-section">
+      <h3><span>⚙️</span> Portal Preferences & Alerts</h3>
+      <div class="grid-2" style="margin-bottom: 20px;">
+        <div>
+          <label style="font-size: 12px; font-weight: 600; color: #475569; display: block; margin-bottom: 4px;">Preferred Language</label>
+          <select id="pref-lang" class="form-control">
+            <option value="en" selected>English</option>
+            <option value="te">తెలుగు (Telugu)</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+            <option value="ta">தமிழ் (Tamil)</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size: 12px; font-weight: 600; color: #475569; display: block; margin-bottom: 4px;">Dietary Habit</label>
+          <select id="pref-diet" class="form-control">
+            <option value="veg" selected>Vegetarian</option>
+            <option value="nonveg">Non-Vegetarian</option>
+            <option value="vegan">Vegan</option>
+            <option value="eggetarian">Eggetarian</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="toggle-row">
+        <div>
+          <strong style="font-size: 14px; color: #1e293b; display: block;">Medicine Reminders & Audio Alerts</strong>
+          <span style="font-size: 12px; color: #64748b;">Receive popups and voice alerts for scheduled prescription dosages.</span>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" checked id="pref-toggle-med">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-row">
+        <div>
+          <strong style="font-size: 14px; color: #1e293b; display: block;">Doctor Appointment Reminders</strong>
+          <span style="font-size: 12px; color: #64748b;">Notify regarding follow-ups extracted from your discharge summaries.</span>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" checked id="pref-toggle-appt">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-row">
+        <div>
+          <strong style="font-size: 14px; color: #1e293b; display: block;">Seasonal Health Advisories</strong>
+          <span style="font-size: 12px; color: #64748b;">Get updates when high-risk monsoon/summer diseases peak.</span>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="pref-toggle-seasonal">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div style="margin-top: 20px; text-align: right;">
+        <button class="btn btn-primary" onclick="savePreferences()">Save Preferences</button>
+      </div>
+    </div>
+
+    <!-- Section: Data Export & Account Actions -->
+    <div class="profile-section">
+      <h3><span>🔐</span> Account & Privacy</h3>
+      <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+        <button class="btn btn-secondary" onclick="exportUserData()">
+          📥 Download My Health Data (JSON)
+        </button>
+        <button class="btn btn-secondary" onclick="simulatePasswordChange()">
+          🔑 Change Password
+        </button>
+        <button class="btn btn-danger" onclick="simulateResetAccount()">
+          🗑️ Clear Local Demo Data
+        </button>
+      </div>
+      <p style="font-size: 12px; color: #94a3b8; margin-top: 16px;">
+        CareNest operates with client-side encrypted local storage in demonstration mode. No unencrypted personal medical data is transmitted to unauthorized external servers.
+      </p>
+    </div>
+
+  </main>
+
+  <script>
+    function loadProfile() {
+      const userStr = localStorage.getItem('carenest_user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          document.getElementById('prof-name').value = user.name || 'Santhosh Kumar';
+          document.getElementById('profile-name-hero').innerText = user.name || 'Santhosh Kumar';
+          const initials = user.name ? user.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase() : 'SK';
+          document.getElementById('avatar-initials-hero').innerText = initials;
+          if (user.language) document.getElementById('pref-lang').value = user.language;
+          if (user.dietPreference) document.getElementById('pref-diet').value = user.dietPreference;
+        } catch(e) {}
+      }
+    }
+
+    function savePersonalInfo() {
+      const name = document.getElementById('prof-name').value.trim();
+      let user = {};
+      try {
+        user = JSON.parse(localStorage.getItem('carenest_user') || '{}');
+      } catch(e) {}
+      user.name = name;
+      localStorage.setItem('carenest_user', JSON.stringify(user));
+      alert("✅ Personal details updated successfully!");
+      loadProfile();
+    }
+
+    function savePreferences() {
+      let user = {};
+      try {
+        user = JSON.parse(localStorage.getItem('carenest_user') || '{}');
+      } catch(e) {}
+      user.language = document.getElementById('pref-lang').value;
+      user.dietPreference = document.getElementById('pref-diet').value;
+      localStorage.setItem('carenest_user', JSON.stringify(user));
+      alert("✅ Preferences saved successfully!");
+    }
+
+    function exportUserData() {
+      const data = {
+        user: JSON.parse(localStorage.getItem('carenest_user') || '{}'),
+        timestamp: new Date().toISOString(),
+        note: "CareNest Patient Health Data Export"
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = "carenest_health_profile_export.json";
+      a.click();
+    }
+
+    function simulatePasswordChange() {
+      const current = prompt("Enter Current Password:");
+      if (!current) return;
+      const newP = prompt("Enter New Password (min 6 characters):");
+      if (newP && newP.length >= 6) {
+        alert("✅ Password updated successfully for demo account!");
+      } else {
+        alert("❌ Invalid password length.");
+      }
+    }
+
+    function simulateResetAccount() {
+      if (confirm("Reset all CareNest temporary demo data and return to initial login state?")) {
+        localStorage.clear();
+        window.location.href = 'index.html';
+      }
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('carenest_logged_in');
+      window.location.href = 'index.html';
+    }
+
+    window.addEventListener('DOMContentLoaded', loadProfile);
+  </script>
+</body>
+</html>
