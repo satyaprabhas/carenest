@@ -43,39 +43,4 @@ CareNest is a modern, responsive, and privacy-first digital healthcare platform 
 
 ---
 
-## 🚀 Free Hosting on Render
 
-CareNest is built as a fast, zero-dependency static web application, which can be hosted **100% free forever** on **[Render](https://render.com/)**:
-
-### Quick Deployment Steps:
-1. Go to **[dashboard.render.com](https://dashboard.render.com/)** and sign in with GitHub.
-2. Click **New +** and select **Static Site**.
-3. Connect your repository: `satyaprabhas/carenest`.
-4. Configure the settings:
-   - **Name**: `carenest`
-   - **Branch**: `main`
-   - **Build Command**: *(leave empty)*
-   - **Publish Directory**: `./` (or `.`)
-5. Click **Create Static Site**.
-6. Render will automatically deploy your site and provide a free live URL (e.g., `https://carenest.onrender.com`).
-
----
-
-## 💻 Running Locally
-
-CareNest has no heavy dependencies and runs directly in any modern browser:
-
-```bash
-# Clone the repository
-git clone https://github.com/satyaprabhas/carenest.git
-cd carenest
-
-# Run using any static HTTP server (Python 3)
-python -m http.server 8080
-```
-Open `http://localhost:8080/index.html` in your browser.
-
----
-
-## 🛡️ License & Medical Disclaimer
-All clinical translations, diet suggestions, and bioequivalent drug data are curated for health literacy and post-discharge navigation. Always adhere strictly to your attending physician's guidance.
