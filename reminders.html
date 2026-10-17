@@ -864,12 +864,30 @@
   <script>
     // High-resolution SVG data-URI presets for realistic tablet photos
     const TABLET_PHOTOS = {
-      'pill-white-round': 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="%23f8fafc" stroke="%2394a3b8" stroke-width="4"/><line x1="50" y1="12" x2="50" y2="88" stroke="%23cbd5e1" stroke-width="4"/><circle cx="50" cy="50" r="28" fill="%23ffffff"/></svg>',
-      'capsule-blue-white': 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="25" y="14" width="50" height="72" rx="25" fill="%230284c7"/><path d="M25 50h50v36a25 25 0 0 1-50 0Z" fill="%23ffffff" stroke="%23cbd5e1" stroke-width="3"/><rect x="25" y="14" width="50" height="72" rx="25" fill="none" stroke="%230369a1" stroke-width="3"/></svg>',
-      'pill-yellow-oval': 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="44" ry="28" fill="%23fef08a" stroke="%23eab308" stroke-width="4"/><line x1="50" y1="24" x2="50" y2="76" stroke="%23ca8a04" stroke-width="3"/></svg>',
-      'pill-red-round': 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="%23ef4444" stroke="%23b91c1c" stroke-width="4"/><circle cx="50" cy="50" r="24" fill="%23dc2626"/></svg>',
-      'capsule-green': 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="25" y="14" width="50" height="72" rx="25" fill="%2322c55e"/><path d="M25 50h50v36a25 25 0 0 1-50 0Z" fill="%2315803d"/><rect x="25" y="14" width="50" height="72" rx="25" fill="none" stroke="%23166534" stroke-width="3"/></svg>'
+      'pill-white-round': "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='44' fill='%23f8fafc' stroke='%2394a3b8' stroke-width='4'/><line x1='50' y1='12' x2='50' y2='88' stroke='%23cbd5e1' stroke-width='4'/><circle cx='50' cy='50' r='28' fill='%23ffffff'/></svg>",
+      'capsule-blue-white': "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect x='25' y='14' width='50' height='72' rx='25' fill='%230284c7'/><path d='M25 50h50v36a25 25 0 0 1-50 0Z' fill='%23ffffff' stroke='%23cbd5e1' stroke-width='3'/><rect x='25' y='14' width='50' height='72' rx='25' fill='none' stroke='%230369a1' stroke-width='3'/></svg>",
+      'pill-yellow-oval': "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><ellipse cx='50' cy='50' rx='44' ry='28' fill='%23fef08a' stroke='%23eab308' stroke-width='4'/><line x1='50' y1='24' x2='50' y2='76' stroke='%23ca8a04' stroke-width='3'/></svg>",
+      'pill-red-round': "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='44' fill='%23ef4444' stroke='%23b91c1c' stroke-width='4'/><circle cx='50' cy='50' r='24' fill='%23dc2626'/></svg>",
+      'capsule-green': "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect x='25' y='14' width='50' height='72' rx='25' fill='%2322c55e'/><path d='M25 50h50v36a25 25 0 0 1-50 0Z' fill='%2315803d'/><rect x='25' y='14' width='50' height='72' rx='25' fill='none' stroke='%23166534' stroke-width='3'/></svg>"
     };
+
+    function getMedPhotoSrc(med) {
+      if (!med) return TABLET_PHOTOS['pill-white-round'];
+      let p = med.photo || med.photoUrl;
+      if (!p || typeof p !== 'string' || p.trim() === '' || p === 'null' || p === 'undefined') {
+        const n = (med.name || '').toLowerCase();
+        if (n.includes('panto') || n.includes('acid') || n.includes('yellow')) return TABLET_PHOTOS['pill-yellow-oval'];
+        if (n.includes('clopid') || n.includes('heart') || n.includes('red')) return TABLET_PHOTOS['pill-red-round'];
+        if (n.includes('vitamin') || n.includes('beco') || n.includes('multi') || n.includes('cap')) return TABLET_PHOTOS['capsule-blue-white'];
+        if (n.includes('anti') || n.includes('green') || n.includes('insulin')) return TABLET_PHOTOS['capsule-green'];
+        return TABLET_PHOTOS['pill-white-round'];
+      }
+      // Clean any legacy unescaped double quotes that break HTML image tag attributes
+      if (p.startsWith('data:image/svg+xml') && p.includes('"')) {
+        p = p.replace(/"/g, "'");
+      }
+      return p;
+    }
 
     // Medication Database with Prescribed Times & Tablet Photos
     let MEDICINES = [
@@ -1000,12 +1018,14 @@
         }
 
         listEl.innerHTML = meds.map(m => {
-          const isCustom = m.isCustomPhoto || (m.photo && (m.photo.startsWith('data:image/jpeg') || m.photo.startsWith('data:image/png') || m.photo.startsWith('data:image/webp')));
+          const photoSrc = getMedPhotoSrc(m);
+          const isCustom = m.isCustomPhoto || (photoSrc && (photoSrc.startsWith('data:image/jpeg') || photoSrc.startsWith('data:image/png') || photoSrc.startsWith('data:image/webp')));
+          const safeName = (m.name || 'Medicine').replace(/"/g, '&quot;');
           return `
           <div class="med-item-card ${m.status === 'taken' ? 'taken' : ''}" id="med-card-${m.id}">
             <div class="med-left-group">
               <div class="tablet-photo-frame" title="Click to view large photo" style="cursor: pointer; position: relative;" onclick='openPhotoLightbox(MEDICINES.find(x => x.id === ${m.id}))'>
-                <img src="${m.photo}" alt="${m.name} Tablet">
+                <img src="${photoSrc}" alt="${safeName} Tablet">
                 ${isCustom ? `<span style="position: absolute; bottom: 2px; right: 2px; font-size: 10px; background: rgba(16, 185, 129, 0.9); color: white; border-radius: 6px; padding: 1px 3px; line-height: 1;" title="Your Uploaded Photo">📸</span>` : ''}
               </div>
               <div class="med-details">
@@ -1086,7 +1106,7 @@
       document.getElementById('alarm-med-instruction').innerText = med.meal;
       
       const alarmImg = document.getElementById('alarm-tablet-img');
-      alarmImg.src = med.photo;
+      alarmImg.src = getMedPhotoSrc(med);
       alarmImg.alt = `${med.name} Tablet Photo`;
 
       // Distinguish custom uploaded photo vs preset
@@ -1149,7 +1169,7 @@
       document.getElementById('lightbox-med-notes').innerText = '• ' + (med.notes || 'Prescribed medication');
       
       const img = document.getElementById('lightbox-med-img');
-      img.src = med.photo;
+      img.src = getMedPhotoSrc(med);
 
       const sourceEl = document.getElementById('lightbox-photo-source');
       const isCustom = med.isCustomPhoto || (med.photo && (med.photo.startsWith('data:image/jpeg') || med.photo.startsWith('data:image/png') || med.photo.startsWith('data:image/webp')));
@@ -1341,7 +1361,20 @@
     window.addEventListener('DOMContentLoaded', () => {
       try {
         const savedMeds = localStorage.getItem('carenest_reminders');
-        if (savedMeds) MEDICINES = JSON.parse(savedMeds);
+        if (savedMeds) {
+          MEDICINES = JSON.parse(savedMeds);
+          let updated = false;
+          MEDICINES.forEach(m => {
+            const clean = getMedPhotoSrc(m);
+            if (m.photo !== clean) {
+              m.photo = clean;
+              updated = true;
+            }
+          });
+          if (updated) {
+            try { localStorage.setItem('carenest_reminders', JSON.stringify(MEDICINES)); } catch(e) {}
+          }
+        }
       } catch(e) {}
       renderSchedules();
       const userStr = localStorage.getItem('carenest_user');
