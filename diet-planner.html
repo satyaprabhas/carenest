@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CareNest - Daily Diet Planner</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="api-config.js"></script>
   <style>
     /* Portal-Specific Styling */
     .diet-portal-container {
@@ -386,6 +387,9 @@
       </div>
     </div>
     <div class="portal-header-right">
+      <button class="btn btn-secondary btn-sm" onclick="promptCareNestBackendUrl()" title="Configure Render Backend Web Service Link" style="margin-right: 8px;">
+        ⚙️ Backend Link
+      </button>
       <button class="btn btn-secondary btn-sm" onclick="window.print()" style="margin-right: 12px;">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
         Print Plan
@@ -1474,7 +1478,7 @@
       localStorage.setItem('carenest_diet_history', JSON.stringify(history));
 
       // Sync to cloud backend for multi-device access
-      fetch('/api/diet/log', {
+      fetch(getCareNestApiUrl('/api/diet/log'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(record)
@@ -1571,7 +1575,7 @@
 
     // Auto-sync diet logs from cloud on page load
     window.addEventListener('DOMContentLoaded', () => {
-      fetch('/api/diet/history')
+      fetch(getCareNestApiUrl('/api/diet/history'))
         .then(r => r.json())
         .then(logs => {
           if (Array.isArray(logs) && logs.length > 0) {

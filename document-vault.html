@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CareNest - Medical Document Vault</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="api-config.js"></script>
   <style>
     .portal-container {
       max-width: 1540px;
@@ -157,6 +158,9 @@
       </div>
     </div>
     <div class="portal-header-right">
+      <button class="btn btn-secondary btn-sm" onclick="promptCareNestBackendUrl()" title="Configure Render Backend Web Service Link" style="margin-right: 8px;">
+        ⚙️ Backend Link
+      </button>
       <button class="btn btn-secondary btn-sm" onclick="exportDocumentCSV()">
         📥 Export CSV
       </button>
@@ -430,7 +434,7 @@
           currentDocs = [...DEMO_DOCS];
           renderDocs(currentDocs);
         }
-        fetch(`/api/documents/${id}`, { method: 'DELETE' }).catch(err => console.log('Offline delete:', err));
+        fetch(getCareNestApiUrl(`/api/documents/${id}`), { method: 'DELETE' }).catch(err => console.log('Offline delete:', err));
       }
     }
 
@@ -618,7 +622,7 @@
         formData.append('category', 'General Medical');
         formData.append('description', 'User uploaded medical documentation.');
 
-        const response = await fetch('/api/documents/upload', {
+        const response = await fetch(getCareNestApiUrl('/api/documents/upload'), {
           method: 'POST',
           body: formData
         });
@@ -668,7 +672,7 @@
       renderDocs(currentDocs);
 
       function syncDocsFromCloud() {
-        fetch('/api/documents')
+        fetch(getCareNestApiUrl('/api/documents'))
           .then(res => res.json())
           .then(data => {
             if (Array.isArray(data) && data.length > 0) {

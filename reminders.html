@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script src="api-config.js"></script>
   <style>
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
@@ -553,6 +554,9 @@
       </div>
     </div>
     <div class="portal-header-right">
+      <button class="btn btn-secondary btn-sm" onclick="promptCareNestBackendUrl()" title="Configure Render Backend Web Service Link" style="border-color: #cbd5e1;">
+        ⚙️ Backend Link
+      </button>
       <button class="btn btn-secondary btn-sm" onclick="speakCurrentSchedule()">
         🔊 Voice Timetable
       </button>
@@ -1089,7 +1093,7 @@
           console.warn('LocalStorage save error:', e);
         }
         renderSchedules();
-        fetch(`/api/reminders/${id}`, { method: 'DELETE' }).catch(() => {});
+        fetch(getCareNestApiUrl(`/api/reminders/${id}`), { method: 'DELETE' }).catch(() => {});
       }
     }
 
@@ -1103,7 +1107,7 @@
         renderSchedules();
         
         // Sync dose status to backend cloud immediately
-        fetch(`/api/reminders/${id}`, {
+        fetch(getCareNestApiUrl(`/api/reminders/${id}`), {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ status })
@@ -1365,7 +1369,7 @@
       document.getElementById('new-med-notes').value = '';
 
       // Post full medicine object to backend API for multi-device sync
-      fetch('/api/reminders', {
+      fetch(getCareNestApiUrl('/api/reminders'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newMedicine)
@@ -1389,7 +1393,7 @@
       const syncText = document.getElementById('cloud-sync-text');
 
       try {
-        const res = await fetch('/api/reminders');
+        const res = await fetch(getCareNestApiUrl('/api/reminders'));
         if (!res.ok) throw new Error('Network error');
         const cloudMeds = await res.json();
 
