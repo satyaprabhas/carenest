@@ -842,10 +842,180 @@
 
     .clinical-box strong {
       display: block;
-      font-size: 0.82rem;
+    /* 1:1 Equal Generic Spotlight Card */
+    .equal-generic-spotlight-card {
+      background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+      border: 2px solid #10b981;
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin: 18px 0;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.12);
+    }
+
+    .spotlight-top-strip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .spotlight-badge-label {
+      font-size: 0.78rem;
+      font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.03em;
-      margin-bottom: 4px;
+      letter-spacing: 0.05em;
+      color: #047857;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .bioequivalent-cert-pill {
+      font-size: 0.76rem;
+      font-weight: 700;
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #6ee7b7;
+      padding: 3px 10px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .spotlight-content-grid {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .spotlight-details {
+      flex: 1;
+      min-width: 280px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .spotlight-salt-read {
+      font-size: 0.88rem;
+      color: #334155;
+    }
+
+    .salt-read-label {
+      font-weight: 600;
+      color: #64748b;
+      margin-right: 4px;
+    }
+
+    .salt-read-value {
+      font-weight: 700;
+      color: #0f766e;
+      background: #ccfbf1;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .spotlight-generic-name {
+      font-size: 1.15rem;
+      color: #0f172a;
+    }
+
+    .spotlight-generic-name strong {
+      color: #047857;
+    }
+
+    .spotlight-mfr-line {
+      font-size: 0.82rem;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .mfr-name {
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .standards-tag {
+      background: #e2e8f0;
+      color: #475569;
+      font-size: 0.72rem;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .spotlight-price-savings {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      min-width: 220px;
+    }
+
+    .price-comparison-dual {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #ffffff;
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid #a7f3d0;
+    }
+
+    .brand-strike-box {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .brand-strike-box .pr-label, .generic-price-box .pr-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      color: #94a3b8;
+      font-weight: 700;
+    }
+
+    .pr-brand-val {
+      font-size: 1.05rem;
+      color: #94a3b8;
+      text-decoration: line-through;
+      font-weight: 600;
+    }
+
+    .arrow-indicator {
+      color: #10b981;
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+
+    .generic-price-box {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .pr-generic-val {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #047857;
+    }
+
+    .savings-burst-pill {
+      background: #047857;
+      color: #ffffff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      box-shadow: 0 2px 6px rgba(4, 120, 87, 0.25);
     }
 
     /* Savings Calculator Panel */
@@ -1038,6 +1208,90 @@
 
     .comparison-table tbody tr.best-price-row {
       background: #f0fdf4;
+    }
+
+    /* VIBRANT GREEN HIGHLIGHT FOR CHEAPEST GENERIC MEDICINE */
+    .comparison-table tbody tr.cheapest-generic-row {
+      background: linear-gradient(90deg, #ecfdf5 0%, #d1fae5 50%, #f0fdf4 100%) !important;
+      border-top: 2px solid #10b981 !important;
+      border-bottom: 2px solid #10b981 !important;
+    }
+
+    .comparison-table tbody tr.cheapest-generic-row td:first-child {
+      border-left: 5px solid #059669 !important;
+      padding-left: 14px;
+    }
+
+    .comparison-table tbody tr.cheapest-generic-row:hover {
+      background: linear-gradient(90deg, #d1fae5 0%, #a7f3d0 100%) !important;
+    }
+
+    .comparison-table tbody tr.cheapest-generic-row td {
+      color: #064e3b;
+      font-weight: 500;
+    }
+
+    .badge-cheapest-generic {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      color: #ffffff !important;
+      padding: 3px 9px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      box-shadow: 0 2px 6px rgba(5, 150, 105, 0.35);
+      animation: pulseGreenGlow 2.5s infinite ease-in-out;
+    }
+
+    @keyframes pulseGreenGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+      50% { box-shadow: 0 0 0 5px rgba(16, 185, 129, 0); }
+    }
+
+    .badge-cheapest-generic-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #059669;
+      color: #ffffff;
+      padding: 3px 9px;
+      border-radius: 14px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      box-shadow: 0 2px 4px rgba(5, 150, 105, 0.25);
+    }
+
+    .cheapest-generic-price {
+      color: #047857 !important;
+      font-size: 1.15rem !important;
+      font-weight: 900 !important;
+      text-shadow: 0 1px 2px rgba(4, 120, 87, 0.15);
+    }
+
+    .cheapest-generic-sub {
+      display: block;
+      font-size: 0.68rem;
+      color: #059669;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .cheapest-generic-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #bbf7d0;
+      color: #14532d;
+      border: 1px solid #86efac;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 800;
     }
 
     .comparison-table tbody tr.original-brand-row {
@@ -1399,11 +1653,21 @@
             </span>
             <div id="popularChipsContainer" class="chips-row">
               <button class="search-chip" data-search="Dolo 650">Dolo 650</button>
-              <button class="search-chip" data-search="Crocin">Crocin</button>
-              <button class="search-chip" data-search="Azithromycin">Azithromycin</button>
-              <button class="search-chip" data-search="Metformin">Metformin</button>
-              <button class="search-chip" data-search="Atorvastatin">Atorvastatin</button>
+              <button class="search-chip" data-search="Augmentin">Augmentin 625</button>
+              <button class="search-chip" data-search="Cheston Cold">Cheston Cold</button>
+              <button class="search-chip" data-search="Sinarest">Sinarest</button>
               <button class="search-chip" data-search="Pan 40">Pan 40</button>
+              <button class="search-chip" data-search="Emeset">Emeset 4</button>
+              <button class="search-chip" data-search="Dulcolax">Dulcolax</button>
+              <button class="search-chip" data-search="Metformin">Metformin</button>
+              <button class="search-chip" data-search="Telmisartan">Telmisartan</button>
+              <button class="search-chip" data-search="Atorvastatin">Atorvastatin</button>
+              <button class="search-chip" data-search="Zerodol-SP">Zerodol-SP</button>
+              <button class="search-chip" data-search="Montair LC">Montair LC</button>
+              <button class="search-chip" data-search="Shelcal 500">Shelcal 500</button>
+              <button class="search-chip" data-search="Saridon">Saridon</button>
+              <button class="search-chip" data-search="Cipladine">Cipladine</button>
+              <button class="search-chip" data-search="Azithromycin">Azithral 500</button>
             </div>
           </div>
 
@@ -1449,17 +1713,20 @@
 
           <!-- Quick Category Filters -->
           <div class="filter-pills-bar" id="categoryFilterBar">
-            <button class="filter-pill active" data-category="ALL">All Categories</button>
+            <button class="filter-pill active" data-category="ALL">All Categories (318+ Medicines)</button>
             <button class="filter-pill" data-category="Pain & Fever">Pain &amp; Fever</button>
             <button class="filter-pill" data-category="Antibiotic">Antibiotic</button>
+            <button class="filter-pill" data-category="Antifungal">Antifungal</button>
             <button class="filter-pill" data-category="Diabetes">Diabetes</button>
-            <button class="filter-pill" data-category="Gastric">Gastric</button>
+            <button class="filter-pill" data-category="Gastric">Gastric &amp; Acidity</button>
             <button class="filter-pill" data-category="Blood Pressure">Blood Pressure</button>
             <button class="filter-pill" data-category="Cholesterol">Cholesterol</button>
-            <button class="filter-pill" data-category="Supplement">Supplement</button>
-            <button class="filter-pill" data-category="Allergy">Allergy</button>
             <button class="filter-pill" data-category="Blood Thinner">Blood Thinner</button>
+            <button class="filter-pill" data-category="Allergy">Allergy &amp; Resp</button>
+            <button class="filter-pill" data-category="Supplement">Vitamins &amp; Calcium</button>
             <button class="filter-pill" data-category="Thyroid">Thyroid</button>
+            <button class="filter-pill" data-category="Neurology & Mental Health">Mental Health</button>
+            <button class="filter-pill" data-category="Liver & Kidney">Liver &amp; Kidney</button>
           </div>
         </div>
 
@@ -1468,15 +1735,22 @@
           <div style="width: 68px; height: 68px; border-radius: 50%; background: #e0f2f1; color: #0d7377; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; font-size: 30px;">
             🔍
           </div>
-          <h3 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; margin-bottom: 8px;">Search to Compare Generic Alternatives</h3>
-          <p style="font-size: 0.95rem; color: #64748b; max-width: 600px; margin: 0 auto 22px auto; line-height: 1.5;">
-            Enter any prescribed brand name (like <em>Dolo 650</em>, <em>Augmentin</em>, <em>Pan 40</em>, or <em>Metformin</em>) in the search box above or select a chip below to view verified bioequivalent salt matches and instant cost savings.
+          <h3 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; margin-bottom: 8px;">Search Across 318+ Verified Medications &amp; Bioequivalents</h3>
+          <p style="font-size: 0.95rem; color: #64748b; max-width: 650px; margin: 0 auto 22px auto; line-height: 1.5;">
+            Enter any prescribed brand name or generic active salt in the search box above, or click one of the popular clinical chips below to compare authentic Jan Aushadhi generic equivalents and save up to 85%:
           </p>
           <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
-            <button type="button" class="search-chip initial-sample-chip" data-search="Metformin" style="cursor:pointer; padding:8px 16px; border-radius:20px; background:#f0fdf4; border:1px solid #86efac; color:#166534; font-weight:600; font-size:0.88rem;">⚡ Metformin (Diabetes)</button>
-            <button type="button" class="search-chip initial-sample-chip" data-search="Pan 40" style="cursor:pointer; padding:8px 16px; border-radius:20px; background:#eff6ff; border:1px solid #93c5fd; color:#1e40af; font-weight:600; font-size:0.88rem;">⚡ Pan 40 (Acidity)</button>
-            <button type="button" class="search-chip initial-sample-chip" data-search="Atorvastatin" style="cursor:pointer; padding:8px 16px; border-radius:20px; background:#fef3c7; border:1px solid #fde047; color:#854d0e; font-weight:600; font-size:0.88rem;">⚡ Atorvastatin (Cholesterol)</button>
             <button type="button" class="search-chip initial-sample-chip" data-search="Dolo 650" style="cursor:pointer; padding:8px 16px; border-radius:20px; background:#fdf2f8; border:1px solid #f472b6; color:#9d174d; font-weight:600; font-size:0.88rem;">⚡ Dolo 650 (Fever)</button>
+            <button type="button" class="search-chip initial-sample-chip" data-search="Augmentin 625" style="cursor:pointer; padding:8px 16px; border-radius:20px; background:#eff6ff; border:1px solid #93c5fd; color:#1e40af; font-weight:600; font-size:0.88rem;">⚡ Augmentin (Antibiotic)</button>
+            <button type="button" class="search-chip initial-sample-chip" data-search="Grilinctus" style="cursor:pointer; padding:8px 16px; border-radius:20px; background:#fef2f2; border:1px solid #fca5a5; color:#991b1b; font-weight:600; font-size:0.88rem;">⚡ Grilinctus (Cough)</button>
+            <button type="button" class="search-chip initial-sample-chip" data-search="Pan 40" style="cursor:pointer; padding:8px 16px; border-radius:20px; background:#fff7ed; border:1px solid #fdba74; color:#c2410c; font-weight:600; font-size:0.88rem;">⚡ Pan 40 (Acidity)</button>
+            <button type="button" class="search-chip initial-sample-chip" data-search="Meftal-Spas" style="cursor:pointer; padding:8px 16px; border-radius:20px; background:#fdf4ff; border:1px solid #f0abfc; color:#86198f; font-weight:600; font-size:0.88rem;">⚡ Meftal-Spas (Cramps)</button>
+            <button type="button" class="search-chip initial-sample-chip" data-search="Metformin" style="cursor:pointer; padding:8px 16px; border-radius:20px; background:#f0fdf4; border:1px solid #86efac; color:#166534; font-weight:600; font-size:0.88rem;">⚡ Metformin (Diabetes)</button>
+            <button type="button" class="search-chip initial-sample-chip" data-search="Telmisartan" style="cursor:pointer; padding:8px 16px; border-radius:20px; background:#f5f3ff; border:1px solid #c4b5fd; color:#6d28d9; font-weight:600; font-size:0.88rem;">⚡ Telmisartan (BP)</button>
+            <button type="button" class="search-chip initial-sample-chip" data-search="Becosules" style="cursor:pointer; padding:8px 16px; border-radius:20px; background:#fef9c3; border:1px solid #fde047; color:#854d0e; font-weight:600; font-size:0.88rem;">⚡ Becosules (Multivitamin)</button>
+            <button type="button" class="search-chip initial-sample-chip" data-search="Liv 52" style="cursor:pointer; padding:8px 16px; border-radius:20px; background:#ecfdf5; border:1px solid #6ee7b7; color:#047857; font-weight:600; font-size:0.88rem;">⚡ Liv 52 (Liver/Digestion)</button>
+            <button type="button" class="search-chip initial-sample-chip" data-search="Montair LC" style="cursor:pointer; padding:8px 16px; border-radius:20px; background:#f0fdfa; border:1px solid #5eead4; color:#0f766e; font-weight:600; font-size:0.88rem;">⚡ Montair LC (Allergy)</button>
+            <button type="button" class="search-chip initial-sample-chip" data-search="Shelcal 500" style="cursor:pointer; padding:8px 16px; border-radius:20px; background:#f8fafc; border:1px solid #cbd5e1; color:#334155; font-weight:600; font-size:0.88rem;">⚡ Shelcal 500 (Calcium)</button>
           </div>
         </div>
 
@@ -1606,6 +1880,9 @@
     </div>
   </footer>
 
+  <!-- External comprehensive 55+ medicine database -->
+  <script src="medicines-data.js"></script>
+
   <!-- SCRIPT: DATA, LOGIC, CALCULATION & INTERACTION -->
   <script>
     (function () {
@@ -1614,7 +1891,9 @@
       // ========================================================================
       // 1. BUILT-IN MEDICINE DATABASE (16+ Medicines with Realistic Alternatives)
       // ========================================================================
-      const MEDICINE_DATABASE = [
+      const MEDICINE_DATABASE = (typeof window !== 'undefined' && window.MEDICINE_DATABASE && window.MEDICINE_DATABASE.length > 0)
+        ? window.MEDICINE_DATABASE
+        : [
         {
           id: 'med-dolo650',
           brand: 'Dolo 650',
@@ -2096,24 +2375,49 @@
         const q = query.trim().toLowerCase();
         const terms = q.split(/\s+/).filter(t => t.length > 0);
 
-        return MEDICINE_DATABASE.filter(med => {
+        // Strict search: only match brand, generic salt, or alternative names
+        const scored = [];
+
+        MEDICINE_DATABASE.forEach(med => {
           const brand = med.brand.toLowerCase();
           const generic = med.generic.toLowerCase();
+          const altNames = med.alternatives.map(a => a.name.toLowerCase()).join(' ');
           const category = med.category.toLowerCase();
-          const uses = med.uses.toLowerCase();
-          const mfr = med.manufacturer.toLowerCase();
-          const strength = med.strength.toLowerCase();
-          const altNames = med.alternatives.map(a => `${a.name} ${a.mfr}`).join(' ').toLowerCase();
 
-          // Full haystack for this medicine
-          const haystack = `${brand} ${generic} ${category} ${uses} ${mfr} ${strength} ${altNames}`;
+          let score = 0;
 
-          // Check if all search tokens match or primary substring matches
-          const exactMatches = haystack.includes(q);
-          const allTokensMatch = terms.every(term => haystack.includes(term));
+          // Check direct name matches
+          if (brand === q) score += 100;
+          else if (brand.startsWith(q)) score += 80;
+          else if (brand.includes(q)) score += 60;
 
-          return exactMatches || allTokensMatch;
+          if (generic === q) score += 95;
+          else if (generic.startsWith(q)) score += 75;
+          else if (generic.includes(q)) score += 55;
+
+          if (altNames.includes(q)) score += 50;
+
+          // Multi-term matching across brand, generic, or alternatives
+          const allTermsMatchName = terms.every(t => 
+            brand.includes(t) || generic.includes(t) || altNames.includes(t)
+          );
+          if (allTermsMatchName && score === 0) {
+            score += 40;
+          }
+
+          // Category match only if exact query matches category
+          if (category === q || category.includes(q)) {
+            score += 20;
+          }
+
+          if (score > 0) {
+            scored.push({ med, score });
+          }
         });
+
+        // Sort by relevance score descending
+        scored.sort((a, b) => b.score - a.score);
+        return scored.map(item => item.med);
       }
 
       function performSearch(query, isFilterChange = false) {
@@ -2153,7 +2457,16 @@
 
           // Apply Category Filter if not ALL
           if (activeCategoryFilter !== 'ALL') {
-            results = results.filter(m => m.category.toLowerCase() === activeCategoryFilter.toLowerCase());
+            const fLow = activeCategoryFilter.toLowerCase();
+            results = results.filter(m => {
+              const cLow = m.category.toLowerCase();
+              return cLow === fLow || cLow.includes(fLow) || fLow.includes(cLow) ||
+                (fLow.includes('blood pressure') && cLow.includes('heart')) ||
+                (fLow.includes('gastric') && cLow.includes('gastric')) ||
+                (fLow.includes('supplement') && (cLow.includes('vitamin') || cLow.includes('supplement'))) ||
+                (fLow.includes('antibiotic') && cLow.includes('antibiotic')) ||
+                (fLow.includes('allergy') && cLow.includes('allergy'));
+            });
           }
 
           currentSearchResults = results;
@@ -2237,9 +2550,17 @@
         const qty = activeDosageMultipliers[med.id] || 1;
         const metrics = calculateSavingsMetrics(med, qty);
         const cheapestAlt = getCheapestAlternative(med);
+        const sortedAlts = [...(med.alternatives || [])].sort((a, b) => a.price - b.price);
 
-        // Sort alternatives by price ascending
-        const sortedAlts = [...med.alternatives].sort((a, b) => a.price - b.price);
+        // Find the cheapest generic alternative among all options
+        const genericAlts = (med.alternatives || []).filter(a => a.isGeneric);
+        const cheapestGeneric = genericAlts.length > 0 
+          ? genericAlts.reduce((min, curr) => curr.price < min.price ? curr : min, genericAlts[0])
+          : cheapestAlt;
+
+        const equalGeneric = cheapestGeneric || cheapestAlt;
+        const genericDiff = Math.max(0, med.price - equalGeneric.price);
+        const genericSavePct = med.price > 0 ? Math.round((genericDiff / med.price) * 100) : 0;
 
         card.innerHTML = `
           <!-- Medicine Info Card Header -->
@@ -2264,6 +2585,54 @@
               </div>
             </div>
 
+            <!-- 1:1 Equal Generic Medicine Match Box -->
+            <div class="equal-generic-spotlight-card">
+              <div class="spotlight-top-strip">
+                <div class="spotlight-badge-label">
+                  <span>🔬</span>
+                  <span>COMPOSITION READ &amp; EQUAL GENERIC MATCH</span>
+                </div>
+                <span class="bioequivalent-cert-pill">
+                  <span>✓</span> 100% Bioequivalent Salt (${escapeHtml(med.generic)} ${escapeHtml(med.strength)})
+                </span>
+              </div>
+
+              <div class="spotlight-content-grid">
+                <div class="spotlight-details">
+                  <div class="spotlight-salt-read">
+                    <span class="salt-read-label">Active Chemical Composition:</span>
+                    <span class="salt-read-value">${escapeHtml(med.generic)} • ${escapeHtml(med.strength)}</span>
+                  </div>
+                  <div class="spotlight-generic-name">
+                    <span>Equal Generic Equivalent: </span>
+                    <strong>${escapeHtml(equalGeneric.name)}</strong>
+                  </div>
+                  <div class="spotlight-mfr-line">
+                    <span>Approved Maker: </span>
+                    <span class="mfr-name">${escapeHtml(equalGeneric.mfr)}</span>
+                    <span class="standards-tag">Jan Aushadhi / WHO-GMP Bioequivalent</span>
+                  </div>
+                </div>
+
+                <div class="spotlight-price-savings">
+                  <div class="price-comparison-dual">
+                    <div class="brand-strike-box">
+                      <span class="pr-label">Brand MRP</span>
+                      <span class="pr-brand-val">₹${med.price.toFixed(2)}</span>
+                    </div>
+                    <div class="arrow-indicator">➔</div>
+                    <div class="generic-price-box" style="background:#ecfdf5; border:1.5px solid #10b981; border-radius:10px; padding:6px 12px; text-align:center;">
+                      <span class="pr-label" style="color:#047857; font-weight:800; font-size:0.75rem; text-transform:uppercase; display:block; letter-spacing:0.03em;">★ Cheapest Generic</span>
+                      <span class="pr-generic-val" style="color:#047857; font-weight:900; font-size:1.45rem;">₹${equalGeneric.price.toFixed(2)}</span>
+                    </div>
+                  </div>
+                  <div class="savings-burst-pill" style="background: linear-gradient(135deg, #059669 0%, #047857 100%); color:#ffffff; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.35);">
+                    <span>🎉 You Save ₹${genericDiff.toFixed(2)} (${genericSavePct}% Cheaper)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- Key Specs Grid -->
             <div class="med-specs-grid">
               <div class="spec-item">
@@ -2278,9 +2647,9 @@
                 <span class="spec-label">Dosage Form</span>
                 <span class="spec-val">${escapeHtml(med.form)}</span>
               </div>
-              <div class="spec-item">
-                <span class="spec-label">Lowest Generic Price</span>
-                <span class="spec-val" style="color:#15803d; font-weight:800;">₹${cheapestAlt.price.toFixed(2)} (${metrics.savedPercent}% Lower)</span>
+              <div class="spec-item" style="background:#ecfdf5; border-color:#10b981;">
+                <span class="spec-label" style="color:#047857; font-weight:700;">★ Cheapest Generic Price</span>
+                <span class="spec-val" style="color:#047857; font-weight:900;">₹${equalGeneric.price.toFixed(2)} (${metrics.savedPercent}% Lower)</span>
               </div>
             </div>
 
@@ -2350,8 +2719,8 @@
               <div class="meter-progress-track" title="${metrics.savedPercent}% Savings">
                 <div class="meter-progress-fill" id="meter-fill-${med.id}" style="width: ${Math.min(100, Math.max(10, metrics.savedPercent))}%;"></div>
               </div>
-              <div class="annual-savings-highlight">
-                Switching to <strong>${escapeHtml(cheapestAlt.name)}</strong> saves you approx <strong id="annual-text-${med.id}">₹${metrics.annualSavings.toFixed(2)}</strong> every year!
+              <div class="annual-savings-highlight" style="background:#ecfdf5; border:1.5px solid #10b981; color:#065f46;">
+                Switching to cheapest generic <strong>${escapeHtml(equalGeneric.name)}</strong> saves you approx <strong id="annual-text-${med.id}">₹${metrics.annualSavings.toFixed(2)}</strong> every year!
               </div>
             </div>
           </div>
@@ -2394,47 +2763,55 @@
                   <td><span style="color:#64748b; font-size:0.82rem; font-weight:600;">Reference</span></td>
                 </tr>
 
-                <!-- Alternative Rows -->
+                <!-- Alternative Rows (Cheapest Generic Highlighted in Green) -->
                 ${sortedAlts.map(alt => {
+                  const isCheapestGeneric = alt.isGeneric && cheapestGeneric && (alt.name === cheapestGeneric.name && alt.price === cheapestGeneric.price);
                   const isLowest = alt.price === cheapestAlt.price;
                   const diff = med.price - alt.price;
                   const pct = Math.round((diff / med.price) * 100);
                   const isPositive = pct > 0;
-                  const rowClass = isLowest ? 'best-price-row' : '';
+                  const rowClass = isCheapestGeneric ? 'cheapest-generic-row best-price-row' : (isLowest ? 'best-price-row' : '');
 
                   return `
                     <tr class="${rowClass}">
                       <td>
                         <div class="alt-name-cell">
-                          <span class="alt-name-strong">
+                          <span class="alt-name-strong" ${isCheapestGeneric ? 'style="color:#064e3b; font-weight:800;"' : ''}>
                             ${escapeHtml(alt.name)}
-                            ${isLowest ? '<span class="badge-best-price">Best Price</span>' : ''}
+                            ${isCheapestGeneric 
+                              ? '<span class="badge-cheapest-generic">★ CHEAPEST GENERIC</span>' 
+                              : (isLowest ? '<span class="badge-best-price">Best Price</span>' : '')}
                           </span>
                         </div>
                       </td>
                       <td>${escapeHtml(alt.mfr)}</td>
                       <td>
-                        ${alt.isGeneric 
-                          ? '<span class="badge-generic-pill">Verified Generic</span>' 
-                          : '<span class="badge-brand-alt">Branded Alt</span>'}
+                        ${isCheapestGeneric 
+                          ? '<span class="badge-cheapest-generic-pill">✓ Lowest Cost Generic</span>' 
+                          : (alt.isGeneric 
+                            ? '<span class="badge-generic-pill">Verified Generic</span>' 
+                            : '<span class="badge-brand-alt">Branded Alt</span>')}
                       </td>
                       <td>${escapeHtml(alt.dosage || med.strength)}</td>
                       <td>
-                        <span class="price-num" style="${isLowest ? 'color:#15803d; font-size:1.05rem;' : ''}">
+                        <span class="price-num ${isCheapestGeneric ? 'cheapest-generic-price' : ''}" style="${!isCheapestGeneric && isLowest ? 'color:#15803d; font-size:1.05rem;' : ''}">
                           ₹${alt.price.toFixed(2)}
                         </span>
+                        ${isCheapestGeneric ? '<span class="cheapest-generic-sub">Best Value Generic</span>' : ''}
                       </td>
                       <td>
                         ${isPositive 
-                          ? `<span class="savings-pct-badge positive">Save ${pct}% (₹${diff.toFixed(2)})</span>` 
+                          ? `<span class="savings-pct-badge positive ${isCheapestGeneric ? 'cheapest-savings-badge' : ''}" ${isCheapestGeneric ? 'style="background:#a7f3d0; color:#065f46; font-weight:800;"' : ''}>Save ${pct}% (₹${diff.toFixed(2)})</span>` 
                           : pct === 0 
                             ? `<span class="savings-pct-badge neutral">Same Price</span>` 
                             : `<span class="savings-pct-badge negative">+₹${Math.abs(diff).toFixed(2)}</span>`}
                       </td>
                       <td>
-                        ${isLowest 
-                          ? '<span style="color:#15803d; font-weight:700; font-size:0.85rem;">★ Highest Savings</span>' 
-                          : '<span style="color:#0288d1; font-size:0.82rem; font-weight:600;">Bioequivalent</span>'}
+                        ${isCheapestGeneric 
+                          ? '<span class="cheapest-generic-status">🏆 Cheapest Bioequivalent</span>' 
+                          : (isLowest 
+                            ? '<span style="color:#15803d; font-weight:700; font-size:0.85rem;">★ Highest Savings</span>' 
+                            : '<span style="color:#0288d1; font-size:0.82rem; font-weight:600;">Bioequivalent</span>')}
                       </td>
                     </tr>
                   `;

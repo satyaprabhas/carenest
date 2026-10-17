@@ -569,6 +569,20 @@
         Review your morning, afternoon, and evening meals below. If you don't like an item, click <strong>🔄 Swap Item</strong> to pick a delicious alternative with equivalent nutrients!
       </p>
 
+      <!-- Dynamic Tailored Plan Header Banner -->
+      <div id="plan-tailored-banner" style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 14px 18px; margin-bottom: 22px; display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+          <div style="font-weight: 700; font-size: 15px; color: #166534; display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 20px;">🎯</span>
+            <span id="plan-tailored-title">Tailored Diet Plan for Vegetarian • Diabetes</span>
+          </div>
+          <div id="plan-calorie-summary-pill" style="background: #166534; color: #ffffff; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 700;">
+            Daily Total: ~1,850 kcal
+          </div>
+        </div>
+        <div id="plan-condition-pills" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+      </div>
+
       <!-- Morning: Breakfast -->
       <div class="meal-block" id="block-breakfast">
         <div class="meal-header">
@@ -781,47 +795,61 @@
 
   <!-- JAVASCRIPT LOGIC -->
   <script>
-    // --- Food Database with Full Nutrition Profiles ---
+    // --- Food Database with Full Clinical & Nutrition Profiles ---
     const FOOD_DATABASE = [
       // Breakfast items
-      { id: 'ww_dosa', name: 'Whole Wheat Dosa (2 pcs) with Sambar', cat: 'breakfast', cal: 240, protein: 7, carbs: 42, fat: 4, fiber: 5, vA: 60, vC: 8, vD: 0, b12: 0, calcium: 55, iron: 2.4, potassium: 280, tags: ['veg', 'diabetic_safe'] },
-      { id: 'idli_sambar', name: 'Steamed Idli (3 pcs) with Moong Sambar', cat: 'breakfast', cal: 230, protein: 8, carbs: 45, fat: 2, fiber: 4, vA: 40, vC: 6, vD: 0, b12: 0, calcium: 40, iron: 2.1, potassium: 250, tags: ['veg', 'diabetic_safe'] },
-      { id: 'oats_porridge', name: 'Oats & Chia Seed Porridge with Nuts', cat: 'breakfast', cal: 250, protein: 9, carbs: 38, fat: 6, fiber: 7, vA: 20, vC: 2, vD: 0, b12: 0.2, calcium: 120, iron: 3.2, potassium: 310, tags: ['veg', 'diabetic_safe'] },
-      { id: 'poha_veg', name: 'Vegetable Poha with Roasted Peanuts', cat: 'breakfast', cal: 240, protein: 6, carbs: 40, fat: 6, fiber: 4, vA: 50, vC: 12, vD: 0, b12: 0, calcium: 35, iron: 3.8, potassium: 220, tags: ['veg', 'diabetic_safe'] },
-      { id: 'egg_omelette', name: '2 Egg White Omelette with Whole Wheat Toast', cat: 'breakfast', cal: 220, protein: 16, carbs: 24, fat: 4, fiber: 3, vA: 80, vC: 4, vD: 25, b12: 1.2, calcium: 60, iron: 2.6, potassium: 290, tags: ['eggetarian', 'nonveg', 'diabetic_safe'] },
-      { id: 'paneer_bhurji', name: 'Low-Fat Paneer Bhurji with 1 Roti', cat: 'breakfast', cal: 260, protein: 14, carbs: 26, fat: 8, fiber: 4, vA: 110, vC: 5, vD: 15, b12: 0.8, calcium: 240, iron: 2.2, potassium: 260, tags: ['veg', 'diabetic_safe'] },
+      { id: 'ww_dosa', name: 'Whole Wheat Methi Dosa (2 pcs) with Sambar', cat: 'breakfast', cal: 240, protein: 7, carbs: 40, fat: 4, fiber: 6, vA: 60, vC: 8, vD: 0, b12: 0, calcium: 65, iron: 2.8, potassium: 280, diet: ['veg', 'vegan'], conditions: ['diabetes', 'cholesterol', 'pcod'], featureTag: '🩸 Low-GI Fenugreek & High Soluble Fiber' },
+      { id: 'oats_berries', name: 'Steel-Cut Oats with Berries & Crushed Flaxseeds', cat: 'breakfast', cal: 260, protein: 9, carbs: 36, fat: 6, fiber: 8, vA: 30, vC: 15, vD: 0, b12: 0, calcium: 130, iron: 3.4, potassium: 310, diet: ['veg', 'vegan'], conditions: ['cholesterol', 'heart', 'diabetes'], featureTag: '🫀 Cardioprotective Beta-Glucan & Omega-3' },
+      { id: 'low_sodium_poha', name: 'Low-Sodium Vegetable Poha with Coriander & Lemon', cat: 'breakfast', cal: 235, protein: 6, carbs: 42, fat: 5, fiber: 4, vA: 70, vC: 18, vD: 0, b12: 0, calcium: 40, iron: 3.6, potassium: 220, diet: ['veg', 'vegan'], conditions: ['bp', 'kidney', 'none'], featureTag: '❤️ DASH Low-Sodium & Gentle on Kidneys' },
+      { id: 'egg_omelette_toast', name: '2 Egg White Scramble with Spinach + Whole Grain Toast', cat: 'breakfast', cal: 225, protein: 17, carbs: 24, fat: 4, fiber: 4, vA: 120, vC: 8, vD: 25, b12: 1.4, calcium: 70, iron: 2.9, potassium: 290, diet: ['eggetarian', 'nonveg'], conditions: ['thyroid', 'pcod', 'diabetes', 'none'], featureTag: '🦋 High Selenium, Choline & Lean Protein' },
+      { id: 'renal_rice_idli', name: 'Steamed White Rice Idli (3 pcs) + Mild Moong Sambar', cat: 'breakfast', cal: 220, protein: 7, carbs: 46, fat: 2, fiber: 3, vA: 20, vC: 4, vD: 0, b12: 0, calcium: 35, iron: 1.8, potassium: 190, diet: ['veg', 'vegan'], conditions: ['kidney', 'none'], featureTag: '🫘 Renal-Safe: Low Potassium & Low Phosphorus' },
+      { id: 'besan_paneer_chilla', name: 'High-Protein Besan & Low-Fat Paneer Chilla', cat: 'breakfast', cal: 270, protein: 15, carbs: 28, fat: 8, fiber: 5, vA: 90, vC: 6, vD: 10, b12: 0.6, calcium: 210, iron: 2.5, potassium: 260, diet: ['veg'], conditions: ['pcod', 'thyroid', 'diabetes'], featureTag: '🌸 Hormone-Balancing Complex Plant Protein' },
+      { id: 'traditional_upma', name: 'Multigrain Rava Upma with Sautéed Veggies & Cashews', cat: 'breakfast', cal: 255, protein: 7, carbs: 44, fat: 6, fiber: 4, vA: 60, vC: 10, vD: 0, b12: 0, calcium: 45, iron: 2.2, potassium: 240, diet: ['veg', 'vegan'], conditions: ['none'], featureTag: '✨ Balanced Morning Sustained Energy' },
+      { id: 'chicken_toast', name: 'Poached Egg & Herb Grilled Chicken on Rye Toast', cat: 'breakfast', cal: 280, protein: 24, carbs: 22, fat: 7, fiber: 3, vA: 80, vC: 4, vD: 30, b12: 1.8, calcium: 55, iron: 3.1, potassium: 320, diet: ['nonveg'], conditions: ['thyroid', 'heart', 'diabetes', 'none'], featureTag: '🍗 High Thermogenic Protein & Vital Micronutrients' },
 
       // Mid-Morning snacks
-      { id: 'apple_almonds', name: 'Crisp Apple (1 medium) + 6 Soaked Almonds', cat: 'snack1', cal: 135, protein: 3, carbs: 24, fat: 4, fiber: 5, vA: 40, vC: 9, vD: 0, b12: 0, calcium: 45, iron: 0.8, potassium: 240, tags: ['veg', 'vegan', 'diabetic_safe'] },
-      { id: 'papaya_walnuts', name: 'Fresh Papaya Bowl + 4 Walnuts', cat: 'snack1', cal: 140, protein: 3, carbs: 22, fat: 5, fiber: 4, vA: 350, vC: 45, vD: 0, b12: 0, calcium: 50, iron: 0.9, potassium: 280, tags: ['veg', 'vegan', 'diabetic_safe'] },
-      { id: 'guava_chaat', name: 'Pink Guava Slices with Himalayan Pink Salt', cat: 'snack1', cal: 110, protein: 3, carbs: 20, fat: 1, fiber: 8, vA: 250, vC: 125, vD: 0, b12: 0, calcium: 30, iron: 1.2, potassium: 380, tags: ['veg', 'vegan', 'diabetic_safe'] },
-      { id: 'buttermilk_chia', name: 'Spiced Mint Buttermilk + Chia Seeds', cat: 'snack1', cal: 95, protein: 5, carbs: 8, fat: 3, fiber: 3, vA: 70, vC: 4, vD: 10, b12: 0.6, calcium: 180, iron: 0.7, potassium: 290, tags: ['veg', 'diabetic_safe'] },
+      { id: 'apple_chia', name: 'Crisp Green Apple Slices + Soaked Chia Seeds', cat: 'snack1', cal: 130, protein: 3, carbs: 22, fat: 4, fiber: 6, vA: 40, vC: 10, vD: 0, b12: 0, calcium: 55, iron: 0.9, potassium: 180, diet: ['veg', 'vegan', 'eggetarian', 'nonveg'], conditions: ['kidney', 'diabetes', 'pcod'], featureTag: '🫘 Renal & Diabetic Gentle: Low Potassium Fruit' },
+      { id: 'walnut_papaya', name: 'Fresh Papaya Bowl + 4 Halved Raw Walnuts', cat: 'snack1', cal: 145, protein: 3, carbs: 20, fat: 6, fiber: 4, vA: 380, vC: 50, vD: 0, b12: 0, calcium: 50, iron: 1.0, potassium: 280, diet: ['veg', 'vegan', 'eggetarian', 'nonveg'], conditions: ['cholesterol', 'heart', 'thyroid'], featureTag: '🫀 Plant Sterols & Antioxidant Lycopene' },
+      { id: 'cucumber_mint_cooler', name: 'Cooling Cucumber & Fresh Mint Cooler with Lemon', cat: 'snack1', cal: 45, protein: 2, carbs: 8, fat: 0, fiber: 3, vA: 80, vC: 22, vD: 0, b12: 0, calcium: 40, iron: 0.6, potassium: 260, diet: ['veg', 'vegan', 'eggetarian', 'nonveg'], conditions: ['bp', 'none'], featureTag: '❤️ Natural Vasodilator: Zero Sodium Hydration' },
+      { id: 'buttermilk_cumin', name: 'Spiced Mint Buttermilk with Roasted Cumin', cat: 'snack1', cal: 85, protein: 5, carbs: 7, fat: 2, fiber: 1, vA: 70, vC: 4, vD: 10, b12: 0.6, calcium: 190, iron: 0.7, potassium: 290, diet: ['veg', 'eggetarian'], conditions: ['pcod', 'diabetes', 'none'], featureTag: '🌸 Gut Probiotics & Glycemic Balance' },
+      { id: 'brazil_almonds', name: '2 Brazil Nuts + 6 Soaked Organic Almonds', cat: 'snack1', cal: 140, protein: 4, carbs: 5, fat: 12, fiber: 3, vA: 10, vC: 0, vD: 0, b12: 0, calcium: 65, iron: 1.2, potassium: 190, diet: ['veg', 'vegan', 'eggetarian', 'nonveg'], conditions: ['thyroid', 'cholesterol'], featureTag: '🦋 100% Daily Selenium & Vitamin E' },
+      { id: 'guava_chaat', name: 'Pink Guava Slices with Himalayan Rock Salt', cat: 'snack1', cal: 110, protein: 3, carbs: 20, fat: 1, fiber: 8, vA: 250, vC: 125, vD: 0, b12: 0, calcium: 30, iron: 1.2, potassium: 380, diet: ['veg', 'vegan', 'eggetarian', 'nonveg'], conditions: ['diabetes', 'bp', 'none'], featureTag: '🩸 Ultra High Dietary Fiber & High Vitamin C' },
 
       // Lunch items
-      { id: 'roti_dal_curry', name: '2 Multigrain Rotis + Dal Tadka + Bhindi Curry', cat: 'lunch', cal: 480, protein: 16, carbs: 74, fat: 10, fiber: 14, vA: 180, vC: 22, vD: 0, b12: 0, calcium: 130, iron: 4.8, potassium: 520, tags: ['veg', 'diabetic_safe'] },
-      { id: 'brown_rice_rajma', name: 'Brown Rice (1 cup) with Punjabi Rajma Curry', cat: 'lunch', cal: 490, protein: 17, carbs: 82, fat: 7, fiber: 15, vA: 90, vC: 14, vD: 0, b12: 0, calcium: 90, iron: 5.2, potassium: 610, tags: ['veg', 'diabetic_safe'] },
-      { id: 'chicken_roti_salad', name: 'Grilled Chicken Breast (120g) + 2 Rotis + Salad', cat: 'lunch', cal: 470, protein: 34, carbs: 48, fat: 9, fiber: 8, vA: 120, vC: 18, vD: 20, b12: 1.8, calcium: 80, iron: 4.1, potassium: 680, tags: ['nonveg', 'diabetic_safe'] },
-      { id: 'tofu_quinoa_curry', name: 'Quinoa Bowl with Herb Tofu & Sautéed Greens', cat: 'lunch', cal: 460, protein: 20, carbs: 62, fat: 12, fiber: 11, vA: 280, vC: 35, vD: 0, b12: 0, calcium: 210, iron: 5.8, potassium: 540, tags: ['veg', 'vegan', 'diabetic_safe'] },
+      { id: 'quinoa_tofu_greens', name: 'Quinoa Bowl with Herb Tofu & Sautéed Greens', cat: 'lunch', cal: 460, protein: 21, carbs: 58, fat: 11, fiber: 12, vA: 290, vC: 35, vD: 0, b12: 0, calcium: 230, iron: 5.9, potassium: 540, diet: ['veg', 'vegan'], conditions: ['diabetes', 'pcod', 'cholesterol'], featureTag: '🩸 Low Glycemic Load & Plant Isoflavones' },
+      { id: 'salmon_brown_rice', name: 'Grilled Salmon Fillet (120g) + Steamed Greens & Brown Rice', cat: 'lunch', cal: 490, protein: 35, carbs: 46, fat: 12, fiber: 7, vA: 150, vC: 22, vD: 65, b12: 3.2, calcium: 110, iron: 3.8, potassium: 660, diet: ['nonveg'], conditions: ['heart', 'cholesterol', 'bp'], featureTag: '🫀 Omega-3 Fatty Acids (EPA/DHA) Cardioprotective' },
+      { id: 'chicken_roti_salad', name: 'Herb-Baked Chicken Breast (120g) + 2 Rotis + Tossed Salad', cat: 'lunch', cal: 475, protein: 36, carbs: 48, fat: 9, fiber: 8, vA: 130, vC: 20, vD: 20, b12: 1.9, calcium: 85, iron: 4.2, potassium: 680, diet: ['nonveg'], conditions: ['diabetes', 'thyroid', 'pcod', 'none'], featureTag: '🍗 High Biological Value Protein & Zero Saturated Fat' },
+      { id: 'jowar_lauki_dal', name: '2 Jowar Rotis + Low-Sodium Lauki Dal + Beetroot Salad', cat: 'lunch', cal: 440, protein: 14, carbs: 70, fat: 7, fiber: 13, vA: 160, vC: 25, vD: 0, b12: 0, calcium: 90, iron: 4.5, potassium: 580, diet: ['veg', 'vegan'], conditions: ['bp', 'heart'], featureTag: '❤️ DASH Protocol: High Potassium/Magnesium' },
+      { id: 'white_rice_moong_dal', name: 'Steamed White Rice + Mild Yellow Moong Dal + Cabbage Sabzi', cat: 'lunch', cal: 430, protein: 13, carbs: 76, fat: 6, fiber: 6, vA: 80, vC: 16, vD: 0, b12: 0, calcium: 65, iron: 2.9, potassium: 260, diet: ['veg', 'vegan'], conditions: ['kidney'], featureTag: '🫘 Kidney Shield: Low Potassium & Phosphorus' },
+      { id: 'multigrain_palak_dal', name: '2 Multigrain Rotis + Garlic Spinach Dal + Raw Papaya Salad', cat: 'lunch', cal: 465, protein: 18, carbs: 68, fat: 9, fiber: 14, vA: 380, vC: 30, vD: 0, b12: 0, calcium: 180, iron: 5.4, potassium: 590, diet: ['veg', 'vegan'], conditions: ['cholesterol', 'diabetes', 'pcod'], featureTag: '🧪 Active Allicin & Soluble Fiber for Lipid Clearance' },
+      { id: 'egg_curry_roti', name: '2 Boiled Egg Curry (Low Oil) + 2 Whole Wheat Rotis + Cucumber Raita', cat: 'lunch', cal: 460, protein: 22, carbs: 54, fat: 12, fiber: 8, vA: 140, vC: 12, vD: 35, b12: 1.6, calcium: 140, iron: 3.8, potassium: 490, diet: ['eggetarian', 'nonveg'], conditions: ['thyroid', 'pcod', 'none'], featureTag: '🥚 Essential Choline, Iodine & B-Complex' },
+      { id: 'traditional_thali', name: '2 Whole Wheat Rotis + Dal Tadka + Bhindi Curry + Fresh Curd', cat: 'lunch', cal: 480, protein: 16, carbs: 72, fat: 10, fiber: 12, vA: 170, vC: 20, vD: 10, b12: 0.5, calcium: 160, iron: 4.6, potassium: 510, diet: ['veg'], conditions: ['none'], featureTag: '✨ Balanced Macro-Nutrient Golden Standard' },
 
       // Evening Snacks
-      { id: 'roasted_chana', name: 'Roasted Spiced Chana (1 cup) + Green Tea', cat: 'snack2', cal: 140, protein: 7, carbs: 22, fat: 2, fiber: 6, vA: 10, vC: 3, vD: 0, b12: 0, calcium: 40, iron: 2.2, potassium: 280, tags: ['veg', 'vegan', 'diabetic_safe'] },
-      { id: 'sprouts_salad', name: 'Sprouted Moong Chaat with Lemon & Tomatoes', cat: 'snack2', cal: 130, protein: 8, carbs: 20, fat: 1, fiber: 7, vA: 90, vC: 28, vD: 0, b12: 0, calcium: 50, iron: 2.5, potassium: 340, tags: ['veg', 'vegan', 'diabetic_safe'] },
-      { id: 'makhana_roasted', name: 'Foxnut (Makhana) Roasted in Olive Oil', cat: 'snack2', cal: 135, protein: 4, carbs: 24, fat: 3, fiber: 4, vA: 0, vC: 0, vD: 0, b12: 0, calcium: 60, iron: 1.4, potassium: 190, tags: ['veg', 'diabetic_safe'] },
+      { id: 'roasted_makhana', name: 'Olive Oil Roasted Foxnut (Makhana) with Turmeric', cat: 'snack2', cal: 130, protein: 4, carbs: 22, fat: 3, fiber: 4, vA: 0, vC: 0, vD: 0, b12: 0, calcium: 65, iron: 1.5, potassium: 170, diet: ['veg', 'vegan', 'eggetarian', 'nonveg'], conditions: ['bp', 'kidney', 'heart'], featureTag: '❤️ Low Sodium, Low Glycemic & Cardioprotective' },
+      { id: 'sprouts_chaat', name: 'Sprouted Moong & Pomegranate Chaat with Lemon', cat: 'snack2', cal: 135, protein: 8, carbs: 22, fat: 1, fiber: 7, vA: 90, vC: 30, vD: 0, b12: 0, calcium: 55, iron: 2.6, potassium: 340, diet: ['veg', 'vegan', 'eggetarian', 'nonveg'], conditions: ['diabetes', 'pcod', 'cholesterol'], featureTag: '🩸 Living Digestive Enzymes & High Fiber' },
+      { id: 'green_tea_walnuts', name: 'Matcha Green Tea + 3 Halved Raw Walnuts', cat: 'snack2', cal: 110, protein: 3, carbs: 4, fat: 9, fiber: 2, vA: 15, vC: 4, vD: 0, b12: 0, calcium: 30, iron: 0.8, potassium: 140, diet: ['veg', 'vegan', 'eggetarian', 'nonveg'], conditions: ['cholesterol', 'heart'], featureTag: '🧪 EGCG Polyphenols for Endothelial Health' },
+      { id: 'pumpkin_seeds_tea', name: 'Roasted Pumpkin Seeds + Chamomile Herb Tea', cat: 'snack2', cal: 135, protein: 6, carbs: 6, fat: 10, fiber: 3, vA: 10, vC: 0, vD: 0, b12: 0, calcium: 40, iron: 2.1, potassium: 230, diet: ['veg', 'vegan', 'eggetarian', 'nonveg'], conditions: ['thyroid', 'pcod'], featureTag: '🦋 Rich in Organic Zinc, Magnesium & Adaptogens' },
+      { id: 'roasted_chana_mint', name: 'Roasted Spiced Bengal Gram (Chana) + Green Tea', cat: 'snack2', cal: 140, protein: 7, carbs: 22, fat: 2, fiber: 6, vA: 10, vC: 3, vD: 0, b12: 0, calcium: 40, iron: 2.2, potassium: 280, diet: ['veg', 'vegan', 'eggetarian', 'nonveg'], conditions: ['none', 'diabetes'], featureTag: '✨ Sustained Blood Sugar & Satiety Booster' },
 
       // Dinner items
-      { id: 'palak_paneer_roti', name: 'Palak Paneer (Low Oil) + 2 Missi Rotis', cat: 'dinner', cal: 420, protein: 18, carbs: 46, fat: 14, fiber: 10, vA: 550, vC: 32, vD: 15, b12: 0.9, calcium: 320, iron: 4.6, potassium: 590, tags: ['veg', 'diabetic_safe'] },
-      { id: 'methi_dal_khichdi', name: 'Brown Rice & Methi Moong Khichdi + Curd', cat: 'dinner', cal: 410, protein: 15, carbs: 64, fat: 8, fiber: 9, vA: 210, vC: 16, vD: 10, b12: 0.5, calcium: 190, iron: 3.9, potassium: 480, tags: ['veg', 'diabetic_safe'] },
-      { id: 'fish_curry_roti', name: 'Steamed Fish Fillet (120g) in Mild Curry + 2 Rotis', cat: 'dinner', cal: 430, protein: 30, carbs: 44, fat: 11, fiber: 6, vA: 140, vC: 12, vD: 60, b12: 2.4, calcium: 110, iron: 3.5, potassium: 640, tags: ['nonveg', 'diabetic_safe'] },
-      { id: 'mix_veg_soup_paneer', name: 'Thick Veg Lentil Soup + Grilled Paneer Cubes', cat: 'dinner', cal: 390, protein: 19, carbs: 38, fat: 12, fiber: 8, vA: 340, vC: 25, vD: 12, b12: 0.7, calcium: 280, iron: 3.2, potassium: 490, tags: ['veg', 'diabetic_safe'] }
+      { id: 'methi_moong_khichdi', name: 'Brown Rice & Methi Moong Khichdi + Mint Raita', cat: 'dinner', cal: 405, protein: 15, carbs: 62, fat: 8, fiber: 9, vA: 220, vC: 18, vD: 10, b12: 0.5, calcium: 195, iron: 4.1, potassium: 470, diet: ['veg'], conditions: ['diabetes', 'pcod'], featureTag: '🩸 Fenugreek 4-hydroxyisoleucine for Insulin Sensitivity' },
+      { id: 'steamed_fish_soup', name: 'Steamed Lemon-Pepper Fish (120g) + Clear Vegetable Broth', cat: 'dinner', cal: 410, protein: 32, carbs: 32, fat: 9, fiber: 5, vA: 160, vC: 16, vD: 60, b12: 2.6, calcium: 110, iron: 3.4, potassium: 590, diet: ['nonveg'], conditions: ['heart', 'bp', 'cholesterol'], featureTag: '🫀 Low Sodium Heart Recovery & Lean Protein' },
+      { id: 'grilled_chicken_veggies', name: 'Grilled Herb Chicken (120g) + Sautéed Zucchini & Mushrooms', cat: 'dinner', cal: 420, protein: 35, carbs: 28, fat: 10, fiber: 6, vA: 180, vC: 22, vD: 25, b12: 1.8, calcium: 90, iron: 3.9, potassium: 640, diet: ['nonveg'], conditions: ['pcod', 'thyroid', 'diabetes'], featureTag: '🍗 Low Carb & High Thermogenic Protein' },
+      { id: 'egg_bhurji_roti', name: 'Egg White Bhurji with Tomatoes & Onions + 2 Rotis', cat: 'dinner', cal: 395, protein: 20, carbs: 46, fat: 8, fiber: 6, vA: 110, vC: 14, vD: 30, b12: 1.4, calcium: 80, iron: 3.2, potassium: 420, diet: ['eggetarian', 'nonveg'], conditions: ['thyroid', 'none'], featureTag: '🥚 Light & Digestible Night Protein' },
+      { id: 'pumpkin_dal_soup', name: 'Mild Yellow Lentil & Pumpkin Soup + 1 Soft Phulka', cat: 'dinner', cal: 360, protein: 12, carbs: 58, fat: 5, fiber: 7, vA: 380, vC: 18, vD: 0, b12: 0, calcium: 80, iron: 2.8, potassium: 280, diet: ['veg', 'vegan'], conditions: ['kidney', 'bp'], featureTag: '🫘 Renal Gentle: Easily Digestible Low-Potassium' },
+      { id: 'palak_tofu_roti', name: 'Garlic Palak Tofu (Low Oil) + 2 Multigrain Rotis', cat: 'dinner', cal: 410, protein: 19, carbs: 48, fat: 11, fiber: 11, vA: 520, vC: 28, vD: 0, b12: 0, calcium: 290, iron: 5.2, potassium: 560, diet: ['veg', 'vegan'], conditions: ['cholesterol', 'heart', 'diabetes'], featureTag: '🧪 Zero Cholesterol & High Iron Folate' },
+      { id: 'lauki_chana_dal_roti', name: 'Lauki (Gourd) Chana Dal + 2 Soft Rotis + Salad', cat: 'dinner', cal: 395, protein: 14, carbs: 58, fat: 7, fiber: 10, vA: 140, vC: 20, vD: 0, b12: 0, calcium: 95, iron: 3.6, potassium: 440, diet: ['veg', 'vegan'], conditions: ['bp', 'none'], featureTag: '❤️ Light Heart-Healthy DASH Dinner' },
+      { id: 'traditional_veg_dinner', name: 'Palak Paneer (Low Fat) + 2 Phulkas + Steamed Dal', cat: 'dinner', cal: 420, protein: 18, carbs: 50, fat: 12, fiber: 9, vA: 420, vC: 24, vD: 15, b12: 0.8, calcium: 310, iron: 4.2, potassium: 510, diet: ['veg'], conditions: ['none'], featureTag: '✨ Classic Well-Balanced Wholesome Dinner' }
     ];
 
     // Current State
     let currentPlan = {
-      breakfast: FOOD_DATABASE.find(f => f.id === 'ww_dosa'),
-      snack1: FOOD_DATABASE.find(f => f.id === 'apple_almonds'),
-      lunch: FOOD_DATABASE.find(f => f.id === 'roti_dal_curry'),
-      snack2: FOOD_DATABASE.find(f => f.id === 'roasted_chana'),
-      dinner: FOOD_DATABASE.find(f => f.id === 'palak_paneer_roti')
+      breakfast: FOOD_DATABASE[0],
+      snack1: FOOD_DATABASE[8],
+      lunch: FOOD_DATABASE[14],
+      snack2: FOOD_DATABASE[22],
+      dinner: FOOD_DATABASE[27]
     };
 
     let eatenStatus = {
@@ -849,10 +877,27 @@
       renderWaterTracker();
       updateCalculatedMetrics();
 
-      // Listen to form input changes to auto-update metrics
+      // Listen to form input changes to auto-update metrics & live plan if open
       ['input-age', 'input-height', 'input-weight', 'input-activity', 'input-gender'].forEach(id => {
-        document.getElementById(id).addEventListener('input', updateCalculatedMetrics);
+        document.getElementById(id).addEventListener('input', () => {
+          updateCalculatedMetrics();
+          const planSec = document.getElementById('meal-plan-section');
+          if (planSec && planSec.style.display !== 'none') {
+            generateMealPlan(false);
+          }
+        });
       });
+
+      // Listen to dietary preference change
+      const dietSelect = document.getElementById('input-diet-type');
+      if (dietSelect) {
+        dietSelect.addEventListener('change', () => {
+          const planSec = document.getElementById('meal-plan-section');
+          if (planSec && planSec.style.display !== 'none') {
+            generateMealPlan(false);
+          }
+        });
+      }
     });
 
     // --- Health Condition Toggle Logic ---
@@ -882,6 +927,12 @@
         }
       }
       updateCalculatedMetrics();
+
+      // Dynamic reactive update: immediately refresh meal plan if section is active
+      const planSec = document.getElementById('meal-plan-section');
+      if (planSec && planSec.style.display !== 'none') {
+        generateMealPlan(false);
+      }
     }
 
     // --- Metrics Calculation ---
@@ -908,14 +959,17 @@
       bmr += (gender === 'male' ? 5 : -161);
       let calories = Math.round(bmr * activity);
 
-      // Diabetes or weight adjustments
+      // Diabetes or kidney adjustments
       const isDiabetic = document.getElementById('cond-diabetes').checked;
+      const isKidney = document.getElementById('cond-kidney').checked;
       if (isDiabetic) calories = Math.max(1500, Math.round(calories * 0.95));
+      if (isKidney) calories = Math.max(1600, Math.round(calories * 0.98));
 
       document.getElementById('metric-calories').innerText = calories.toLocaleString() + ' kcal';
 
       // Macronutrient targets
-      const protein = Math.round(weight * 0.9); // ~0.9g/kg
+      const proteinMultiplier = isKidney ? 0.75 : 0.9;
+      const protein = Math.round(weight * proteinMultiplier);
       const fat = Math.round((calories * 0.25) / 9);
       const carbs = Math.round((calories - (protein * 4) - (fat * 9)) / 4);
 
@@ -925,30 +979,154 @@
       document.getElementById('metric-fiber').innerText = isDiabetic ? '35 g' : '30 g';
     }
 
-    // --- Generate Meal Plan ---
-    function generateMealPlan() {
+    // --- Generate Dynamic Meal Plan Based on User Conditions & Preferences ---
+    function generateMealPlan(shouldScroll = true) {
       const dietPref = document.getElementById('input-diet-type').value;
 
-      // Filter food candidates
-      const filterForPref = (cat) => {
-        let items = FOOD_DATABASE.filter(f => f.cat === cat);
-        if (dietPref === 'veg') items = items.filter(f => f.tags.includes('veg'));
-        else if (dietPref === 'vegan') items = items.filter(f => f.tags.includes('vegan'));
-        else if (dietPref === 'eggetarian') items = items.filter(f => f.tags.includes('veg') || f.tags.includes('eggetarian'));
-        return items[0] || FOOD_DATABASE.find(f => f.cat === cat);
+      // Collect Active Conditions
+      const activeConditions = [];
+      const conditionNames = [];
+      const conditionPillsData = [];
+
+      if (document.getElementById('cond-none').checked) {
+        activeConditions.push('none');
+        conditionNames.push('No Health Problems');
+        conditionPillsData.push({ text: '✨ Balanced Nutrition Standard', bg: '#f0fdf4', color: '#166534', border: '#bbf7d0' });
+      }
+      if (document.getElementById('cond-diabetes').checked) {
+        activeConditions.push('diabetes');
+        conditionNames.push('Diabetes');
+        conditionPillsData.push({ text: '🩸 Low-GI & High Soluble Fiber', bg: '#fef2f2', color: '#991b1b', border: '#fecaca' });
+      }
+      if (document.getElementById('cond-bp').checked) {
+        activeConditions.push('bp');
+        conditionNames.push('High Blood Pressure');
+        conditionPillsData.push({ text: '❤️ Low Sodium DASH Protocol', bg: '#eff6ff', color: '#1e40af', border: '#bfdbfe' });
+      }
+      if (document.getElementById('cond-cholesterol').checked) {
+        activeConditions.push('cholesterol');
+        conditionNames.push('High Cholesterol');
+        conditionPillsData.push({ text: '🧪 Low Saturated Fat & Beta-Glucans', bg: '#faf5ff', color: '#6b21a8', border: '#e9d5ff' });
+      }
+      if (document.getElementById('cond-thyroid').checked) {
+        activeConditions.push('thyroid');
+        conditionNames.push('Thyroid Support');
+        conditionPillsData.push({ text: '🦋 High Selenium & Zinc Rich', bg: '#ecfdf5', color: '#065f46', border: '#a7f3d0' });
+      }
+      if (document.getElementById('cond-kidney').checked) {
+        activeConditions.push('kidney');
+        conditionNames.push('Kidney Disease');
+        conditionPillsData.push({ text: '🫘 Renal Gentle: Low Potassium & Phosphorus', bg: '#fffbeb', color: '#92400e', border: '#fde68a' });
+      }
+      if (document.getElementById('cond-heart').checked) {
+        activeConditions.push('heart');
+        conditionNames.push('Heart Disease');
+        conditionPillsData.push({ text: '🫀 Cardioprotective Omega-3 & Low Sodium', bg: '#fff1f2', color: '#9f1239', border: '#fecdd3' });
+      }
+      if (document.getElementById('cond-pcod').checked) {
+        activeConditions.push('pcod');
+        conditionNames.push('PCOD / PCOS');
+        conditionPillsData.push({ text: '🌸 Anti-Inflammatory & Low Glycemic Load', bg: '#fdf2f8', color: '#9d174d', border: '#fbcfe8' });
+      }
+
+      if (activeConditions.length === 0) {
+        activeConditions.push('none');
+        conditionNames.push('Standard Balanced');
+        conditionPillsData.push({ text: '✨ Standard Balanced Nutrition', bg: '#f0fdf4', color: '#166534', border: '#bbf7d0' });
+      }
+
+      // Filter food candidates matching diet preference and score by conditions
+      const selectBestFood = (category) => {
+        let candidates = FOOD_DATABASE.filter(f => f.cat === category);
+
+        // Dietary preference filtering
+        if (dietPref === 'veg') {
+          candidates = candidates.filter(f => f.diet.includes('veg'));
+        } else if (dietPref === 'vegan') {
+          candidates = candidates.filter(f => f.diet.includes('vegan'));
+        } else if (dietPref === 'eggetarian') {
+          candidates = candidates.filter(f => f.diet.includes('veg') || f.diet.includes('eggetarian'));
+        } else if (dietPref === 'nonveg') {
+          candidates = candidates.filter(f => f.diet.includes('nonveg') || f.diet.includes('veg') || f.diet.includes('eggetarian'));
+        }
+
+        // Score candidates based on active conditions
+        candidates.forEach(food => {
+          let score = 0;
+          activeConditions.forEach(cond => {
+            if (food.conditions.includes(cond)) score += 20;
+          });
+
+          // Clinical penalties / bonuses
+          if (activeConditions.includes('kidney')) {
+            if (food.potassium > 320) score -= 25;
+            else score += 15;
+          }
+          if (activeConditions.includes('bp')) {
+            if (food.id.includes('sodium') || food.id.includes('lauki') || food.id.includes('makhana')) score += 20;
+          }
+          if (activeConditions.includes('diabetes')) {
+            if (food.fiber >= 6) score += 15;
+            if (food.carbs > 65) score -= 15;
+          }
+          if (activeConditions.includes('cholesterol') || activeConditions.includes('heart')) {
+            if (food.id.includes('oats') || food.id.includes('salmon') || food.id.includes('palak_tofu') || food.id.includes('walnut')) score += 25;
+          }
+          if (activeConditions.includes('thyroid')) {
+            if (food.id.includes('egg') || food.id.includes('brazil') || food.id.includes('pumpkin')) score += 25;
+          }
+          if (activeConditions.includes('pcod')) {
+            if (food.id.includes('chilla') || food.id.includes('quinoa') || food.id.includes('sprouts') || food.id.includes('buttermilk')) score += 20;
+          }
+
+          food._tempScore = score;
+        });
+
+        candidates.sort((a, b) => b._tempScore - a._tempScore);
+        return candidates[0] || FOOD_DATABASE.find(f => f.cat === category);
       };
 
-      currentPlan.breakfast = filterForPref('breakfast');
-      currentPlan.snack1 = filterForPref('snack1');
-      currentPlan.lunch = filterForPref('lunch');
-      currentPlan.snack2 = filterForPref('snack2');
-      currentPlan.dinner = filterForPref('dinner');
+      currentPlan.breakfast = selectBestFood('breakfast');
+      currentPlan.snack1 = selectBestFood('snack1');
+      currentPlan.lunch = selectBestFood('lunch');
+      currentPlan.snack2 = selectBestFood('snack2');
+      currentPlan.dinner = selectBestFood('dinner');
+
+      // Update Plan Tailored Header Banner
+      const dietLabels = {
+        veg: 'Vegetarian',
+        nonveg: 'Non-Vegetarian',
+        vegan: 'Vegan',
+        eggetarian: 'Eggetarian'
+      };
+
+      const titleEl = document.getElementById('plan-tailored-title');
+      if (titleEl) {
+        titleEl.textContent = `Tailored Diet Plan for ${dietLabels[dietPref] || 'User'} • ${conditionNames.join(' + ')}`;
+      }
+
+      const calPill = document.getElementById('plan-calorie-summary-pill');
+      const totalDailyCal = (currentPlan.breakfast.cal + currentPlan.snack1.cal + currentPlan.lunch.cal + currentPlan.snack2.cal + currentPlan.dinner.cal);
+      if (calPill) {
+        calPill.textContent = `Daily Plan Total: ~${totalDailyCal} kcal`;
+      }
+
+      const pillsContainer = document.getElementById('plan-condition-pills');
+      if (pillsContainer) {
+        pillsContainer.innerHTML = conditionPillsData.map(p => `
+          <span style="font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 12px; background: ${p.bg}; color: ${p.color}; border: 1px solid ${p.border};">
+            ${p.text}
+          </span>
+        `).join('');
+      }
 
       renderMealPlan();
 
       const planSection = document.getElementById('meal-plan-section');
       planSection.style.display = 'block';
-      planSection.scrollIntoView({ behavior: 'smooth' });
+      if (shouldScroll) {
+        planSection.scrollIntoView({ behavior: 'smooth' });
+      }
     }
 
     // SVG Dish Graphics for Meal Items
@@ -957,13 +1135,13 @@
         return `<svg viewBox="0 0 36 36" width="32" height="32"><circle cx="18" cy="18" r="14" fill="#fef08a" stroke="#eab308" stroke-width="1.5"/><circle cx="18" cy="18" r="6" fill="#fde047"/><circle cx="28" cy="12" r="4" fill="#86efac"/></svg>`;
       } else if (id.includes('oats') || id.includes('porridge') || id.includes('khichdi') || id.includes('soup')) {
         return `<svg viewBox="0 0 36 36" width="32" height="32"><path d="M6 16c0 9 5 15 12 15s12-6 12-15H6Z" fill="#bae6fd" stroke="#0284c7" stroke-width="1.5"/><path d="M8 16c0-4 4-6 10-6s10 2 10 6H8Z" fill="#fef08a"/><circle cx="14" cy="13" r="2" fill="#ef4444"/><circle cx="22" cy="13" r="2" fill="#15803d"/></svg>`;
-      } else if (id.includes('egg') || id.includes('omelette')) {
+      } else if (id.includes('egg') || id.includes('omelette') || id.includes('bhurji')) {
         return `<svg viewBox="0 0 36 36" width="32" height="32"><ellipse cx="18" cy="18" rx="14" ry="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/><circle cx="18" cy="18" r="6" fill="#f59e0b"/></svg>`;
       } else if (id.includes('apple') || id.includes('fruit') || id.includes('guava') || id.includes('papaya')) {
         return `<svg viewBox="0 0 36 36" width="32" height="32"><path d="M18 30c-5 0-10-3-10-10a9 9 0 0 1 18 0c0 7-5 10-8 10Z" fill="#ef4444"/><path d="M18 10c0-3 3-5 5-5" stroke="#15803d" stroke-width="1.5" fill="none"/></svg>`;
-      } else if (id.includes('chicken') || id.includes('fish')) {
+      } else if (id.includes('chicken') || id.includes('fish') || id.includes('salmon')) {
         return `<svg viewBox="0 0 36 36" width="32" height="32"><circle cx="18" cy="18" r="14" fill="#ffedd5" stroke="#ea580c" stroke-width="1.5"/><path d="M12 20c4-6 12-6 16 0" stroke="#ea580c" stroke-width="2.5" stroke-linecap="round"/><circle cx="15" cy="14" r="2" fill="#16a34a"/><circle cx="21" cy="14" r="2" fill="#ef4444"/></svg>`;
-      } else if (id.includes('chana') || id.includes('sprouts') || id.includes('makhana')) {
+      } else if (id.includes('chana') || id.includes('sprouts') || id.includes('makhana') || id.includes('seeds')) {
         return `<svg viewBox="0 0 36 36" width="32" height="32"><circle cx="18" cy="18" r="14" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/><circle cx="14" cy="16" r="3" fill="#ca8a04"/><circle cx="22" cy="16" r="3" fill="#ca8a04"/><circle cx="18" cy="22" r="3" fill="#15803d"/></svg>`;
       } else {
         return `<svg viewBox="0 0 36 36" width="32" height="32"><circle cx="18" cy="18" r="14" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/><circle cx="18" cy="18" r="8" fill="#4ade80"/><circle cx="13" cy="15" r="3" fill="#facc15"/><circle cx="23" cy="15" r="3" fill="#f87171"/></svg>`;
@@ -994,8 +1172,13 @@
                 ${getFoodSvg(item.id)}
               </div>
               <div class="food-info-text">
-                <span class="food-name">${item.name}</span>
-                <span class="food-nutrients-sub">
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                  <span class="food-name" style="font-weight:700; color:#0f172a;">${item.name}</span>
+                  <span style="font-size:10px; font-weight:700; background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd; padding:1px 8px; border-radius:10px;">
+                    ${item.featureTag || '✨ Tailored Nutrition'}
+                  </span>
+                </div>
+                <span class="food-nutrients-sub" style="margin-top:3px; display:block;">
                   ⚡ ${item.cal} kcal &nbsp;|&nbsp; 🍗 ${item.protein}g Protein &nbsp;|&nbsp; 🌾 ${item.carbs}g Carbs &nbsp;|&nbsp; 🥑 ${item.fat}g Fat &nbsp;|&nbsp; 🥦 ${item.fiber}g Fiber
                 </span>
               </div>
@@ -1028,9 +1211,10 @@
       const dietPref = document.getElementById('input-diet-type').value;
       let candidates = FOOD_DATABASE.filter(f => f.cat === mealKey && f.id !== currentItem.id);
 
-      if (dietPref === 'veg') candidates = candidates.filter(f => f.tags.includes('veg'));
-      else if (dietPref === 'vegan') candidates = candidates.filter(f => f.tags.includes('vegan'));
-      else if (dietPref === 'eggetarian') candidates = candidates.filter(f => f.tags.includes('veg') || f.tags.includes('eggetarian'));
+      if (dietPref === 'veg') candidates = candidates.filter(f => f.diet.includes('veg'));
+      else if (dietPref === 'vegan') candidates = candidates.filter(f => f.diet.includes('vegan'));
+      else if (dietPref === 'eggetarian') candidates = candidates.filter(f => f.diet.includes('veg') || f.diet.includes('eggetarian'));
+      else if (dietPref === 'nonveg') candidates = candidates.filter(f => f.diet.includes('nonveg') || f.diet.includes('veg') || f.diet.includes('eggetarian'));
 
       const container = document.getElementById('swap-options-container');
       if (candidates.length === 0) {
@@ -1044,6 +1228,7 @@
               </div>
               <div>
                 <div style="font-weight: 700; font-size: 14px; color: #1e293b;">${opt.name}</div>
+                <div style="font-size: 11px; color: #0284c7; font-weight: 600; margin-top: 1px;">${opt.featureTag}</div>
                 <div style="font-size: 12px; color: #64748b; margin-top: 2px;">
                   ${opt.cal} kcal &nbsp;•&nbsp; ${opt.protein}g Protein &nbsp;•&nbsp; ${opt.carbs}g Carbs &nbsp;•&nbsp; ${opt.fiber}g Fiber
                 </div>

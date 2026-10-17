@@ -21,121 +21,168 @@
 
     .auth-page-container {
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px 16px;
+      width: 100%;
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
-      background: radial-gradient(circle at 10% 20%, rgba(13, 115, 119, 0.08) 0%, transparent 40%),
-                  radial-gradient(circle at 90% 80%, rgba(76, 175, 80, 0.08) 0%, transparent 40%),
-                  #f4f8f8;
+      display: flex;
+      background: #ffffff;
     }
 
     .auth-card-wrapper {
       width: 100%;
-      max-width: 980px;
+      min-height: 100vh;
       background: #ffffff;
-      border-radius: 24px;
-      box-shadow: 0 20px 50px rgba(13, 115, 119, 0.12), 0 1px 3px rgba(0,0,0,0.04);
-      border: 1px solid #e2e8f0;
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
       overflow: hidden;
       display: flex;
       flex-direction: row;
+      align-items: stretch;
     }
 
-    /* Left Brand Showcase */
+    /* Left Brand Showcase (Image fills completely half of the page) */
     .auth-brand-side {
       flex: 1;
-      background: linear-gradient(145deg, #074346 0%, #0d7377 55%, #14919b 100%);
-      color: #ffffff;
-      padding: 44px 36px;
+      width: 50%;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      position: relative;
+      box-sizing: border-box;
+      background: #074346;
     }
 
-    .auth-brand-side::after {
-      content: "";
+    .brand-hero-full-bg {
       position: absolute;
-      top: -30%;
-      right: -30%;
-      width: 320px;
-      height: 320px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-      pointer-events: none;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* Covers 100% of the half-page area with zero green borders */
+      object-position: center;
+      z-index: 1;
+      display: block;
+    }
+
+    .brand-content-layer {
+      position: relative;
+      z-index: 3;
+      height: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 34px 38px;
+      box-sizing: border-box;
     }
 
     .brand-top-row {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 14px;
+      align-self: flex-start;
+      gap: 12px;
+      background: rgba(7, 45, 48, 0.78);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 8px 18px 8px 10px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
     }
 
     .brand-logo-badge {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.18);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.22);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1.5px solid rgba(255, 255, 255, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      flex-shrink: 0;
     }
 
     .brand-logo-badge svg {
-      width: 28px;
-      height: 28px;
+      width: 24px;
+      height: 24px;
       fill: none;
       stroke: #ffffff;
       stroke-width: 2.2;
     }
 
     .brand-headline-group h1 {
-      font-size: 26px;
+      font-size: 22px;
       font-weight: 800;
       margin: 0;
+      line-height: 1.15;
       letter-spacing: -0.02em;
-    }
-
-    .brand-headline-group span {
-      font-size: 13px;
-      color: rgba(255,255,255,0.85);
-      font-weight: 500;
-    }
-
-    .brand-tagline-text {
-      margin: 28px 0 20px 0;
-      font-size: 21px;
-      font-weight: 700;
-      line-height: 1.35;
       color: #ffffff;
     }
 
-    .brand-features-list {
+    .brand-headline-group span {
+      font-size: 12px;
+      color: rgba(255,255,255,0.95);
+      font-weight: 500;
+    }
+
+    .brand-bottom-group {
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      margin-bottom: 24px;
+      gap: 10px;
+    }
+
+    .brand-tagline-text {
+      display: inline-block;
+      align-self: flex-start;
+      margin: 0;
+      font-size: 14.5px;
+      font-weight: 700;
+      line-height: 1.35;
+      color: #ffffff;
+      background: rgba(7, 45, 48, 0.78);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 6px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .brand-features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
     }
 
     .brand-feature-item {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-size: 14px;
-      color: rgba(255,255,255,0.92);
-      font-weight: 500;
+      gap: 10px;
+      font-size: 12.5px;
+      line-height: 1.3;
+      color: #ffffff;
+      font-weight: 600;
+      background: rgba(7, 45, 48, 0.72);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
     }
 
     .feature-icon-bullet {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      background: rgba(255,255,255,0.14);
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      background: rgba(255, 255, 255, 0.22);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -145,25 +192,41 @@
     .brand-trust-pill {
       display: inline-flex;
       align-items: center;
+      align-self: flex-start;
       gap: 8px;
       padding: 6px 14px;
       border-radius: 20px;
-      background: rgba(255,255,255,0.12);
-      font-size: 12px;
+      background: rgba(7, 45, 48, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      font-size: 11.5px;
       font-weight: 600;
-      color: rgba(255,255,255,0.9);
-      border: 1px solid rgba(255,255,255,0.2);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
 
-    /* Right Form Side */
+    /* Right Form Side (50% remaining half) */
     .auth-form-side {
-      flex: 1.15;
-      padding: 44px 40px;
+      flex: 1;
+      width: 50%;
+      min-height: 100vh;
+      padding: 48px 56px;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      align-items: center;
       background: #ffffff;
       box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    .auth-form-side > form,
+    .auth-form-side > .auth-switch-tabs,
+    .auth-form-side > .demo-oneclick-box,
+    .auth-form-side > div {
+      width: 100%;
+      max-width: 440px;
     }
 
     /* Tab Switch */
@@ -357,20 +420,23 @@
     }
 
     /* Mobile Responsive */
-    @media (max-width: 820px) {
+    @media (max-width: 960px) {
       .auth-card-wrapper {
         flex-direction: column;
-        max-width: 480px;
+        min-height: auto;
+      }
+      .auth-brand-side, .auth-form-side {
+        width: 100%;
+        min-height: auto;
       }
       .auth-brand-side {
-        padding: 28px 24px;
-      }
-      .auth-form-side {
         padding: 32px 24px;
       }
-      .brand-tagline-text {
-        font-size: 18px;
-        margin: 16px 0;
+      .brand-features-grid {
+        grid-template-columns: 1fr;
+      }
+      .auth-form-side {
+        padding: 40px 24px;
       }
     }
   </style>
@@ -380,9 +446,14 @@
   <div class="auth-page-container">
     <div class="auth-card-wrapper">
 
-      <!-- LEFT SIDE: Professional CareNest Brand Panel -->
+      <!-- LEFT SIDE: Image Fills Completely Half of the Page -->
       <aside class="auth-brand-side">
-        <div>
+        <!-- Background Hero Image Filling 100% of this half -->
+        <img src="login-hero.jpg?v=clean" alt="CareNest Healthcare Companion" class="brand-hero-full-bg" />
+
+        <!-- Overlaid Brand Elements Above & Below the visual -->
+        <div class="brand-content-layer">
+          <!-- Top: Brand Logo & Title -->
           <div class="brand-top-row">
             <div class="brand-logo-badge">
               <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
@@ -397,44 +468,47 @@
             </div>
           </div>
 
-          <div class="brand-tagline-text">
-            Your Comprehensive Personal Healthcare Companion
+          <!-- Bottom: Tagline, Features & Trust Pill -->
+          <div class="brand-bottom-group">
+            <div class="brand-tagline-text">
+              Your Comprehensive Personal Healthcare Companion
+            </div>
+
+            <div class="brand-features-grid">
+              <div class="brand-feature-item">
+                <div class="feature-icon-bullet">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                </div>
+                <span>Understand Hospital Discharge Documents</span>
+              </div>
+
+              <div class="brand-feature-item">
+                <div class="feature-icon-bullet">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="7" width="18" height="10" rx="5" ry="5"/><line x1="12" y1="7" x2="12" y2="17"/></svg>
+                </div>
+                <span>Find Affordable Generic Medicine Equivalents</span>
+              </div>
+
+              <div class="brand-feature-item">
+                <div class="feature-icon-bullet">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M12 6v6l4 2"/></svg>
+                </div>
+                <span>Medicine Reminders with Alarm & Tablet Photos</span>
+              </div>
+
+              <div class="brand-feature-item">
+                <div class="feature-icon-bullet">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                </div>
+                <span>Daily Diet Planner with Food Tracking & Swaps</span>
+              </div>
+            </div>
+
+            <div class="brand-trust-pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Private • Encrypted • Healthcare Standard
+            </div>
           </div>
-
-          <div class="brand-features-list">
-            <div class="brand-feature-item">
-              <div class="feature-icon-bullet">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-              </div>
-              <span>Understand Hospital Discharge Documents</span>
-            </div>
-
-            <div class="brand-feature-item">
-              <div class="feature-icon-bullet">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="7" width="18" height="10" rx="5" ry="5"/><line x1="12" y1="7" x2="12" y2="17"/></svg>
-              </div>
-              <span>Find Affordable Generic Medicine Equivalents</span>
-            </div>
-
-            <div class="brand-feature-item">
-              <div class="feature-icon-bullet">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M12 6v6l4 2"/></svg>
-              </div>
-              <span>Medicine Reminders with Alarm & Tablet Photos</span>
-            </div>
-
-            <div class="brand-feature-item">
-              <div class="feature-icon-bullet">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-              </div>
-              <span>Daily Diet Planner with Food Tracking & Swaps</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="brand-trust-pill">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Private • Encrypted • Healthcare Standard
         </div>
       </aside>
 

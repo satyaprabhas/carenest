@@ -352,23 +352,133 @@
     }
 
     .alarm-tablet-img-display {
-      width: 110px;
-      height: 110px;
+      width: 130px;
+      height: 130px;
       border-radius: 20px;
-      border: 3px solid #0d7377;
-      margin: 16px auto;
+      border: 3.5px solid #0d7377;
+      margin: 14px auto 8px auto;
       overflow: hidden;
       background: #f8fffe;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 8px 24px rgba(13, 115, 119, 0.25);
+      box-shadow: 0 8px 24px rgba(13, 115, 119, 0.28);
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .alarm-tablet-img-display:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 30px rgba(13, 115, 119, 0.4);
     }
 
     .alarm-tablet-img-display img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+
+    .alarm-zoom-hint {
+      position: absolute;
+      bottom: 4px;
+      background: rgba(15, 23, 42, 0.75);
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      backdrop-filter: blur(4px);
+    }
+
+    .alarm-photo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      margin-bottom: 6px;
+    }
+
+    .alarm-photo-badge.custom {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1.5px solid #10b981;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+    }
+
+    .alarm-photo-badge.preset {
+      background: #f0fdfa;
+      color: #0d7377;
+      border: 1.5px solid #14b8a6;
+    }
+
+    .custom-pill-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 10px;
+      font-weight: 800;
+      background: #ecfdf5;
+      color: #047857;
+      border: 1px solid #10b981;
+      padding: 1px 6px;
+      border-radius: 10px;
+    }
+
+    /* Fullscreen Photo Lightbox */
+    .lightbox-backdrop {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10001;
+      padding: 20px;
+    }
+
+    .lightbox-card {
+      background: #ffffff;
+      border-radius: 20px;
+      max-width: 500px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+      animation: alarmBounce 0.3s ease;
+      text-align: center;
+    }
+
+    .lightbox-card-header {
+      padding: 16px 20px;
+      background: #0d7377;
+      color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .lightbox-img-wrap {
+      width: 100%;
+      max-height: 380px;
+      background: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 16px;
+    }
+
+    .lightbox-img-wrap img {
+      max-width: 100%;
+      max-height: 340px;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     }
 
     /* ADD MEDICINE MODAL */
@@ -585,11 +695,15 @@
       </span>
 
       <!-- Tablet Photo in Alarm Display -->
-      <div class="alarm-tablet-img-display" id="alarm-tablet-photo-wrap">
-        <img id="alarm-tablet-img" src="" alt="Tablet Photo">
+      <div style="margin: 8px auto;">
+        <div class="alarm-tablet-img-display" id="alarm-tablet-photo-wrap" onclick="openPhotoLightbox(activeAlarmMed)" title="Click to enlarge photo">
+          <img id="alarm-tablet-img" src="" alt="Tablet Photo">
+          <div class="alarm-zoom-hint">🔍 Tap to Zoom</div>
+        </div>
+        <div id="alarm-photo-badge" class="alarm-photo-badge custom">📸 Your Uploaded Tablet Photo</div>
       </div>
 
-      <h2 id="alarm-med-name" style="font-size: 24px; font-weight: 800; color: #0f172a; margin: 8px 0 4px 0;">Metformin</h2>
+      <h2 id="alarm-med-name" style="font-size: 24px; font-weight: 800; color: #0f172a; margin: 4px 0 2px 0;">Metformin</h2>
       <div id="alarm-med-dosage" style="font-size: 16px; font-weight: 700; color: #0d7377;">500mg Tablet</div>
       
       <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; margin: 16px 0; font-size: 13px; color: #475569;">
@@ -660,35 +774,49 @@
         <!-- Tablet Photo Selection & Upload -->
         <div style="margin-bottom: 18px; padding: 16px; background: #f8fffe; border: 1.5px dashed #0d7377; border-radius: 14px;">
           <label style="display: block; font-size: 13px; font-weight: 700; color: #0d7377; margin-bottom: 4px;">
-            📸 Tablet / Capsule Photo
+            📸 Tablet / Strip Photo
           </label>
           <p style="font-size: 12px; color: #64748b; margin: 0 0 10px 0;">
-            Upload a photo of your tablet or select a realistic medical tablet preset:
+            Upload your own photo of the medicine strip/tablet, or pick a realistic preset:
           </p>
 
-          <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px;">
+          <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px; flex-wrap: wrap;">
             <input type="file" id="custom-tablet-file" accept="image/*" onchange="handleCustomTabletUpload(event)" style="display: none;">
-            <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('custom-tablet-file').click()">
-              📷 Upload Custom Photo
+            <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('custom-tablet-file').click()" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 700; border-color: #0d7377; color: #0d7377;">
+              📷 Upload Custom Tablet Photo
             </button>
-            <span style="font-size: 12px; color: #94a3b8;">or pick a preset:</span>
+            <span style="font-size: 12px; color: #94a3b8;">or pick preset below:</span>
+          </div>
+
+          <!-- Dynamic Real-Time Preview for Uploaded Photo -->
+          <div id="custom-photo-preview-box" style="display: none; align-items: center; gap: 12px; background: #ffffff; border: 1.5px solid #10b981; border-radius: 12px; padding: 10px 14px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(16,185,129,0.15);">
+            <img id="custom-photo-thumb" src="" style="width: 54px; height: 54px; object-fit: cover; border-radius: 10px; border: 2px solid #0d7377;">
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-size: 13px; font-weight: 700; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="custom-photo-filename">my_tablet.jpg</div>
+              <div style="font-size: 11px; color: #059669; font-weight: 700; display: flex; align-items: center; gap: 4px; margin-top: 2px;">
+                <span>✓</span> Uploaded tablet photo attached
+              </div>
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="clearCustomPhoto()" style="padding: 4px 10px; font-size: 12px; color: #ef4444; border-color: #fca5a5;">
+              ✕ Remove
+            </button>
           </div>
 
           <!-- Presets -->
           <div class="tablet-photo-picker-row" id="preset-tablet-row">
-            <div class="tablet-preset-option active" data-img="pill-white-round" onclick="selectTabletPreset(this, 'pill-white-round')">
+            <div class="tablet-preset-option active" data-img="pill-white-round" onclick="selectTabletPreset(this, 'pill-white-round')" title="White Round Tablet">
               <svg viewBox="0 0 40 40" class="tablet-svg-art"><circle cx="20" cy="20" r="16" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/><line x1="20" y1="6" x2="20" y2="34" stroke="#cbd5e1" stroke-width="2"/></svg>
             </div>
-            <div class="tablet-preset-option" data-img="capsule-blue-white" onclick="selectTabletPreset(this, 'capsule-blue-white')">
+            <div class="tablet-preset-option" data-img="capsule-blue-white" onclick="selectTabletPreset(this, 'capsule-blue-white')" title="Blue-White Capsule">
               <svg viewBox="0 0 40 40" class="tablet-svg-art"><rect x="10" y="6" width="20" height="28" rx="10" fill="#38bdf8"/><path d="M10 20h20v14a10 10 0 0 1-20 0Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/></svg>
             </div>
-            <div class="tablet-preset-option" data-img="pill-yellow-oval" onclick="selectTabletPreset(this, 'pill-yellow-oval')">
+            <div class="tablet-preset-option" data-img="pill-yellow-oval" onclick="selectTabletPreset(this, 'pill-yellow-oval')" title="Yellow Oval Tablet">
               <svg viewBox="0 0 40 40" class="tablet-svg-art"><ellipse cx="20" cy="20" rx="18" ry="11" fill="#fef08a" stroke="#ca8a04" stroke-width="2"/></svg>
             </div>
-            <div class="tablet-preset-option" data-img="pill-red-round" onclick="selectTabletPreset(this, 'pill-red-round')">
+            <div class="tablet-preset-option" data-img="pill-red-round" onclick="selectTabletPreset(this, 'pill-red-round')" title="Red Round Tablet">
               <svg viewBox="0 0 40 40" class="tablet-svg-art"><circle cx="20" cy="20" r="16" fill="#f87171" stroke="#dc2626" stroke-width="2"/><circle cx="20" cy="20" r="8" fill="#ef4444"/></svg>
             </div>
-            <div class="tablet-preset-option" data-img="capsule-green" onclick="selectTabletPreset(this, 'capsule-green')">
+            <div class="tablet-preset-option" data-img="capsule-green" onclick="selectTabletPreset(this, 'capsule-green')" title="Green Capsule">
               <svg viewBox="0 0 40 40" class="tablet-svg-art"><rect x="10" y="6" width="20" height="28" rx="10" fill="#4ade80"/><path d="M10 20h20v14a10 10 0 0 1-20 0Z" fill="#15803d"/></svg>
             </div>
           </div>
@@ -704,6 +832,32 @@
           <button type="submit" class="btn btn-primary" style="padding: 10px 24px;">Save & Set Alarm</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       FULLSCREEN TABLET PHOTO LIGHTBOX MODAL
+       ========================================================================= -->
+  <div class="lightbox-backdrop" id="photoLightboxModal" onclick="closePhotoLightbox(event)">
+    <div class="lightbox-card" onclick="event.stopPropagation()">
+      <div class="lightbox-card-header">
+        <div>
+          <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.9;">High-Resolution Tablet View</div>
+          <div style="font-size: 18px; font-weight: 800;" id="lightbox-med-name">Medicine Name</div>
+        </div>
+        <button onclick="closePhotoLightbox()" style="background: none; border: none; font-size: 24px; color: #ffffff; cursor: pointer;">&times;</button>
+      </div>
+      <div class="lightbox-img-wrap">
+        <img id="lightbox-med-img" src="" alt="High Resolution Tablet Photo">
+      </div>
+      <div style="padding: 16px 20px; background: #ffffff; text-align: left; border-top: 1px solid #f1f5f9;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <span id="lightbox-med-dose" style="font-weight: 800; color: #0d7377; font-size: 15px;">500mg</span>
+          <span id="lightbox-photo-source" class="custom-pill-tag">📸 Custom Uploaded Photo</span>
+        </div>
+        <div id="lightbox-med-meal" style="font-size: 13px; color: #475569;">🍽️ Instruction: After Food</div>
+        <div id="lightbox-med-notes" style="font-size: 12px; color: #64748b; margin-top: 4px;">• Prescribed medication</div>
+      </div>
     </div>
   </div>
 
@@ -845,16 +999,20 @@
           return;
         }
 
-        listEl.innerHTML = meds.map(m => `
+        listEl.innerHTML = meds.map(m => {
+          const isCustom = m.isCustomPhoto || (m.photo && (m.photo.startsWith('data:image/jpeg') || m.photo.startsWith('data:image/png') || m.photo.startsWith('data:image/webp')));
+          return `
           <div class="med-item-card ${m.status === 'taken' ? 'taken' : ''}" id="med-card-${m.id}">
             <div class="med-left-group">
-              <div class="tablet-photo-frame" title="Prescribed Tablet Photo">
+              <div class="tablet-photo-frame" title="Click to view large photo" style="cursor: pointer; position: relative;" onclick='openPhotoLightbox(MEDICINES.find(x => x.id === ${m.id}))'>
                 <img src="${m.photo}" alt="${m.name} Tablet">
+                ${isCustom ? `<span style="position: absolute; bottom: 2px; right: 2px; font-size: 10px; background: rgba(16, 185, 129, 0.9); color: white; border-radius: 6px; padding: 1px 3px; line-height: 1;" title="Your Uploaded Photo">📸</span>` : ''}
               </div>
               <div class="med-details">
                 <h3>
                   <span>${m.name}</span>
                   <span class="med-dosage-tag">${m.dose}</span>
+                  ${isCustom ? `<span class="custom-pill-tag">📸 Custom Photo</span>` : ''}
                 </h3>
                 <div class="med-meta-line">
                   <span>🕒 <strong>${m.time}</strong></span>
@@ -867,6 +1025,9 @@
             <div class="med-actions">
               <button class="btn btn-secondary btn-sm" onclick="triggerAlarmNow(MEDICINES.find(x => x.id === ${m.id}))" title="Trigger Alarm for this medicine">
                 🔔 Test Alarm
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="deleteMedicine(${m.id})" title="Delete reminder for ${m.name.replace(/"/g, '&quot;')}" style="color: #dc2626; border-color: #fecaca; background: #fff5f5;">
+                🗑️ Delete
               </button>
               ${m.status === 'taken' ? `
                 <span style="color: #16a34a; font-weight: 700; font-size: 13px; display: inline-flex; align-items: center; gap: 4px; margin-left: 8px;">
@@ -881,10 +1042,29 @@
               `}
             </div>
           </div>
-        `).join('');
+        `;
+        }).join('');
       });
 
       document.getElementById('active-med-counter').innerText = `${MEDICINES.length} Prescriptions`;
+    }
+
+    function deleteMedicine(id) {
+      const med = MEDICINES.find(m => m.id === id);
+      if (!med) return;
+      if (confirm(`Are you sure you want to delete the reminder for "${med.name}" (${med.dose})?`)) {
+        if (activeAlarmMed && activeAlarmMed.id === id) {
+          stopAlarm();
+        }
+        MEDICINES = MEDICINES.filter(m => m.id !== id);
+        try {
+          localStorage.setItem('carenest_reminders', JSON.stringify(MEDICINES));
+        } catch (e) {
+          console.warn('LocalStorage save error:', e);
+        }
+        renderSchedules();
+        fetch(`/api/reminders/${id}`, { method: 'DELETE' }).catch(() => {});
+      }
     }
 
     function toggleTake(id, status) {
@@ -904,7 +1084,24 @@
       document.getElementById('alarm-med-dosage').innerText = med.dose;
       document.getElementById('alarm-med-time').innerText = med.time;
       document.getElementById('alarm-med-instruction').innerText = med.meal;
-      document.getElementById('alarm-tablet-img').src = med.photo;
+      
+      const alarmImg = document.getElementById('alarm-tablet-img');
+      alarmImg.src = med.photo;
+      alarmImg.alt = `${med.name} Tablet Photo`;
+
+      // Distinguish custom uploaded photo vs preset
+      const badgeEl = document.getElementById('alarm-photo-badge');
+      const isCustom = med.isCustomPhoto || (med.photo && (med.photo.startsWith('data:image/jpeg') || med.photo.startsWith('data:image/png') || med.photo.startsWith('data:image/webp')));
+      
+      if (badgeEl) {
+        if (isCustom) {
+          badgeEl.className = 'alarm-photo-badge custom';
+          badgeEl.innerHTML = '📸 Your Uploaded Tablet Photo';
+        } else {
+          badgeEl.className = 'alarm-photo-badge preset';
+          badgeEl.innerHTML = '🏷️ Prescribed Tablet Match';
+        }
+      }
 
       document.getElementById('alarmModal').style.display = 'flex';
 
@@ -939,6 +1136,36 @@
       if (alarmInterval) clearInterval(alarmInterval);
       document.getElementById('alarmModal').style.display = 'none';
       if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    }
+
+    // Fullscreen Photo Lightbox View
+    function openPhotoLightbox(med) {
+      if (!med) med = activeAlarmMed || MEDICINES[0];
+      if (!med) return;
+
+      document.getElementById('lightbox-med-name').innerText = med.name;
+      document.getElementById('lightbox-med-dose').innerText = med.dose;
+      document.getElementById('lightbox-med-meal').innerText = '🍽️ Instruction: ' + med.meal;
+      document.getElementById('lightbox-med-notes').innerText = '• ' + (med.notes || 'Prescribed medication');
+      
+      const img = document.getElementById('lightbox-med-img');
+      img.src = med.photo;
+
+      const sourceEl = document.getElementById('lightbox-photo-source');
+      const isCustom = med.isCustomPhoto || (med.photo && (med.photo.startsWith('data:image/jpeg') || med.photo.startsWith('data:image/png') || med.photo.startsWith('data:image/webp')));
+      if (isCustom) {
+        sourceEl.className = 'custom-pill-tag';
+        sourceEl.innerText = '📸 Your Uploaded Photo';
+      } else {
+        sourceEl.className = 'meal-badge';
+        sourceEl.innerText = '🏷️ Prescribed Reference Pill';
+      }
+
+      document.getElementById('photoLightboxModal').style.display = 'flex';
+    }
+
+    function closePhotoLightbox() {
+      document.getElementById('photoLightboxModal').style.display = 'none';
     }
 
     // Countdown Alarm
@@ -988,20 +1215,71 @@
       document.querySelectorAll('.tablet-preset-option').forEach(el => el.classList.remove('active'));
       element.classList.add('active');
       selectedPresetKey = key;
+      clearCustomPhoto(false);
+    }
+
+    function clearCustomPhoto(restorePreset = true) {
       uploadedCustomPhotoData = null;
+      const prevBox = document.getElementById('custom-photo-preview-box');
+      if (prevBox) prevBox.style.display = 'none';
+      const fileInput = document.getElementById('custom-tablet-file');
+      if (fileInput) fileInput.value = '';
+      if (restorePreset) {
+        const firstPreset = document.querySelector('.tablet-preset-option');
+        if (firstPreset) {
+          document.querySelectorAll('.tablet-preset-option').forEach(el => el.classList.remove('active'));
+          firstPreset.classList.add('active');
+          selectedPresetKey = firstPreset.getAttribute('data-img') || 'pill-white-round';
+        }
+      }
     }
 
     function handleCustomTabletUpload(e) {
       const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          uploadedCustomPhotoData = evt.target.result;
-          alert("📸 Custom tablet photo uploaded successfully!");
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const rawData = evt.target.result;
+        // Compress using Canvas to optimize memory and localStorage
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 500;
+          let w = img.width;
+          let h = img.height;
+          if (w > h) {
+            if (w > maxDim) {
+              h = Math.round((h * maxDim) / w);
+              w = maxDim;
+            }
+          } else {
+            if (h > maxDim) {
+              w = Math.round((w * maxDim) / h);
+              h = maxDim;
+            }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const compressed = canvas.toDataURL('image/jpeg', 0.88);
+          uploadedCustomPhotoData = compressed;
+
+          // Display visual preview in modal immediately
+          const prevBox = document.getElementById('custom-photo-preview-box');
+          const prevThumb = document.getElementById('custom-photo-thumb');
+          const prevName = document.getElementById('custom-photo-filename');
+          if (prevThumb) prevThumb.src = compressed;
+          if (prevName) prevName.textContent = file.name;
+          if (prevBox) prevBox.style.display = 'flex';
+
+          // Uncheck preset items
           document.querySelectorAll('.tablet-preset-option').forEach(el => el.classList.remove('active'));
         };
-        reader.readAsDataURL(file);
-      }
+        img.src = rawData;
+      };
+      reader.readAsDataURL(file);
     }
 
     function handleSaveNewMedicine(e) {
@@ -1023,6 +1301,7 @@
         timeFormatted = `${String(h12).padStart(2, '0')}:${m} ${ampm}`;
       }
 
+      const isCustom = !!uploadedCustomPhotoData;
       const photoToUse = uploadedCustomPhotoData || TABLET_PHOTOS[selectedPresetKey] || TABLET_PHOTOS['pill-white-round'];
 
       const newMedicine = {
@@ -1034,6 +1313,7 @@
         meal,
         notes: notes || 'Prescribed medication',
         photo: photoToUse,
+        isCustomPhoto: isCustom,
         status: 'pending'
       };
 
@@ -1041,6 +1321,12 @@
       try { localStorage.setItem('carenest_reminders', JSON.stringify(MEDICINES)); } catch(e) {}
       renderSchedules();
       closeAddMedicineModal();
+      clearCustomPhoto(true);
+
+      // Reset form inputs
+      document.getElementById('new-med-name').value = '';
+      document.getElementById('new-med-dose').value = '';
+      document.getElementById('new-med-notes').value = '';
 
       // Post to backend API if available
       fetch('/api/reminders', {
@@ -1049,7 +1335,7 @@
         body: JSON.stringify({ name, time: timeFormatted, slot, food: meal, dose })
       }).catch(() => {});
 
-      alert(`✅ "${name}" has been added with tablet photo and active alarm!`);
+      alert(`✅ "${name}" has been added with your tablet photo! The alarm will display this exact photo when ringing.`);
     }
 
     window.addEventListener('DOMContentLoaded', () => {
