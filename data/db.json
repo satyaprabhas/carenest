@@ -80,67 +80,89 @@
   "reminders": [
     {
       "id": 1,
-      "name": "Pantoprazole 40mg",
-      "time": "07:30",
-      "slot": "Morning",
-      "food": "30 mins Before Breakfast",
-      "dose": "1 Capsule",
-      "photoUrl": null
+      "name": "Pantoprazole",
+      "dose": "40mg Tablet",
+      "time": "07:30 AM",
+      "slot": "morning",
+      "meal": "Before Food (30 mins before breakfast)",
+      "notes": "Gastric acid suppression & stomach protection",
+      "photo": null,
+      "isCustomPhoto": false,
+      "status": "taken"
     },
     {
       "id": 2,
-      "name": "Metformin 500mg",
-      "time": "08:30",
-      "slot": "Morning",
-      "food": "With Breakfast",
-      "dose": "1 Tablet",
-      "photoUrl": null
+      "name": "Metformin",
+      "dose": "500mg Tablet",
+      "time": "08:30 AM",
+      "slot": "morning",
+      "meal": "After Food (Breakfast)",
+      "notes": "Type 2 Diabetes glucose management",
+      "photo": null,
+      "isCustomPhoto": false,
+      "status": "pending"
     },
     {
       "id": 3,
-      "name": "Clopidogrel 75mg",
-      "time": "13:30",
-      "slot": "Afternoon",
-      "food": "After Lunch",
-      "dose": "1 Tablet",
-      "photoUrl": null
+      "name": "Clopidogrel",
+      "dose": "75mg Coated Pill",
+      "time": "08:30 AM",
+      "slot": "morning",
+      "meal": "After Food",
+      "notes": "Cardiovascular antiplatelet blood thinner",
+      "photo": null,
+      "isCustomPhoto": false,
+      "status": "pending"
     },
     {
       "id": 4,
-      "name": "Atorvastatin 20mg",
-      "time": "21:00",
-      "slot": "Night",
-      "food": "After Dinner",
-      "dose": "1 Tablet",
-      "photoUrl": null
+      "name": "Multivitamin",
+      "dose": "1 Capsule",
+      "time": "01:30 PM",
+      "slot": "afternoon",
+      "meal": "After Food (Lunch)",
+      "notes": "Zinc, B-Complex & essential daily micro-nutrients",
+      "photo": null,
+      "isCustomPhoto": false,
+      "status": "pending"
     },
     {
-      "id": 1792173604707,
-      "name": "paracetmol",
-      "time": "08:30 AM",
-      "slot": "morning",
-      "food": "After Food",
-      "dose": "800",
-      "photoUrl": null
+      "id": 5,
+      "name": "Metformin (Evening)",
+      "dose": "500mg Tablet",
+      "time": "08:30 PM",
+      "slot": "evening",
+      "meal": "After Food (Dinner)",
+      "notes": "Evening post-prandial glycemic control",
+      "photo": null,
+      "isCustomPhoto": false,
+      "status": "pending"
     },
     {
-      "id": 1792174655171,
-      "name": "paracetmol",
-      "time": "08:30 AM",
-      "slot": "morning",
-      "food": "After Food",
-      "dose": "800",
-      "photoUrl": null
-    },
-    {
-      "id": 1792227106608,
-      "name": "paracetmol",
-      "time": "08:30 AM",
-      "slot": "morning",
-      "food": "After Food",
-      "dose": "800",
-      "photoUrl": null
+      "id": 6,
+      "name": "Insulin Glargine",
+      "dose": "20 Units (Pen)",
+      "time": "10:00 PM",
+      "slot": "night",
+      "meal": "At Bedtime",
+      "notes": "Long-acting basal insulin subcutaneous injection",
+      "photo": null,
+      "isCustomPhoto": false,
+      "status": "pending"
     }
   ],
-  "dietLogs": []
+  "dietLogs": [
+    {
+      "id": 1792256086174,
+      "date": "2026-10-17",
+      "timestamp": "10:24:46 pm",
+      "waterGlasses": 6,
+      "eatenMeals": [
+        "breakfast",
+        "lunch"
+      ],
+      "hungerLevel": "satisfied",
+      "calories": 1400
+    }
+  ]
 }

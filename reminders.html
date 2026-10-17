@@ -629,8 +629,14 @@
     </div>
 
     <!-- Dayparts Schedule Section -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h2 style="font-size: 20px; font-weight: 800; color: #0f172a; margin: 0;">Today's Prescription Medication Schedule</h2>
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <h2 style="font-size: 20px; font-weight: 800; color: #0f172a; margin: 0;">Today's Prescription Medication Schedule</h2>
+        <span id="cloud-sync-badge" style="display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; padding: 4px 10px; border-radius: 20px; transition: all 0.3s;">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+          <span id="cloud-sync-text">Cloud Synced • Multi-Device Active</span>
+        </span>
+      </div>
       <button class="btn btn-primary btn-sm" onclick="openAddMedicineModal()">+ Add New Medicine</button>
     </div>
 
@@ -1091,7 +1097,17 @@
       const med = MEDICINES.find(m => m.id === id);
       if (med) {
         med.status = status;
+        try {
+          localStorage.setItem('carenest_reminders', JSON.stringify(MEDICINES));
+        } catch (e) {}
         renderSchedules();
+        
+        // Sync dose status to backend cloud immediately
+        fetch(`/api/reminders/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status })
+        }).catch(err => console.log('Offline status update:', err));
       }
     }
 
@@ -1348,17 +1364,79 @@
       document.getElementById('new-med-dose').value = '';
       document.getElementById('new-med-notes').value = '';
 
-      // Post to backend API if available
+      // Post full medicine object to backend API for multi-device sync
       fetch('/api/reminders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, time: timeFormatted, slot, food: meal, dose })
-      }).catch(() => {});
+        body: JSON.stringify(newMedicine)
+      })
+      .then(r => r.json())
+      .then(() => {
+        syncRemindersFromCloud(true);
+      })
+      .catch(err => {
+        console.log('Saved to local storage, backend pending sync:', err);
+      });
 
       alert(`✅ "${name}" has been added with your tablet photo! The alarm will display this exact photo when ringing.`);
     }
 
+    let isSyncingReminders = false;
+    async function syncRemindersFromCloud(isBackground = false) {
+      if (isSyncingReminders) return;
+      isSyncingReminders = true;
+      const syncBadge = document.getElementById('cloud-sync-badge');
+      const syncText = document.getElementById('cloud-sync-text');
+
+      try {
+        const res = await fetch('/api/reminders');
+        if (!res.ok) throw new Error('Network error');
+        const cloudMeds = await res.json();
+
+        if (Array.isArray(cloudMeds) && cloudMeds.length > 0) {
+          const normalized = cloudMeds.map(m => ({
+            id: m.id,
+            name: m.name,
+            dose: m.dose || '1 Tablet',
+            time: m.time,
+            slot: (m.slot || 'morning').toLowerCase(),
+            meal: m.meal || m.food || 'After Food',
+            notes: m.notes || 'Prescribed medication',
+            photo: getMedPhotoSrc(m),
+            isCustomPhoto: !!m.isCustomPhoto,
+            status: m.status || 'pending'
+          }));
+
+          const curHash = JSON.stringify(MEDICINES.map(m => `${m.id}_${m.status}_${m.name}`));
+          const newHash = JSON.stringify(normalized.map(m => `${m.id}_${m.status}_${m.name}`));
+
+          if (curHash !== newHash || MEDICINES.length === 0) {
+            MEDICINES = normalized;
+            try { localStorage.setItem('carenest_reminders', JSON.stringify(MEDICINES)); } catch (e) {}
+            renderSchedules();
+          }
+
+          if (syncBadge && syncText) {
+            syncBadge.style.background = '#ecfdf5';
+            syncBadge.style.borderColor = '#a7f3d0';
+            syncBadge.style.color = '#059669';
+            syncText.innerText = 'Cloud Synced • Multi-Device Active';
+          }
+        }
+      } catch (err) {
+        if (syncBadge && syncText) {
+          syncBadge.style.background = '#fffbeb';
+          syncBadge.style.borderColor = '#fde68a';
+          syncBadge.style.color = '#b45309';
+          syncText.innerText = 'Local Cache Active';
+        }
+      } finally {
+        isSyncingReminders = false;
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
+      // 1. Instant local render (0ms response time)
       try {
         const savedMeds = localStorage.getItem('carenest_reminders');
         if (savedMeds) {
@@ -1377,6 +1455,17 @@
         }
       } catch(e) {}
       renderSchedules();
+
+      // 2. Initial cloud sync
+      syncRemindersFromCloud(false);
+
+      // 3. Live multi-device background polling (every 8 seconds)
+      setInterval(() => syncRemindersFromCloud(true), 8000);
+
+      // 4. Instant re-sync when switching tabs or bringing phone out of sleep
+      window.addEventListener('focus', () => syncRemindersFromCloud(true));
+      window.addEventListener('online', () => syncRemindersFromCloud(false));
+
       const userStr = localStorage.getItem('carenest_user');
       if (userStr) {
         try {

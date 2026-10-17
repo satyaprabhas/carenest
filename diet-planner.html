@@ -1456,13 +1456,15 @@
       reportSection.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // --- Save Report to LocalStorage ---
+    // --- Save Report to LocalStorage & Cloud ---
     function saveReportToLocalStorage() {
       const record = {
         date: new Date().toISOString().split('T')[0],
         timestamp: new Date().toLocaleTimeString(),
         waterGlasses: filledWaterGlasses,
-        eatenMeals: Object.keys(eatenStatus).filter(k => eatenStatus[k])
+        eatenMeals: Object.keys(eatenStatus).filter(k => eatenStatus[k]),
+        hungerLevel: selectedHungerLevel,
+        calories: calculatedCalories
       };
       let history = [];
       try {
@@ -1470,6 +1472,14 @@
       } catch(e) {}
       history.push(record);
       localStorage.setItem('carenest_diet_history', JSON.stringify(history));
+
+      // Sync to cloud backend for multi-device access
+      fetch('/api/diet/log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(record)
+      }).catch(err => console.log('Offline diet sync:', err));
+
       alert("💾 Daily diet log successfully saved to your CareNest profile history!");
     }
 
@@ -1558,6 +1568,40 @@
       const planSec = document.getElementById('meal-plan-section');
       if (planSec) planSec.scrollIntoView({ behavior: 'smooth' });
     }
+
+    // Auto-sync diet logs from cloud on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      fetch('/api/diet/history')
+        .then(r => r.json())
+        .then(logs => {
+          if (Array.isArray(logs) && logs.length > 0) {
+            try { localStorage.setItem('carenest_diet_history', JSON.stringify(logs)); } catch(e) {}
+            const todayStr = new Date().toISOString().split('T')[0];
+            const todayLog = logs.find(l => l.date === todayStr);
+            if (todayLog) {
+              if (typeof todayLog.waterGlasses === 'number') {
+                filledWaterGlasses = todayLog.waterGlasses;
+                if (typeof renderWaterTrack === 'function') renderWaterTrack();
+              }
+              if (Array.isArray(todayLog.eatenMeals)) {
+                todayLog.eatenMeals.forEach(k => { eatenStatus[k] = true; });
+                if (typeof updateEatenVisuals === 'function') updateEatenVisuals();
+              }
+            }
+          }
+        })
+        .catch(err => console.log('Diet sync notice:', err));
+
+      const userStr = localStorage.getItem('carenest_user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          const initials = user.name ? user.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase() : 'SK';
+          const avatar = document.querySelector('.user-avatar-circle');
+          if (avatar) avatar.innerText = initials;
+        } catch(e) {}
+      }
+    });
   </script>
 </body>
 </html>
