@@ -3,378 +3,573 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CareNest - Daily Diet Planner</title>
+  <title>CareNest - Indian Daily Diet & Nutrition Planner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script src="api-config.js"></script>
   <style>
-    /* Portal-Specific Styling */
+    :root {
+      --primary: #0d7377;
+      --primary-dark: #085356;
+      --primary-light: #e6f4f4;
+      --primary-accent: #14919b;
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-300: #cbd5e1;
+      --slate-600: #475569;
+      --slate-800: #1e293b;
+      --slate-900: #0f172a;
+      --green-600: #16a34a;
+      --green-50: #f0fdf4;
+      --amber-600: #d97706;
+      --amber-50: #fffbeb;
+      --red-600: #dc2626;
+      --red-50: #fef2f2;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f8fafc;
+      margin: 0;
+      color: var(--slate-800);
+      -webkit-font-smoothing: antialiased;
+    }
+
     .diet-portal-container {
-      max-width: 1540px;
+      max-width: 1400px;
       width: calc(100% - 32px);
       margin: 0 auto;
-      padding: 28px 16px 80px;
+      padding: 24px 16px 80px;
     }
-    .portal-banner {
-      background: linear-gradient(135deg, #0d7377 0%, #14919b 100%);
+
+    /* Professional Top Hero Banner */
+    .diet-hero-card {
+      background: linear-gradient(135deg, #09474a 0%, #0d7377 60%, #14919b 100%);
       color: #ffffff;
-      border-radius: 16px;
-      padding: 32px;
-      margin-bottom: 32px;
-      box-shadow: 0 10px 25px rgba(13, 115, 119, 0.18);
+      border-radius: 20px;
+      padding: 32px 36px;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 25px -5px rgba(13, 115, 119, 0.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
     }
-    .portal-banner h1 {
+
+    .diet-hero-content h1 {
       margin: 0 0 8px 0;
       font-size: 28px;
       font-weight: 800;
+      letter-spacing: -0.02em;
     }
-    .portal-banner p {
+
+    .diet-hero-content p {
       margin: 0;
       opacity: 0.92;
       font-size: 15px;
-      max-width: 700px;
+      max-width: 680px;
+      line-height: 1.55;
     }
 
-    /* Step Cards */
-    .step-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 28px;
-      margin-bottom: 28px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    .diet-hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
     }
-    .step-header {
+
+    .diet-hero-tag {
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 6px 14px;
+      border-radius: 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Wizard Step Cards */
+    .step-section {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: 18px;
+      padding: 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    }
+
+    .step-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--slate-100);
+    }
+
+    .step-badge-title {
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 20px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid #f1f5f9;
     }
-    .step-number {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: #0d7377;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 14px;
+
+    .step-num-pill {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid #b2dfdb;
     }
-    .step-title {
-      font-size: 19px;
-      font-weight: 700;
-      color: #1e293b;
+
+    .step-title-text {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--slate-900);
       margin: 0;
+      letter-spacing: -0.01em;
     }
 
     /* Form Grid */
-    .form-grid-3 {
+    .profile-form-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 18px;
     }
-    .form-group label {
+
+    .form-group-item label {
       display: block;
-      font-weight: 600;
       font-size: 13px;
-      color: #475569;
+      font-weight: 700;
+      color: var(--slate-600);
       margin-bottom: 6px;
     }
-    .form-control {
+
+    .form-input-box {
       width: 100%;
       padding: 10px 14px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
+      border: 1.5px solid var(--slate-200);
+      border-radius: 10px;
       font-size: 14px;
+      font-family: inherit;
+      color: var(--slate-900);
+      background: #ffffff;
       box-sizing: border-box;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .form-control:focus {
-      outline: none;
-      border-color: #0d7377;
-      box-shadow: 0 0 0 3px rgba(13, 115, 119, 0.15);
+      transition: all 0.2s;
     }
 
-    /* Health Condition Chips */
-    .conditions-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 12px;
+    .form-input-box:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(13, 115, 119, 0.12);
     }
-    .condition-chip {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 16px;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 10px;
+
+    /* Condition Cards Grid */
+    .health-conditions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .condition-card {
+      border: 1.5px solid var(--slate-200);
+      border-radius: 14px;
+      padding: 16px 18px;
+      background: #ffffff;
       cursor: pointer;
-      background: #f8fafc;
-      transition: all 0.2s ease;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      transition: all 0.2s;
       user-select: none;
     }
-    .condition-chip:hover {
-      border-color: #0d7377;
-      background: #f0fdfa;
-    }
-    .condition-chip.active {
-      border-color: #0d7377;
-      background: #e6f4f4;
-      font-weight: 600;
-      color: #0d7377;
-    }
-    .condition-chip input {
-      accent-color: #0d7377;
-      width: 16px;
-      height: 16px;
+
+    .condition-card:hover {
+      border-color: var(--primary);
+      background: var(--slate-50);
+      transform: translateY(-1px);
     }
 
-    /* Profile Metrics Strip */
-    .metrics-bar {
+    .condition-card.active {
+      border-color: var(--primary);
+      background: #f0fdfa;
+      box-shadow: 0 0 0 2px rgba(13, 115, 119, 0.15);
+    }
+
+    .condition-card input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+      margin-top: 2px;
+      cursor: pointer;
+    }
+
+    .condition-card-info h4 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--slate-900);
+    }
+
+    .condition-card-info p {
+      margin: 4px 0 0 0;
+      font-size: 12px;
+      color: var(--slate-600);
+      line-height: 1.4;
+    }
+
+    /* Clinical Metrics Bar */
+    .clinical-metrics-row {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 16px;
-      background: #f8fffe;
-      border: 1px solid #cce8e9;
-      border-radius: 12px;
-      padding: 20px;
-      margin-top: 20px;
-    }
-    .metric-item {
-      text-align: center;
-    }
-    .metric-item .val {
-      font-size: 22px;
-      font-weight: 800;
-      color: #0d7377;
-    }
-    .metric-item .lbl {
-      font-size: 12px;
-      color: #64748b;
-      margin-top: 4px;
-      font-weight: 500;
+      gap: 14px;
+      background: #f8fafc;
+      border: 1px solid var(--slate-200);
+      border-radius: 14px;
+      padding: 18px;
+      margin-top: 24px;
     }
 
-    /* Meal Card */
-    .meal-block {
+    .metric-stat-box {
       background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 14px;
+      border: 1px solid var(--slate-200);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .metric-stat-box .stat-val {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.02em;
+    }
+
+    .metric-stat-box .stat-lbl {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate-600);
+      margin-top: 4px;
+    }
+
+    /* Meal Schedule Timeline */
+    .meal-schedule-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: 16px;
       margin-bottom: 20px;
       overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      transition: all 0.2s;
     }
-    .meal-header {
-      padding: 16px 20px;
+
+    .meal-schedule-card:hover {
+      box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+    }
+
+    .meal-card-top {
+      padding: 14px 20px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--slate-200);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #f8fafc;
-      border-bottom: 1px solid #e2e8f0;
+      flex-wrap: wrap;
+      gap: 10px;
     }
-    .meal-time-title {
+
+    .meal-time-indicator {
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 16px;
-      font-weight: 700;
-      color: #1e293b;
     }
-    .meal-cal-badge {
-      background: #e0f2f1;
-      color: #00796b;
-      padding: 4px 10px;
-      border-radius: 20px;
+
+    .meal-time-badge {
       font-size: 12px;
       font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      color: var(--slate-800);
     }
-    .food-item-row {
+
+    .meal-name-heading {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin: 0;
+    }
+
+    .meal-card-body {
+      padding: 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 20px;
-      border-bottom: 1px solid #f1f5f9;
-      transition: background 0.15s;
+      flex-wrap: wrap;
+      gap: 16px;
     }
-    .food-item-row:last-child {
-      border-bottom: none;
+
+    .meal-dish-meta {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      flex: 1;
+      min-width: 280px;
     }
-    .food-item-row:hover {
-      background: #fafafa;
+
+    .meal-dish-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid var(--slate-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
     }
-    .food-item-row.eaten {
-      background: #f0fdf4;
+
+    .meal-dish-details {
+      flex: 1;
     }
-    .food-item-row.eaten .food-name {
-      text-decoration: line-through;
-      color: #94a3b8;
+
+    .dish-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
     }
-    .food-meta {
+
+    .dish-name-main {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--slate-900);
+    }
+
+    .dish-benefit-pill {
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--green-50);
+      color: var(--green-600);
+      border: 1px solid #bbf7d0;
+      padding: 2px 10px;
+      border-radius: 20px;
+    }
+
+    .dish-portion-text {
+      font-size: 13px;
+      color: var(--slate-600);
+      margin: 4px 0 0 0;
+      line-height: 1.45;
+    }
+
+    .dish-nutrient-strip {
       display: flex;
       align-items: center;
       gap: 12px;
-      flex: 1;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate-600);
     }
-    .food-checkbox {
-      width: 20px;
-      height: 20px;
-      accent-color: #22c55e;
-      cursor: pointer;
+
+    .nutrient-badge-item {
+      background: var(--slate-100);
+      padding: 3px 8px;
+      border-radius: 6px;
+      color: var(--slate-800);
     }
-    .food-info-text {
+
+    .meal-actions-group {
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
     }
-    .food-name {
-      font-size: 15px;
-      font-weight: 600;
-      color: #1e293b;
-    }
-    .food-nutrients-sub {
-      font-size: 12px;
-      color: #64748b;
-      margin-top: 2px;
-    }
-    .swap-btn {
-      background: #f1f5f9;
-      border: 1px solid #cbd5e1;
-      color: #0f172a;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 600;
+
+    .btn-take-meal {
+      background: #ffffff;
+      border: 1.5px solid var(--slate-300);
+      color: var(--slate-800);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 10px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
       transition: all 0.2s;
     }
-    .swap-btn:hover {
-      background: #e2e8f0;
-      color: #0d7377;
+
+    .btn-take-meal:hover {
+      background: var(--green-50);
+      border-color: var(--green-600);
+      color: var(--green-600);
     }
 
-    /* Modal for Swapping Food */
+    .btn-take-meal.eaten {
+      background: #16a34a;
+      border-color: #16a34a;
+      color: #ffffff;
+    }
+
+    .btn-swap-dish {
+      background: var(--slate-100);
+      border: 1.5px solid var(--slate-200);
+      color: var(--slate-800);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-swap-dish:hover {
+      background: var(--slate-200);
+      color: var(--primary);
+    }
+
+    /* Water Tracker Card */
+    .water-tracker-block {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border: 1.5px solid #bae6fd;
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 24px;
+    }
+
+    .water-tracker-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .water-tracker-title h3 {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 800;
+      color: #0369a1;
+    }
+
+    .water-tracker-title p {
+      margin: 4px 0 0 0;
+      font-size: 13px;
+      color: #0284c7;
+    }
+
+    .glasses-flex-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .water-cup-btn {
+      width: 54px;
+      height: 64px;
+      background: #ffffff;
+      border: 2px dashed #38bdf8;
+      border-radius: 8px 8px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
+      color: #0284c7;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .water-cup-btn:hover {
+      transform: translateY(-2px);
+      border-color: #0284c7;
+    }
+
+    .water-cup-btn.filled {
+      background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+      border-style: solid;
+      border-color: #0284c7;
+      color: #ffffff;
+      box-shadow: 0 4px 10px rgba(2, 132, 199, 0.25);
+    }
+
+    /* Swap Modal */
     .swap-modal-backdrop {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(15, 23, 42, 0.6);
       backdrop-filter: blur(4px);
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 1000;
+      z-index: 9999;
       padding: 16px;
     }
-    .swap-modal {
+
+    .swap-modal-card {
       background: #ffffff;
-      border-radius: 16px;
+      border-radius: 20px;
       width: 100%;
-      max-width: 580px;
+      max-width: 620px;
       max-height: 85vh;
       overflow-y: auto;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-      padding: 24px;
+      padding: 28px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     }
+
     .swap-modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 14px;
-      border-bottom: 1px solid #e2e8f0;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--slate-200);
     }
-    .swap-option-card {
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 14px 16px;
+
+    .swap-dish-card {
+      border: 1.5px solid var(--slate-200);
+      border-radius: 14px;
+      padding: 16px;
       margin-bottom: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 14px;
       transition: all 0.2s;
     }
-    .swap-option-card:hover {
-      border-color: #0d7377;
+
+    .swap-dish-card:hover {
+      border-color: var(--primary);
       background: #f0fdfa;
-    }
-
-    /* Water Tracker */
-    .water-tracker-card {
-      background: #f0f9ff;
-      border: 1px solid #bae6fd;
-      border-radius: 14px;
-      padding: 20px;
-      margin-top: 24px;
-    }
-    .glasses-row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-    }
-    .glass-btn {
-      width: 52px;
-      height: 60px;
-      border: 2px dashed #0284c7;
-      border-radius: 6px 6px 14px 14px;
-      background: #ffffff;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 700;
-      color: #0284c7;
-      transition: all 0.2s;
-    }
-    .glass-btn.filled {
-      background: #0284c7;
-      color: #ffffff;
-      border-style: solid;
-      box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
-    }
-
-    /* End-of-Day Report */
-    .report-card {
-      border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-    .report-consumed {
-      background: #f0fdf4;
-      border: 1px solid #bbf7d0;
-    }
-    .report-missed {
-      background: #fef2f2;
-      border: 1px solid #fecaca;
-    }
-    .report-warning {
-      background: #fffbeb;
-      border: 1px solid #fde68a;
-    }
-    .deficiency-alert {
-      display: flex;
-      gap: 12px;
-      padding: 12px 14px;
-      background: #ffffff;
-      border-left: 4px solid #ef4444;
-      border-radius: 6px;
-      margin-top: 10px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      transform: translateY(-1px);
     }
   </style>
 </head>
 <body class="portal-layout">
 
-  <!-- Top Navigation Header (Self-Contained Portal Header) -->
+  <!-- Header -->
   <header class="portal-header">
     <div class="portal-header-left">
       <a href="dashboard.html" class="btn-back-dashboard">
@@ -383,7 +578,7 @@
       </a>
       <div class="portal-title-badge">
         <span style="font-size: 20px;">🥗</span>
-        <span style="font-weight: 700; font-size: 16px; color: #0d7377;">Daily Diet Planner</span>
+        <span style="font-weight: 700; font-size: 16px; color: #0d7377;">Daily Indian Diet Planner</span>
       </div>
     </div>
     <div class="portal-header-right">
@@ -401,349 +596,375 @@
     </div>
   </header>
 
-  <!-- Main Portal Content -->
+  <!-- Main Content -->
   <main class="diet-portal-container">
-    
+
     <!-- Hero Banner -->
-    <div class="portal-banner" style="display: flex; justify-content: space-between; align-items: center; gap: 24px;">
-      <div style="flex: 1;">
-        <span style="background: rgba(255,255,255,0.2); color: #ffffff; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; display: inline-block; margin-bottom: 8px;">
-          🥗 Clinical Nutrition & Macro Engine
-        </span>
-        <h1 style="margin: 0 0 8px 0; font-size: 26px; font-weight: 800;">Personalized Daily Diet Planner</h1>
-        <p style="margin: 0; opacity: 0.95; font-size: 14px; max-width: 650px; line-height: 1.5;">Configure your age, height, weight, and health conditions to generate a customized meal schedule with complete vitamin & nutrient tracking, 1-click food swaps, and end-of-day deficiency reports.</p>
-        <div style="display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap;">
-          <span style="font-size: 12px; background: rgba(0,0,0,0.15); padding: 4px 10px; border-radius: 6px;">✓ 100% Calorie & Macro Target</span>
-          <span style="font-size: 12px; background: rgba(0,0,0,0.15); padding: 4px 10px; border-radius: 6px;">✓ Equal-Nutrient Food Swapping</span>
-          <span style="font-size: 12px; background: rgba(0,0,0,0.15); padding: 4px 10px; border-radius: 6px;">✓ Daily Vitamin & Deficiency Alerts</span>
+    <div class="diet-hero-card">
+      <div class="diet-hero-content">
+        <h1>Personalized Daily Indian Diet & Nutrition Planner</h1>
+        <p>Healthy, practical, everyday home-cooked Indian meals tailored to your health conditions (Diabetes, Blood Pressure, Thyroid, Heart, etc.). Simple ingredients, easy terminology, and balanced nutrients.</p>
+        <div class="diet-hero-tags">
+          <span class="diet-hero-tag">🇮🇳 100% Everyday Indian Home Meals</span>
+          <span class="diet-hero-tag">🩺 Condition-Tailored Safety</span>
+          <span class="diet-hero-tag">⚖️ Balanced Calories &amp; Protein</span>
+          <span class="diet-hero-tag">🔄 1-Click Dish Swapping</span>
         </div>
       </div>
-      <div style="width: 140px; height: 110px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
-        <svg viewBox="0 0 140 110" style="width: 100%; height: 100%;" fill="none">
-          <circle cx="70" cy="55" r="44" fill="#ffffff" fill-opacity="0.18" stroke="#ffffff" stroke-width="2.5"/>
-          <circle cx="70" cy="55" r="32" fill="#ffffff" fill-opacity="0.25"/>
-          <!-- Salad Greens & Veggies -->
-          <path d="M52 50c0-10 8-18 18-18s18 8 18 18H52Z" fill="#86efac"/>
-          <circle cx="62" cy="62" r="7" fill="#fca5a5"/>
-          <circle cx="80" cy="60" r="6" fill="#fde047"/>
-          <path d="M68 44c4 0 7 3 7 7s-3 7-7 7-7-3-7-7 3-7 7-7Z" fill="#15803d"/>
-        </svg>
+      <div style="font-size: 64px; flex-shrink: 0; line-height: 1;">
+        🥘
       </div>
     </div>
 
-    <!-- STEP 1: Basic Information -->
-    <div class="step-card" id="step-basic-info">
-      <div class="step-header">
-        <div class="step-number">1</div>
-        <h2 class="step-title">Enter Basic Information</h2>
-      </div>
-      <div class="form-grid-3">
-        <div class="form-group">
-          <label for="input-age">Age (Years) *</label>
-          <input type="number" id="input-age" class="form-control" value="45" min="5" max="100" placeholder="e.g. 45">
+    <!-- STEP 1: Personal Profile -->
+    <div class="step-section" id="step-basic-info">
+      <div class="step-header-row">
+        <div class="step-badge-title">
+          <span class="step-num-pill">Step 1</span>
+          <h2 class="step-title-text">Your Physical Profile &amp; Dietary Habit</h2>
         </div>
-        <div class="form-group">
-          <label for="input-gender">Biological Gender *</label>
-          <select id="input-gender" class="form-control">
+        <span style="font-size: 13px; color: var(--slate-600); font-weight: 500;">Used to calculate your daily calorie and protein targets</span>
+      </div>
+
+      <div class="profile-form-grid">
+        <div class="form-group-item">
+          <label for="input-age">Age (Years) *</label>
+          <input type="number" id="input-age" class="form-input-box" value="45" min="10" max="100" placeholder="e.g. 45">
+        </div>
+        <div class="form-group-item">
+          <label for="input-gender">Gender *</label>
+          <select id="input-gender" class="form-input-box">
             <option value="male" selected>Male</option>
             <option value="female">Female</option>
-            <option value="other">Other</option>
           </select>
         </div>
-        <div class="form-group">
+        <div class="form-group-item">
           <label for="input-height">Height (cm) *</label>
-          <input type="number" id="input-height" class="form-control" value="172" min="80" max="250" placeholder="e.g. 172">
+          <input type="number" id="input-height" class="form-input-box" value="172" min="100" max="230" placeholder="e.g. 172">
         </div>
-        <div class="form-group">
+        <div class="form-group-item">
           <label for="input-weight">Weight (kg) *</label>
-          <input type="number" id="input-weight" class="form-control" value="74" min="20" max="300" placeholder="e.g. 74">
+          <input type="number" id="input-weight" class="form-input-box" value="72" min="30" max="200" placeholder="e.g. 72">
         </div>
-        <div class="form-group">
-          <label for="input-activity">Activity Level *</label>
-          <select id="input-activity" class="form-control">
-            <option value="1.2">Sedentary (Little or no exercise)</option>
-            <option value="1.375" selected>Lightly Active (Light exercise 1-3 days/week)</option>
-            <option value="1.55">Moderately Active (Moderate exercise 3-5 days/week)</option>
-            <option value="1.725">Very Active (Hard exercise 6-7 days/week)</option>
+        <div class="form-group-item">
+          <label for="input-activity">Physical Activity Level *</label>
+          <select id="input-activity" class="form-input-box">
+            <option value="1.2">Sedentary (Desk work / light walking)</option>
+            <option value="1.375" selected>Lightly Active (Daily 30 min walk)</option>
+            <option value="1.55">Moderately Active (Gym / Yoga 4-5 days)</option>
+            <option value="1.725">Very Active (Heavy manual work / intense sports)</option>
           </select>
         </div>
-        <div class="form-group">
+        <div class="form-group-item">
           <label for="input-diet-type">Dietary Preference *</label>
-          <select id="input-diet-type" class="form-control">
-            <option value="veg" selected>🥦 Vegetarian</option>
-            <option value="nonveg">🍗 Non-Vegetarian</option>
-            <option value="vegan">🌱 Vegan</option>
-            <option value="eggetarian">🥚 Eggetarian</option>
+          <select id="input-diet-type" class="form-input-box">
+            <option value="veg" selected>🥦 Vegetarian (Milk, Curd, Ghee, Dal)</option>
+            <option value="eggetarian">🥚 Eggetarian (Veg + Eggs)</option>
+            <option value="nonveg">🍗 Non-Vegetarian (Eggs, Chicken, Fish)</option>
+            <option value="vegan">🌱 Vegan (Plant based only, No Dairy)</option>
           </select>
         </div>
       </div>
     </div>
 
     <!-- STEP 2: Health Conditions -->
-    <div class="step-card" id="step-health-conditions">
-      <div class="step-header">
-        <div class="step-number">2</div>
-        <h2 class="step-title">Select Any Health Conditions</h2>
+    <div class="step-section" id="step-health-conditions">
+      <div class="step-header-row">
+        <div class="step-badge-title">
+          <span class="step-num-pill">Step 2</span>
+          <h2 class="step-title-text">Select Health Conditions (For Safe Food Customization)</h2>
+        </div>
+        <span style="font-size: 13px; color: var(--slate-600);">Meals are automatically filtered to protect your health</span>
       </div>
-      <p style="font-size: 13px; color: #64748b; margin-top: -8px; margin-bottom: 16px;">
-        Choose specific conditions for dietary adjustments, or select <strong>No Health Problems</strong> for standard balanced nutrition.
-      </p>
-      <div class="conditions-grid">
-        <label class="condition-chip" id="chip-none">
+
+      <div class="health-conditions-grid">
+        <label class="condition-card" id="chip-none">
           <input type="checkbox" id="cond-none" onchange="handleHealthConditionToggle('none')">
-          <span>✨ No Health Problems</span>
+          <div class="condition-card-info">
+            <h4>✨ General Healthy Diet</h4>
+            <p>No medical issues. Standard wholesome balanced nutrition.</p>
+          </div>
         </label>
-        <label class="condition-chip active" id="chip-diabetes">
+
+        <label class="condition-card active" id="chip-diabetes">
           <input type="checkbox" id="cond-diabetes" checked onchange="handleHealthConditionToggle('diabetes')">
-          <span>🩸 Diabetes (Low Sugar/GI)</span>
+          <div class="condition-card-info">
+            <h4>🩸 Diabetes (Sugar Friendly)</h4>
+            <p>Low sugar, low GI carbs, and high fiber to prevent glucose spikes.</p>
+          </div>
         </label>
-        <label class="condition-chip" id="chip-bp">
+
+        <label class="condition-card" id="chip-bp">
           <input type="checkbox" id="cond-bp" onchange="handleHealthConditionToggle('bp')">
-          <span>❤️ High Blood Pressure (Low Sodium)</span>
+          <div class="condition-card-info">
+            <h4>❤️ Blood Pressure (Low Salt)</h4>
+            <p>Low sodium, high potassium vegetables to keep BP in safe range.</p>
+          </div>
         </label>
-        <label class="condition-chip" id="chip-cholesterol">
+
+        <label class="condition-card" id="chip-cholesterol">
           <input type="checkbox" id="cond-cholesterol" onchange="handleHealthConditionToggle('cholesterol')">
-          <span>🧪 High Cholesterol</span>
+          <div class="condition-card-info">
+            <h4>🧪 High Cholesterol (Heart Care)</h4>
+            <p>Low saturated fats, no deep frying, high soluble fiber.</p>
+          </div>
         </label>
-        <label class="condition-chip" id="chip-thyroid">
+
+        <label class="condition-card" id="chip-thyroid">
           <input type="checkbox" id="cond-thyroid" onchange="handleHealthConditionToggle('thyroid')">
-          <span>🦋 Thyroid Support</span>
+          <div class="condition-card-info">
+            <h4>🦋 Thyroid Support</h4>
+            <p>Rich in natural selenium, zinc, and iodine for healthy metabolism.</p>
+          </div>
         </label>
-        <label class="condition-chip" id="chip-kidney">
+
+        <label class="condition-card" id="chip-kidney">
           <input type="checkbox" id="cond-kidney" onchange="handleHealthConditionToggle('kidney')">
-          <span>🫘 Kidney Disease (Low Potassium)</span>
+          <div class="condition-card-info">
+            <h4>🫘 Kidney Friendly (Renal Safe)</h4>
+            <p>Gentle on kidneys with controlled potassium, salt &amp; protein.</p>
+          </div>
         </label>
-        <label class="condition-chip" id="chip-heart">
+
+        <label class="condition-card" id="chip-heart">
           <input type="checkbox" id="cond-heart" onchange="handleHealthConditionToggle('heart')">
-          <span>🫀 Heart Disease (Low Saturated Fat)</span>
+          <div class="condition-card-info">
+            <h4>🫀 Heart Disease Care</h4>
+            <p>Light home meals, healthy fats (nuts/seeds), low oil.</p>
+          </div>
         </label>
-        <label class="condition-chip" id="chip-pcod">
+
+        <label class="condition-card" id="chip-pcod">
           <input type="checkbox" id="cond-pcod" onchange="handleHealthConditionToggle('pcod')">
-          <span>🌸 PCOD / PCOS Friendly</span>
+          <div class="condition-card-info">
+            <h4>🌸 PCOD / PCOS Friendly</h4>
+            <p>Hormone-balancing complex grains, clean protein &amp; anti-inflammatory herbs.</p>
+          </div>
         </label>
       </div>
 
-      <!-- Calculated Profile Output -->
-      <div class="metrics-bar" id="profile-metrics-bar">
-        <div class="metric-item">
-          <div class="val" id="metric-bmi">25.0</div>
-          <div class="lbl" id="metric-bmi-cat">Overweight</div>
+      <!-- Calculated Daily Targets -->
+      <div class="clinical-metrics-row" id="profile-metrics-bar">
+        <div class="metric-stat-box">
+          <div class="stat-val" id="metric-bmi">24.3</div>
+          <div class="stat-lbl" id="metric-bmi-cat">Normal Weight</div>
         </div>
-        <div class="metric-item">
-          <div class="val" id="metric-calories">1,850 kcal</div>
-          <div class="lbl">Daily Calorie Target</div>
+        <div class="metric-stat-box">
+          <div class="stat-val" id="metric-calories">1,850 kcal</div>
+          <div class="stat-lbl">Daily Target Calories</div>
         </div>
-        <div class="metric-item">
-          <div class="val" id="metric-protein">65 g</div>
-          <div class="lbl">Protein Target</div>
+        <div class="metric-stat-box">
+          <div class="stat-val" id="metric-protein">65 g</div>
+          <div class="stat-lbl">Target Protein</div>
         </div>
-        <div class="metric-item">
-          <div class="val" id="metric-carbs">210 g</div>
-          <div class="lbl">Carbs Target</div>
+        <div class="metric-stat-box">
+          <div class="stat-val" id="metric-carbs">210 g</div>
+          <div class="stat-lbl">Target Carbs</div>
         </div>
-        <div class="metric-item">
-          <div class="val" id="metric-fat">52 g</div>
-          <div class="lbl">Healthy Fats</div>
+        <div class="metric-stat-box">
+          <div class="stat-val" id="metric-fat">50 g</div>
+          <div class="stat-lbl">Healthy Fats</div>
         </div>
-        <div class="metric-item">
-          <div class="val" id="metric-fiber">30 g</div>
-          <div class="lbl">Fiber Target</div>
+        <div class="metric-stat-box">
+          <div class="stat-val" id="metric-fiber">30 g</div>
+          <div class="stat-lbl">Daily Fiber Goal</div>
         </div>
       </div>
 
       <div style="margin-top: 24px; text-align: center;">
-        <button class="btn btn-primary btn-lg" onclick="generateMealPlan()" style="padding: 12px 36px; font-size: 16px;">
-          ⚡ Generate My Daily Diet Plan
+        <button class="btn btn-primary btn-lg" onclick="generateMealPlan()" style="padding: 14px 36px; font-size: 16px; font-weight: 700; border-radius: 12px; box-shadow: 0 4px 14px rgba(13, 115, 119, 0.3);">
+          ⚡ Generate My Indian Diet Plan
         </button>
       </div>
     </div>
 
-    <!-- STEP 3 & 4: Daily Meal Plan Preview & Swap Section -->
-    <div class="step-card" id="meal-plan-section" style="display: none;">
-      <div class="step-header" style="justify-content: space-between;">
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <div class="step-number">3</div>
-          <h2 class="step-title">Daily Meal Schedule & Nutritional Preview</h2>
+    <!-- STEP 3: Daily Indian Meal Plan -->
+    <div class="step-section" id="meal-plan-section" style="display: none;">
+      <div class="step-header-row">
+        <div class="step-badge-title">
+          <span class="step-num-pill">Step 3</span>
+          <h2 class="step-title-text">Today's Indian Meal Schedule</h2>
         </div>
-        <button class="btn btn-primary btn-sm" id="btn-confirm-plan" onclick="confirmMealPlan()">
-          ✅ Confirm & Start Tracking Today
-        </button>
-      </div>
-      <p style="color: #64748b; font-size: 14px; margin-top: -6px; margin-bottom: 20px;">
-        Review your morning, afternoon, and evening meals below. If you don't like an item, click <strong>🔄 Swap Item</strong> to pick a delicious alternative with equivalent nutrients!
-      </p>
-
-      <!-- Dynamic Tailored Plan Header Banner -->
-      <div id="plan-tailored-banner" style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 14px 18px; margin-bottom: 22px; display: flex; flex-direction: column; gap: 8px;">
-        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-          <div style="font-weight: 700; font-size: 15px; color: #166534; display: flex; align-items: center; gap: 8px;">
-            <span style="font-size: 20px;">🎯</span>
-            <span id="plan-tailored-title">Tailored Diet Plan for Vegetarian • Diabetes</span>
-          </div>
-          <div id="plan-calorie-summary-pill" style="background: #166534; color: #ffffff; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 700;">
-            Daily Total: ~1,850 kcal
-          </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <button class="btn btn-primary btn-sm" id="btn-confirm-plan" onclick="confirmMealPlan()">
+            ✅ Confirm &amp; Track Today
+          </button>
         </div>
-        <div id="plan-condition-pills" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
       </div>
 
-      <!-- Morning: Breakfast -->
-      <div class="meal-block" id="block-breakfast">
-        <div class="meal-header">
-          <div class="meal-time-title">
-            <span>🌅</span>
-            <span>Morning Breakfast (8:00 AM)</span>
+      <!-- Plan Summary Badge Banner -->
+      <div style="background: #f0fdfa; border: 1.5px solid #99f6e4; border-radius: 14px; padding: 16px 20px; margin-bottom: 22px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <div style="font-weight: 800; font-size: 16px; color: #0d7377;" id="plan-tailored-title">
+            Tailored Indian Diet Plan for Vegetarian • Diabetes
           </div>
-          <span class="meal-cal-badge" id="cal-breakfast">~400 kcal</span>
+          <div id="plan-condition-pills" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;"></div>
         </div>
-        <div class="food-list" id="list-breakfast"></div>
+        <div id="plan-calorie-summary-pill" style="background: #0d7377; color: #ffffff; padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 700;">
+          Daily Total: ~1,850 kcal
+        </div>
       </div>
 
-      <!-- Mid-Morning Snack -->
-      <div class="meal-block" id="block-snack1">
-        <div class="meal-header">
-          <div class="meal-time-title">
-            <span>🍎</span>
-            <span>Mid-Morning Refreshment (11:00 AM)</span>
+      <!-- 1. Breakfast -->
+      <div class="meal-schedule-card" id="block-breakfast">
+        <div class="meal-card-top">
+          <div class="meal-time-indicator">
+            <span class="meal-time-badge">🌅 8:00 AM – 9:00 AM</span>
+            <h3 class="meal-name-heading">Morning Breakfast (Nashta)</h3>
           </div>
-          <span class="meal-cal-badge" id="cal-snack1">~150 kcal</span>
+          <span class="meal-cal-badge" id="cal-breakfast">~380 kcal</span>
         </div>
-        <div class="food-list" id="list-snack1"></div>
+        <div class="meal-card-body" id="list-breakfast"></div>
       </div>
 
-      <!-- Afternoon: Lunch -->
-      <div class="meal-block" id="block-lunch">
-        <div class="meal-header">
-          <div class="meal-time-title">
-            <span>☀️</span>
-            <span>Afternoon Lunch (1:30 PM)</span>
+      <!-- 2. Mid-Morning Snack -->
+      <div class="meal-schedule-card" id="block-snack1">
+        <div class="meal-card-top">
+          <div class="meal-time-indicator">
+            <span class="meal-time-badge">🍎 11:00 AM – 11:30 AM</span>
+            <h3 class="meal-name-heading">Mid-Morning Refreshment</h3>
+          </div>
+          <span class="meal-cal-badge" id="cal-snack1">~120 kcal</span>
+        </div>
+        <div class="meal-card-body" id="list-snack1"></div>
+      </div>
+
+      <!-- 3. Lunch -->
+      <div class="meal-schedule-card" id="block-lunch">
+        <div class="meal-card-top">
+          <div class="meal-time-indicator">
+            <span class="meal-time-badge">☀️ 1:30 PM – 2:30 PM</span>
+            <h3 class="meal-name-heading">Afternoon Lunch (Dopahar ka Khana)</h3>
           </div>
           <span class="meal-cal-badge" id="cal-lunch">~550 kcal</span>
         </div>
-        <div class="food-list" id="list-lunch"></div>
+        <div class="meal-card-body" id="list-lunch"></div>
       </div>
 
-      <!-- Evening Snack -->
-      <div class="meal-block" id="block-snack2">
-        <div class="meal-header">
-          <div class="meal-time-title">
-            <span>🫖</span>
-            <span>Evening Snack (5:00 PM)</span>
+      <!-- 4. Evening Snack -->
+      <div class="meal-schedule-card" id="block-snack2">
+        <div class="meal-card-top">
+          <div class="meal-time-indicator">
+            <span class="meal-time-badge">🫖 5:00 PM – 5:30 PM</span>
+            <h3 class="meal-name-heading">Evening Snack (Chai &amp; Light Bite)</h3>
           </div>
           <span class="meal-cal-badge" id="cal-snack2">~140 kcal</span>
         </div>
-        <div class="food-list" id="list-snack2"></div>
+        <div class="meal-card-body" id="list-snack2"></div>
       </div>
 
-      <!-- Evening / Night: Dinner -->
-      <div class="meal-block" id="block-dinner">
-        <div class="meal-header">
-          <div class="meal-time-title">
-            <span>🌙</span>
-            <span>Evening Dinner (8:00 PM)</span>
+      <!-- 5. Dinner -->
+      <div class="meal-schedule-card" id="block-dinner">
+        <div class="meal-card-top">
+          <div class="meal-time-indicator">
+            <span class="meal-time-badge">🌙 8:00 PM – 9:00 PM</span>
+            <h3 class="meal-name-heading">Night Dinner (Raat ka Khana)</h3>
           </div>
           <span class="meal-cal-badge" id="cal-dinner">~450 kcal</span>
         </div>
-        <div class="food-list" id="list-dinner"></div>
+        <div class="meal-card-body" id="list-dinner"></div>
       </div>
 
       <!-- Water Tracker -->
-      <div class="water-tracker-card">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div>
-            <h3 style="margin: 0; font-size: 16px; color: #0369a1; font-weight: 700;">💧 Daily Hydration Tracker</h3>
-            <p style="margin: 4px 0 0 0; font-size: 13px; color: #0284c7;">Target: 8 Glasses (2,000 ml). Click glasses as you drink!</p>
+      <div class="water-tracker-block">
+        <div class="water-tracker-header">
+          <div class="water-tracker-title">
+            <h3>💧 Daily Water Tracker (Pani Peene ka Record)</h3>
+            <p>Target: 8 Glasses (2,000 ml). Tap each glass as you drink throughout the day!</p>
           </div>
-          <div style="font-size: 18px; font-weight: 800; color: #0284c7;" id="water-count-text">0 / 8 Glasses</div>
+          <div style="font-size: 18px; font-weight: 800; color: #0284c7;" id="water-count-text">
+            0 / 8 Glasses (0 ml)
+          </div>
         </div>
-        <div class="glasses-row" id="water-glasses-row"></div>
+        <div class="glasses-flex-row" id="water-glasses-row"></div>
       </div>
 
-      <!-- End of Day Trigger -->
+      <!-- Action Button for End-of-Day Report -->
       <div style="margin-top: 28px; text-align: center;">
-        <button class="btn btn-success btn-lg" onclick="showEndOfDayReport()" style="padding: 12px 32px; font-size: 16px;">
-          📊 View End-of-Day Nutrient & Deficiency Report
+        <button class="btn btn-success btn-lg" onclick="showEndOfDayReport()" style="padding: 14px 36px; font-size: 15px; font-weight: 700; border-radius: 12px; box-shadow: 0 4px 14px rgba(22, 163, 74, 0.25);">
+          📊 View End-of-Day Nutrition &amp; Deficiency Report
         </button>
       </div>
     </div>
 
-    <!-- STEP 5: End-of-Day Nutritional & Deficiency Report -->
-    <div class="step-card" id="end-of-day-report-section" style="display: none;">
-      <div class="step-header">
-        <div class="step-number">4</div>
-        <h2 class="step-title">End-of-Day Comprehensive Nutritional Report</h2>
+    <!-- STEP 4: End-of-Day Nutritional & Deficiency Report -->
+    <div class="step-section" id="end-of-day-report-section" style="display: none;">
+      <div class="step-header-row">
+        <div class="step-badge-title">
+          <span class="step-num-pill">Step 4</span>
+          <h2 class="step-title-text">End-of-Day Nutrition Gain &amp; Health Insights</h2>
+        </div>
       </div>
 
       <!-- Consumed Nutrients -->
-      <div class="report-card report-consumed">
-        <h3 style="color: #15803d; margin: 0 0 12px 0; font-size: 17px; display: flex; align-items: center; gap: 8px;">
-          <span>✅</span> What You Consumed & Nutrients Gained
+      <div class="report-card report-consumed" style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 16px; padding: 22px; margin-bottom: 20px;">
+        <h3 style="color: #15803d; margin: 0 0 8px 0; font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+          <span>✅</span> What You Consumed Today &amp; Nutrients Gained
         </h3>
-        <p style="font-size: 13px; color: #166534; margin-top: -6px; margin-bottom: 16px;">
-          Based on the meals ticked throughout the day, here are the vitamins, minerals, and macronutrients successfully absorbed:
+        <p style="font-size: 13.5px; color: #166534; margin: 0 0 16px 0;">
+          Based on the meals ticked as eaten today, here is your real nutritional intake:
         </p>
         <div id="consumed-summary-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;"></div>
       </div>
 
       <!-- Missed Foods -->
-      <div class="report-card report-missed">
-        <h3 style="color: #b91c1c; margin: 0 0 12px 0; font-size: 17px; display: flex; align-items: center; gap: 8px;">
-          <span>❌</span> Foods Unticked & Lost Nutrients
+      <div class="report-card report-missed" style="background: #fef2f2; border: 1.5px solid #fecaca; border-radius: 16px; padding: 22px; margin-bottom: 20px;">
+        <h3 style="color: #b91c1c; margin: 0 0 8px 0; font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+          <span>❌</span> Skipped Meals &amp; Missed Nutrients
         </h3>
-        <p style="font-size: 13px; color: #991b1b; margin-top: -6px; margin-bottom: 16px;">
-          The following planned items were left unconsumed, resulting in skipped nutrients and vitamins:
+        <p style="font-size: 13.5px; color: #991b1b; margin: 0 0 16px 0;">
+          Foods unticked in your schedule that caused missing calories or vitamins:
         </p>
         <div id="missed-items-list"></div>
       </div>
 
-      <!-- Deficiency Warnings & Health Problems -->
-      <div class="report-card report-warning">
-        <h3 style="color: #b45309; margin: 0 0 12px 0; font-size: 17px; display: flex; align-items: center; gap: 8px;">
-          <span>⚠️</span> Clinical Deficiency Alerts & Potential Health Risks
+      <!-- Deficiency Warnings -->
+      <div class="report-card report-warning" style="background: #fffbeb; border: 1.5px solid #fde68a; border-radius: 16px; padding: 22px; margin-bottom: 20px;">
+        <h3 style="color: #b45309; margin: 0 0 8px 0; font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+          <span>⚠️</span> Important Vitamin &amp; Mineral Alerts (Deficiency Risks)
         </h3>
-        <p style="font-size: 13px; color: #92400e; margin-top: -6px; margin-bottom: 16px;">
-          When essential vitamins and minerals fall below required daily values, specific health issues can develop:
+        <p style="font-size: 13.5px; color: #92400e; margin: 0 0 16px 0;">
+          If essential nutrients fall below daily requirements, specific fatigue or health issues can develop:
         </p>
         <div id="deficiency-alerts-container"></div>
       </div>
 
-      <!-- Satiety & Hunger Assessment Card -->
-      <div class="report-card" style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 16px; padding: 24px; margin-top: 20px; box-shadow: 0 4px 14px rgba(0,0,0,0.04);">
-        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
-          <h3 style="color: #0f172a; margin: 0; font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
-            <span>🍽️</span> Daily Satiety Check: Did you feel hungry with today's diet?
+      <!-- Satiety & Hunger Check -->
+      <div style="background: #ffffff; border: 1.5px solid var(--slate-300); border-radius: 16px; padding: 24px; margin-top: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+          <h3 style="color: var(--slate-900); margin: 0; font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+            <span>🍽️</span> Daily Hunger Check: Did you feel hungry today?
           </h3>
-          <span style="font-size: 11px; font-weight: 700; background: #e0f2f1; color: #0d7377; padding: 4px 10px; border-radius: 20px;">
-            Adaptive Nutrition AI
+          <span style="font-size: 11px; font-weight: 700; background: var(--primary-light); color: var(--primary); padding: 4px 10px; border-radius: 20px;">
+            Smart Food Adjustment
           </span>
         </div>
-        <p style="font-size: 13.5px; color: #64748b; margin-top: 0; margin-bottom: 16px; line-height: 1.5;">
-          Healthy diets must never leave you starving or fatigued. Tell us how your hunger felt today, and we will automatically adjust tomorrow's portion sizes and add high-satiety foods:
+        <p style="font-size: 13.5px; color: var(--slate-600); margin: 0 0 18px 0; line-height: 1.5;">
+          A healthy diet should never leave you starving, weak, or craving snacks. Tell us how your energy felt:
         </p>
 
-        <!-- Satiety Selection Radio Cards -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 16px;">
-          <label style="border: 2px solid #22c55e; border-radius: 12px; padding: 14px; cursor: pointer; display: flex; align-items: flex-start; gap: 10px; transition: all 0.2s; background: #f0fdf4;" class="hunger-option-label" id="label-hunger-none">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-bottom: 16px;">
+          <label style="border: 2px solid #22c55e; border-radius: 12px; padding: 14px; cursor: pointer; display: flex; align-items: flex-start; gap: 10px; background: #f0fdf4;" class="hunger-option-label" id="label-hunger-none">
             <input type="radio" name="hunger_level" value="satisfied" checked onchange="handleHungerChange('satisfied')" style="margin-top: 3px; accent-color: #166534;">
             <div>
-              <div style="font-weight: 700; font-size: 14px; color: #166534;">😊 Full &amp; Energetic</div>
-              <div style="font-size: 12px; color: #475569; margin-top: 2px;">Felt completely satisfied, steady energy. Keep tomorrow's calories unchanged.</div>
+              <div style="font-weight: 700; font-size: 14px; color: #166534;">😊 Full &amp; Energetic (Pet Bhara Hua)</div>
+              <div style="font-size: 12px; color: #475569; margin-top: 2px;">Felt completely satisfied. Keep tomorrow's meal portions as is.</div>
             </div>
           </label>
 
-          <label style="border: 2px solid #e2e8f0; border-radius: 12px; padding: 14px; cursor: pointer; display: flex; align-items: flex-start; gap: 10px; transition: all 0.2s; background: #f8fafc;" class="hunger-option-label" id="label-hunger-mild">
+          <label style="border: 2px solid var(--slate-200); border-radius: 12px; padding: 14px; cursor: pointer; display: flex; align-items: flex-start; gap: 10px; background: #f8fafc;" class="hunger-option-label" id="label-hunger-mild">
             <input type="radio" name="hunger_level" value="mild" onchange="handleHungerChange('mild')" style="margin-top: 3px; accent-color: #b45309;">
             <div>
-              <div style="font-weight: 700; font-size: 14px; color: #b45309;">😐 A Little Hungry</div>
-              <div style="font-size: 12px; color: #475569; margin-top: 2px;">Mild cravings between meals or before bedtime. Add healthy fiber-rich snacks.</div>
+              <div style="font-weight: 700; font-size: 14px; color: #b45309;">😐 A Little Hungry (Thodi Bhookh Lagi)</div>
+              <div style="font-size: 12px; color: #475569; margin-top: 2px;">Cravings between lunch and dinner. Add healthy high-fiber roasted snacks.</div>
             </div>
           </label>
 
-          <label style="border: 2px solid #e2e8f0; border-radius: 12px; padding: 14px; cursor: pointer; display: flex; align-items: flex-start; gap: 10px; transition: all 0.2s; background: #f8fafc;" class="hunger-option-label" id="label-hunger-high">
+          <label style="border: 2px solid var(--slate-200); border-radius: 12px; padding: 14px; cursor: pointer; display: flex; align-items: flex-start; gap: 10px; background: #f8fafc;" class="hunger-option-label" id="label-hunger-high">
             <input type="radio" name="hunger_level" value="high" onchange="handleHungerChange('high')" style="margin-top: 3px; accent-color: #dc2626;">
             <div>
-              <div style="font-weight: 700; font-size: 14px; color: #dc2626;">😫 Very Hungry &amp; Low Energy</div>
-              <div style="font-size: 12px; color: #475569; margin-top: 2px;">Strong hunger pangs or low stamina. Calorie target is too low for your body.</div>
+              <div style="font-weight: 700; font-size: 14px; color: #dc2626;">😫 Very Hungry &amp; Weak (Bohot Zyada Bhookh)</div>
+              <div style="font-size: 12px; color: #475569; margin-top: 2px;">Energy felt low. Need more wholesome roti/dal portion size.</div>
             </div>
           </label>
         </div>
@@ -755,7 +976,7 @@
             <div style="flex: 1;">
               <h4 style="margin: 0 0 4px 0; font-size: 15px; font-weight: 800; color: #1e40af;" id="hunger-adjust-title">Recommended Tomorrow Calorie Boost</h4>
               <p style="font-size: 13px; color: #1e3a8a; margin: 0 0 14px 0; line-height: 1.5;" id="hunger-adjust-desc">
-                We will increase tomorrow's meal plan by <strong>+200 kcal</strong> using high-satiety, high-fiber, and lean protein items (such as roasted makhana, sprouted moong, or chia seed curd) to keep you comfortably full throughout the day.
+                We will increase tomorrow's meal plan by <strong>+175 kcal</strong> using healthy Indian snacks like roasted makhana, boiled chana, or curd to keep you comfortable without sugar spikes.
               </p>
               <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                 <button class="btn btn-primary" onclick="applyTomorrowHungerAdjustment()" style="background: #2563eb; border: none; padding: 9px 20px; font-weight: 700; font-size: 13.5px; border-radius: 8px;">
@@ -768,11 +989,10 @@
             </div>
           </div>
         </div>
-
       </div>
 
       <div style="text-align: center; margin-top: 24px;">
-        <button class="btn btn-primary" onclick="saveReportToLocalStorage()">
+        <button class="btn btn-primary" onclick="saveReportToLocalStorage()" style="padding: 12px 32px; font-weight: 700; font-size: 15px; border-radius: 10px;">
           💾 Save Daily Log to History
         </button>
         <button class="btn btn-secondary" onclick="document.getElementById('end-of-day-report-section').scrollIntoView({behavior: 'smooth'})" style="margin-left: 12px;">
@@ -785,13 +1005,13 @@
 
   <!-- SWAP MODAL -->
   <div class="swap-modal-backdrop" id="swapModal">
-    <div class="swap-modal">
+    <div class="swap-modal-card">
       <div class="swap-modal-header">
-        <h3 style="margin: 0; font-size: 18px; color: #0f172a;">🔄 Swap for Equal-Nutrient Alternative</h3>
-        <button onclick="closeSwapModal()" style="background: none; border: none; font-size: 22px; cursor: pointer; color: #94a3b8;">&times;</button>
+        <h3 style="margin: 0; font-size: 18px; font-weight: 800; color: #0f172a;">🔄 Choose an Indian Dish Alternative</h3>
+        <button onclick="closeSwapModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #94a3b8; font-weight: bold;">&times;</button>
       </div>
-      <p style="font-size: 13px; color: #64748b; margin-top: -8px; margin-bottom: 16px;">
-        Replacing: <strong id="swap-target-name" style="color: #0d7377;">Item Name</strong>. Pick an alternative with equivalent calories, protein, and micro-nutrients:
+      <p style="font-size: 13.5px; color: #64748b; margin-top: 0; margin-bottom: 16px;">
+        Replacing: <strong id="swap-target-name" style="color: #0d7377;">Item Name</strong>. Pick any equally healthy Indian home dish below:
       </p>
       <div id="swap-options-container"></div>
     </div>
@@ -799,55 +1019,580 @@
 
   <!-- JAVASCRIPT LOGIC -->
   <script>
-    // --- Food Database with Full Clinical & Nutrition Profiles ---
+    // --- Everyday Indian Food Database with Simple Terminology ---
     const FOOD_DATABASE = [
-      // Breakfast items
-      { id: 'ww_dosa', name: 'Whole Wheat Methi Dosa (2 pcs) with Sambar', cat: 'breakfast', cal: 240, protein: 7, carbs: 40, fat: 4, fiber: 6, vA: 60, vC: 8, vD: 0, b12: 0, calcium: 65, iron: 2.8, potassium: 280, diet: ['veg', 'vegan'], conditions: ['diabetes', 'cholesterol', 'pcod'], featureTag: '🩸 Low-GI Fenugreek & High Soluble Fiber' },
-      { id: 'oats_berries', name: 'Steel-Cut Oats with Berries & Crushed Flaxseeds', cat: 'breakfast', cal: 260, protein: 9, carbs: 36, fat: 6, fiber: 8, vA: 30, vC: 15, vD: 0, b12: 0, calcium: 130, iron: 3.4, potassium: 310, diet: ['veg', 'vegan'], conditions: ['cholesterol', 'heart', 'diabetes'], featureTag: '🫀 Cardioprotective Beta-Glucan & Omega-3' },
-      { id: 'low_sodium_poha', name: 'Low-Sodium Vegetable Poha with Coriander & Lemon', cat: 'breakfast', cal: 235, protein: 6, carbs: 42, fat: 5, fiber: 4, vA: 70, vC: 18, vD: 0, b12: 0, calcium: 40, iron: 3.6, potassium: 220, diet: ['veg', 'vegan'], conditions: ['bp', 'kidney', 'none'], featureTag: '❤️ DASH Low-Sodium & Gentle on Kidneys' },
-      { id: 'egg_omelette_toast', name: '2 Egg White Scramble with Spinach + Whole Grain Toast', cat: 'breakfast', cal: 225, protein: 17, carbs: 24, fat: 4, fiber: 4, vA: 120, vC: 8, vD: 25, b12: 1.4, calcium: 70, iron: 2.9, potassium: 290, diet: ['eggetarian', 'nonveg'], conditions: ['thyroid', 'pcod', 'diabetes', 'none'], featureTag: '🦋 High Selenium, Choline & Lean Protein' },
-      { id: 'renal_rice_idli', name: 'Steamed White Rice Idli (3 pcs) + Mild Moong Sambar', cat: 'breakfast', cal: 220, protein: 7, carbs: 46, fat: 2, fiber: 3, vA: 20, vC: 4, vD: 0, b12: 0, calcium: 35, iron: 1.8, potassium: 190, diet: ['veg', 'vegan'], conditions: ['kidney', 'none'], featureTag: '🫘 Renal-Safe: Low Potassium & Low Phosphorus' },
-      { id: 'besan_paneer_chilla', name: 'High-Protein Besan & Low-Fat Paneer Chilla', cat: 'breakfast', cal: 270, protein: 15, carbs: 28, fat: 8, fiber: 5, vA: 90, vC: 6, vD: 10, b12: 0.6, calcium: 210, iron: 2.5, potassium: 260, diet: ['veg'], conditions: ['pcod', 'thyroid', 'diabetes'], featureTag: '🌸 Hormone-Balancing Complex Plant Protein' },
-      { id: 'traditional_upma', name: 'Multigrain Rava Upma with Sautéed Veggies & Cashews', cat: 'breakfast', cal: 255, protein: 7, carbs: 44, fat: 6, fiber: 4, vA: 60, vC: 10, vD: 0, b12: 0, calcium: 45, iron: 2.2, potassium: 240, diet: ['veg', 'vegan'], conditions: ['none'], featureTag: '✨ Balanced Morning Sustained Energy' },
-      { id: 'chicken_toast', name: 'Poached Egg & Herb Grilled Chicken on Rye Toast', cat: 'breakfast', cal: 280, protein: 24, carbs: 22, fat: 7, fiber: 3, vA: 80, vC: 4, vD: 30, b12: 1.8, calcium: 55, iron: 3.1, potassium: 320, diet: ['nonveg'], conditions: ['thyroid', 'heart', 'diabetes', 'none'], featureTag: '🍗 High Thermogenic Protein & Vital Micronutrients' },
+      // 1. Breakfast (Nashta)
+      {
+        id: 'idli_sambar',
+        name: 'Soft Steamed Idlis (3 pcs) + Vegetable Sambar + Coconut Chutney',
+        cat: 'breakfast',
+        cal: 230,
+        protein: 8,
+        carbs: 42,
+        fat: 3,
+        fiber: 5,
+        vA: 50, vC: 8, vD: 0, b12: 0, calcium: 55, iron: 2.2, potassium: 240,
+        diet: ['veg', 'vegan'],
+        conditions: ['diabetes', 'bp', 'heart', 'kidney', 'none'],
+        featureTag: 'Easy to Digest • Light & Energizing',
+        portion: '3 medium steamed idlis with 1 bowl sambar & 1 spoon chutney',
+        icon: '🥟'
+      },
+      {
+        id: 'veg_poha',
+        name: 'Vegetable Poha with Roasted Peanuts, Curry Leaves & Lemon',
+        cat: 'breakfast',
+        cal: 240,
+        protein: 6,
+        carbs: 44,
+        fat: 5,
+        fiber: 4,
+        vA: 70, vC: 18, vD: 0, b12: 0, calcium: 40, iron: 3.6, potassium: 220,
+        diet: ['veg', 'vegan'],
+        conditions: ['bp', 'kidney', 'none'],
+        featureTag: 'Iron Rich • Wholesome & Quick',
+        portion: '1 medium plate with green peas, onions, peanuts & lemon juice',
+        icon: '🥣'
+      },
+      {
+        id: 'moong_chilla',
+        name: 'Yellow Moong Dal Chilla (2 pcs) with Mint Coriander Chutney',
+        cat: 'breakfast',
+        cal: 250,
+        protein: 14,
+        carbs: 32,
+        fat: 6,
+        fiber: 6,
+        vA: 90, vC: 12, vD: 0, b12: 0, calcium: 70, iron: 2.8, potassium: 310,
+        diet: ['veg', 'vegan'],
+        conditions: ['diabetes', 'pcod', 'cholesterol', 'thyroid'],
+        featureTag: 'High Protein • Blood Sugar Friendly',
+        portion: '2 golden crepes made from soaked moong dal with green chutney',
+        icon: '🥞'
+      },
+      {
+        id: 'oats_upma',
+        name: 'Oats & Vegetable Upma with Carrots, Beans & Green Peas',
+        cat: 'breakfast',
+        cal: 245,
+        protein: 8,
+        carbs: 38,
+        fat: 5,
+        fiber: 7,
+        vA: 110, vC: 14, vD: 0, b12: 0, calcium: 60, iron: 3.0, potassium: 280,
+        diet: ['veg', 'vegan'],
+        conditions: ['cholesterol', 'heart', 'diabetes'],
+        featureTag: 'Heart Healthy • Rich in Fiber',
+        portion: '1 medium bowl tempered with mustard seeds, curry leaves & ginger',
+        icon: '🍲'
+      },
+      {
+        id: 'methi_thepla',
+        name: 'Fresh Methi (Fenugreek) Thepla / Rotis (2 pcs) with Fresh Curd',
+        cat: 'breakfast',
+        cal: 255,
+        protein: 8,
+        carbs: 38,
+        fat: 6,
+        fiber: 6,
+        vA: 180, vC: 10, vD: 10, b12: 0.5, calcium: 160, iron: 3.2, potassium: 270,
+        diet: ['veg'],
+        conditions: ['diabetes', 'cholesterol', 'pcod', 'none'],
+        featureTag: 'Controls Sugar • Healthy Gut',
+        portion: '2 soft whole wheat methi rotis with 1 small katori fresh dahi',
+        icon: '🫓'
+      },
+      {
+        id: 'boiled_eggs_toast',
+        name: '2 Boiled Eggs with Black Pepper & 2 Whole Wheat Phulkas / Toast',
+        cat: 'breakfast',
+        cal: 250,
+        protein: 16,
+        carbs: 26,
+        fat: 6,
+        fiber: 4,
+        vA: 120, vC: 6, vD: 35, b12: 1.5, calcium: 75, iron: 2.9, potassium: 290,
+        diet: ['eggetarian', 'nonveg'],
+        conditions: ['thyroid', 'pcod', 'diabetes', 'none'],
+        featureTag: 'High Protein • Muscle Strength',
+        portion: '2 whole eggs sprinkled with roasted jeera & black pepper',
+        icon: '🥚'
+      },
+      {
+        id: 'ragi_dosa',
+        name: 'Ragi (Finger Millet) Dosa (2 pcs) with Tomato Onion Chutney',
+        cat: 'breakfast',
+        cal: 235,
+        protein: 6,
+        carbs: 42,
+        fat: 4,
+        fiber: 6,
+        vA: 40, vC: 10, vD: 0, b12: 0, calcium: 210, iron: 3.5, potassium: 250,
+        diet: ['veg', 'vegan'],
+        conditions: ['diabetes', 'cholesterol', 'none'],
+        featureTag: 'Rich in Calcium & Iron • Bone Health',
+        portion: '2 crispy dark millet dosas with homemade tomato chutney',
+        icon: '🫓'
+      },
+      {
+        id: 'egg_bhurji_toast',
+        name: 'Masala Egg Bhurji (2 Eggs) with 2 Soft Whole Wheat Rotis',
+        cat: 'breakfast',
+        cal: 270,
+        protein: 17,
+        carbs: 28,
+        fat: 8,
+        fiber: 4,
+        vA: 130, vC: 12, vD: 30, b12: 1.6, calcium: 80, iron: 3.1, potassium: 320,
+        diet: ['eggetarian', 'nonveg'],
+        conditions: ['thyroid', 'heart', 'none'],
+        featureTag: 'Satisfying Home Breakfast • High Energy',
+        portion: 'Scrambled eggs tossed with onions, tomatoes & coriander',
+        icon: '🍳'
+      },
 
-      // Mid-Morning snacks
-      { id: 'apple_chia', name: 'Crisp Green Apple Slices + Soaked Chia Seeds', cat: 'snack1', cal: 130, protein: 3, carbs: 22, fat: 4, fiber: 6, vA: 40, vC: 10, vD: 0, b12: 0, calcium: 55, iron: 0.9, potassium: 180, diet: ['veg', 'vegan', 'eggetarian', 'nonveg'], conditions: ['kidney', 'diabetes', 'pcod'], featureTag: '🫘 Renal & Diabetic Gentle: Low Potassium Fruit' },
-      { id: 'walnut_papaya', name: 'Fresh Papaya Bowl + 4 Halved Raw Walnuts', cat: 'snack1', cal: 145, protein: 3, carbs: 20, fat: 6, fiber: 4, vA: 380, vC: 50, vD: 0, b12: 0, calcium: 50, iron: 1.0, potassium: 280, diet: ['veg', 'vegan', 'eggetarian', 'nonveg'], conditions: ['cholesterol', 'heart', 'thyroid'], featureTag: '🫀 Plant Sterols & Antioxidant Lycopene' },
-      { id: 'cucumber_mint_cooler', name: 'Cooling Cucumber & Fresh Mint Cooler with Lemon', cat: 'snack1', cal: 45, protein: 2, carbs: 8, fat: 0, fiber: 3, vA: 80, vC: 22, vD: 0, b12: 0, calcium: 40, iron: 0.6, potassium: 260, diet: ['veg', 'vegan', 'eggetarian', 'nonveg'], conditions: ['bp', 'none'], featureTag: '❤️ Natural Vasodilator: Zero Sodium Hydration' },
-      { id: 'buttermilk_cumin', name: 'Spiced Mint Buttermilk with Roasted Cumin', cat: 'snack1', cal: 85, protein: 5, carbs: 7, fat: 2, fiber: 1, vA: 70, vC: 4, vD: 10, b12: 0.6, calcium: 190, iron: 0.7, potassium: 290, diet: ['veg', 'eggetarian'], conditions: ['pcod', 'diabetes', 'none'], featureTag: '🌸 Gut Probiotics & Glycemic Balance' },
-      { id: 'brazil_almonds', name: '2 Brazil Nuts + 6 Soaked Organic Almonds', cat: 'snack1', cal: 140, protein: 4, carbs: 5, fat: 12, fiber: 3, vA: 10, vC: 0, vD: 0, b12: 0, calcium: 65, iron: 1.2, potassium: 190, diet: ['veg', 'vegan', 'eggetarian', 'nonveg'], conditions: ['thyroid', 'cholesterol'], featureTag: '🦋 100% Daily Selenium & Vitamin E' },
-      { id: 'guava_chaat', name: 'Pink Guava Slices with Himalayan Rock Salt', cat: 'snack1', cal: 110, protein: 3, carbs: 20, fat: 1, fiber: 8, vA: 250, vC: 125, vD: 0, b12: 0, calcium: 30, iron: 1.2, potassium: 380, diet: ['veg', 'vegan', 'eggetarian', 'nonveg'], conditions: ['diabetes', 'bp', 'none'], featureTag: '🩸 Ultra High Dietary Fiber & High Vitamin C' },
+      // 2. Mid-Morning Refreshment (11:00 AM)
+      {
+        id: 'coconut_water',
+        name: 'Fresh Tender Coconut Water (Nariyal Pani / Elaneer)',
+        cat: 'snack1',
+        cal: 45,
+        protein: 2,
+        carbs: 9,
+        fat: 0,
+        fiber: 2,
+        vA: 10, vC: 8, vD: 0, b12: 0, calcium: 30, iron: 0.6, potassium: 450,
+        diet: ['veg', 'vegan', 'eggetarian', 'nonveg'],
+        conditions: ['bp', 'heart', 'none'],
+        featureTag: 'Natural Electrolytes • Hydrating & Cooling',
+        portion: '1 natural tender coconut (approx. 200 ml)',
+        icon: '🥥'
+      },
+      {
+        id: 'spiced_buttermilk',
+        name: 'Spiced Buttermilk (Chaas / Majjiga) with Roasted Jeera & Curry Leaves',
+        cat: 'snack1',
+        cal: 65,
+        protein: 4,
+        carbs: 6,
+        fat: 1.5,
+        fiber: 1,
+        vA: 60, vC: 4, vD: 10, b12: 0.5, calcium: 180, iron: 0.6, potassium: 280,
+        diet: ['veg', 'eggetarian'],
+        conditions: ['pcod', 'diabetes', 'bp', 'none'],
+        featureTag: 'Cools Stomach • Natural Probiotic',
+        portion: '1 large glass freshly churned with roasted cumin & mint',
+        icon: '🥛'
+      },
+      {
+        id: 'papaya_bowl',
+        name: 'Fresh Sweet Papaya Slices (1 Medium Bowl)',
+        cat: 'snack1',
+        cal: 80,
+        protein: 1,
+        carbs: 18,
+        fat: 0.4,
+        fiber: 4,
+        vA: 380, vC: 60, vD: 0, b12: 0, calcium: 35, iron: 0.8, potassium: 260,
+        diet: ['veg', 'vegan', 'eggetarian', 'nonveg'],
+        conditions: ['cholesterol', 'heart', 'thyroid', 'none'],
+        featureTag: 'Aids Digestion • High Vitamin A & C',
+        portion: '1 medium cup freshly cut ripe papaya',
+        icon: '🍈'
+      },
+      {
+        id: 'guava_chaat',
+        name: 'Fresh Pink Guava Slices with a pinch of Chaat Masala',
+        cat: 'snack1',
+        cal: 75,
+        protein: 2,
+        carbs: 15,
+        fat: 0.5,
+        fiber: 7,
+        vA: 200, vC: 130, vD: 0, b12: 0, calcium: 25, iron: 1.0, potassium: 320,
+        diet: ['veg', 'vegan', 'eggetarian', 'nonveg'],
+        conditions: ['diabetes', 'bp', 'none'],
+        featureTag: 'Very High Fiber • Sugar Safe',
+        portion: '1 whole ripe guava sliced with black salt',
+        icon: '🍐'
+      },
+      {
+        id: 'badam_akhrot',
+        name: 'Handful of Soaked Almonds (6 pcs Badam) & 2 Walnuts (Akhrot)',
+        cat: 'snack1',
+        cal: 115,
+        protein: 4,
+        carbs: 3,
+        fat: 10,
+        fiber: 3,
+        vA: 10, vC: 0, vD: 0, b12: 0, calcium: 55, iron: 1.1, potassium: 170,
+        diet: ['veg', 'vegan', 'eggetarian', 'nonveg'],
+        conditions: ['thyroid', 'cholesterol', 'diabetes', 'heart'],
+        featureTag: 'Brain & Memory • Good Fats for Heart',
+        portion: '6 peeled soaked almonds and 2 walnut halves',
+        icon: '🥜'
+      },
+      {
+        id: 'apple_slices',
+        name: 'Fresh Crisp Apple Slices with pinch of Cinnamon',
+        cat: 'snack1',
+        cal: 85,
+        protein: 1,
+        carbs: 20,
+        fat: 0.3,
+        fiber: 4,
+        vA: 20, vC: 8, vD: 0, b12: 0, calcium: 15, iron: 0.5, potassium: 180,
+        diet: ['veg', 'vegan', 'eggetarian', 'nonveg'],
+        conditions: ['kidney', 'diabetes', 'pcod'],
+        featureTag: 'Gentle on Kidneys • Crisp & Filling',
+        portion: '1 medium apple sliced with peel',
+        icon: '🍎'
+      },
 
-      // Lunch items
-      { id: 'quinoa_tofu_greens', name: 'Quinoa Bowl with Herb Tofu & Sautéed Greens', cat: 'lunch', cal: 460, protein: 21, carbs: 58, fat: 11, fiber: 12, vA: 290, vC: 35, vD: 0, b12: 0, calcium: 230, iron: 5.9, potassium: 540, diet: ['veg', 'vegan'], conditions: ['diabetes', 'pcod', 'cholesterol'], featureTag: '🩸 Low Glycemic Load & Plant Isoflavones' },
-      { id: 'salmon_brown_rice', name: 'Grilled Salmon Fillet (120g) + Steamed Greens & Brown Rice', cat: 'lunch', cal: 490, protein: 35, carbs: 46, fat: 12, fiber: 7, vA: 150, vC: 22, vD: 65, b12: 3.2, calcium: 110, iron: 3.8, potassium: 660, diet: ['nonveg'], conditions: ['heart', 'cholesterol', 'bp'], featureTag: '🫀 Omega-3 Fatty Acids (EPA/DHA) Cardioprotective' },
-      { id: 'chicken_roti_salad', name: 'Herb-Baked Chicken Breast (120g) + 2 Rotis + Tossed Salad', cat: 'lunch', cal: 475, protein: 36, carbs: 48, fat: 9, fiber: 8, vA: 130, vC: 20, vD: 20, b12: 1.9, calcium: 85, iron: 4.2, potassium: 680, diet: ['nonveg'], conditions: ['diabetes', 'thyroid', 'pcod', 'none'], featureTag: '🍗 High Biological Value Protein & Zero Saturated Fat' },
-      { id: 'jowar_lauki_dal', name: '2 Jowar Rotis + Low-Sodium Lauki Dal + Beetroot Salad', cat: 'lunch', cal: 440, protein: 14, carbs: 70, fat: 7, fiber: 13, vA: 160, vC: 25, vD: 0, b12: 0, calcium: 90, iron: 4.5, potassium: 580, diet: ['veg', 'vegan'], conditions: ['bp', 'heart'], featureTag: '❤️ DASH Protocol: High Potassium/Magnesium' },
-      { id: 'white_rice_moong_dal', name: 'Steamed White Rice + Mild Yellow Moong Dal + Cabbage Sabzi', cat: 'lunch', cal: 430, protein: 13, carbs: 76, fat: 6, fiber: 6, vA: 80, vC: 16, vD: 0, b12: 0, calcium: 65, iron: 2.9, potassium: 260, diet: ['veg', 'vegan'], conditions: ['kidney'], featureTag: '🫘 Kidney Shield: Low Potassium & Phosphorus' },
-      { id: 'multigrain_palak_dal', name: '2 Multigrain Rotis + Garlic Spinach Dal + Raw Papaya Salad', cat: 'lunch', cal: 465, protein: 18, carbs: 68, fat: 9, fiber: 14, vA: 380, vC: 30, vD: 0, b12: 0, calcium: 180, iron: 5.4, potassium: 590, diet: ['veg', 'vegan'], conditions: ['cholesterol', 'diabetes', 'pcod'], featureTag: '🧪 Active Allicin & Soluble Fiber for Lipid Clearance' },
-      { id: 'egg_curry_roti', name: '2 Boiled Egg Curry (Low Oil) + 2 Whole Wheat Rotis + Cucumber Raita', cat: 'lunch', cal: 460, protein: 22, carbs: 54, fat: 12, fiber: 8, vA: 140, vC: 12, vD: 35, b12: 1.6, calcium: 140, iron: 3.8, potassium: 490, diet: ['eggetarian', 'nonveg'], conditions: ['thyroid', 'pcod', 'none'], featureTag: '🥚 Essential Choline, Iodine & B-Complex' },
-      { id: 'traditional_thali', name: '2 Whole Wheat Rotis + Dal Tadka + Bhindi Curry + Fresh Curd', cat: 'lunch', cal: 480, protein: 16, carbs: 72, fat: 10, fiber: 12, vA: 170, vC: 20, vD: 10, b12: 0.5, calcium: 160, iron: 4.6, potassium: 510, diet: ['veg'], conditions: ['none'], featureTag: '✨ Balanced Macro-Nutrient Golden Standard' },
+      // 3. Lunch (Dopahar ka Khana)
+      {
+        id: 'phulka_dal_bhindi',
+        name: '2 Soft Whole Wheat Phulkas + Yellow Moong Dal + Bhindi Sabzi + Fresh Curd',
+        cat: 'lunch',
+        cal: 440,
+        protein: 15,
+        carbs: 68,
+        fat: 8,
+        fiber: 11,
+        vA: 150, vC: 18, vD: 10, b12: 0.5, calcium: 170, iron: 4.2, potassium: 490,
+        diet: ['veg'],
+        conditions: ['diabetes', 'bp', 'heart', 'none'],
+        featureTag: 'Classic Indian Thali • Wholesome & Balanced',
+        portion: '2 phulkas (no oil) + 1 katori moong dal + 1 katori bhindi + 1 small katori dahi',
+        icon: '🍛'
+      },
+      {
+        id: 'rice_palak_dal',
+        name: 'Steamed Rice + Palak Dal (Spinach Lentils) + Carrot Beans Sabzi + Curd',
+        cat: 'lunch',
+        cal: 460,
+        protein: 16,
+        carbs: 74,
+        fat: 7,
+        fiber: 10,
+        vA: 380, vC: 25, vD: 10, b12: 0.5, calcium: 190, iron: 5.1, potassium: 520,
+        diet: ['veg'],
+        conditions: ['cholesterol', 'diabetes', 'pcod'],
+        featureTag: 'High Iron & Calcium • Fiber Rich',
+        portion: '1 medium bowl rice + generous palak dal + steamed carrot beans + dahi',
+        icon: '🍲'
+      },
+      {
+        id: 'paneer_bhurji_roti',
+        name: '2 Phulkas + Low-Fat Paneer Bhurji + Toor Dal + Sliced Cucumber Salad',
+        cat: 'lunch',
+        cal: 460,
+        protein: 20,
+        carbs: 56,
+        fat: 11,
+        fiber: 9,
+        vA: 160, vC: 15, vD: 15, b12: 0.8, calcium: 240, iron: 3.9, potassium: 510,
+        diet: ['veg'],
+        conditions: ['pcod', 'thyroid', 'diabetes', 'none'],
+        featureTag: 'High Vegetarian Protein • Strong Bones',
+        portion: '2 rotis with 75g crumbled paneer tossed with tomatoes & fresh dal',
+        icon: '🧀'
+      },
+      {
+        id: 'chicken_curry_roti',
+        name: '2 Soft Phulkas + Home-Style Chicken Curry (Low Oil) + Green Salad',
+        cat: 'lunch',
+        cal: 470,
+        protein: 34,
+        carbs: 48,
+        fat: 9,
+        fiber: 7,
+        vA: 130, vC: 18, vD: 20, b12: 1.8, calcium: 80, iron: 4.1, potassium: 620,
+        diet: ['nonveg'],
+        conditions: ['diabetes', 'thyroid', 'pcod', 'none'],
+        featureTag: 'Lean High Protein • Low Fat',
+        portion: '2 phulkas with 100g tender chicken in onion-tomato-ginger gravy + salad',
+        icon: '🍗'
+      },
+      {
+        id: 'jowar_lauki_dal',
+        name: '2 Jowar / Bajra Rotis + Lauki (Gourd) Chana Dal + Beetroot Salad',
+        cat: 'lunch',
+        cal: 430,
+        protein: 14,
+        carbs: 68,
+        fat: 6,
+        fiber: 13,
+        vA: 180, vC: 22, vD: 0, b12: 0, calcium: 95, iron: 4.6, potassium: 560,
+        diet: ['veg', 'vegan'],
+        conditions: ['bp', 'heart'],
+        featureTag: 'Controls Blood Pressure • Light & Cooling',
+        portion: '2 gluten-free millet rotis with cooling bottle gourd dal & fresh beetroot',
+        icon: '🫓'
+      },
+      {
+        id: 'fish_curry_rice',
+        name: 'Steamed Rice + Home-Style Fish Curry + Cabbage Poriyal / Sabzi',
+        cat: 'lunch',
+        cal: 450,
+        protein: 30,
+        carbs: 58,
+        fat: 8,
+        fiber: 6,
+        vA: 140, vC: 20, vD: 55, b12: 2.8, calcium: 90, iron: 3.5, potassium: 580,
+        diet: ['nonveg'],
+        conditions: ['heart', 'cholesterol', 'bp'],
+        featureTag: 'Heart Healthy • Natural Omega-3',
+        portion: '1 bowl steamed rice with 1 piece fish in light curry + cabbage sabzi',
+        icon: '🐟'
+      },
+      {
+        id: 'egg_curry_phulka',
+        name: '2 Boiled Egg Curry + 2 Whole Wheat Phulkas + Cucumber Onion Salad',
+        cat: 'lunch',
+        cal: 440,
+        protein: 21,
+        carbs: 52,
+        fat: 10,
+        fiber: 7,
+        vA: 140, vC: 14, vD: 35, b12: 1.6, calcium: 110, iron: 3.7, potassium: 470,
+        diet: ['eggetarian', 'nonveg'],
+        conditions: ['thyroid', 'pcod', 'none'],
+        featureTag: 'Healthy Egg Protein • Vitamin B12',
+        portion: '2 hard boiled eggs in mild home curry with 2 hot rotis',
+        icon: '🥚'
+      },
+      {
+        id: 'white_rice_mild_dal',
+        name: 'Steamed White Rice + Mild Yellow Moong Dal + Sautéed Gourd (Lauki)',
+        cat: 'lunch',
+        cal: 410,
+        protein: 12,
+        carbs: 74,
+        fat: 5,
+        fiber: 5,
+        vA: 80, vC: 14, vD: 0, b12: 0, calcium: 60, iron: 2.6, potassium: 250,
+        diet: ['veg', 'vegan'],
+        conditions: ['kidney'],
+        featureTag: 'Light on Kidneys • Low Potassium & Phosphorus',
+        portion: '1 bowl soft rice with light moong dal and bottle gourd sabzi',
+        icon: '🍚'
+      },
 
-      // Evening Snacks
-      { id: 'roasted_makhana', name: 'Olive Oil Roasted Foxnut (Makhana) with Turmeric', cat: 'snack2', cal: 130, protein: 4, carbs: 22, fat: 3, fiber: 4, vA: 0, vC: 0, vD: 0, b12: 0, calcium: 65, iron: 1.5, potassium: 170, diet: ['veg', 'vegan', 'eggetarian', 'nonveg'], conditions: ['bp', 'kidney', 'heart'], featureTag: '❤️ Low Sodium, Low Glycemic & Cardioprotective' },
-      { id: 'sprouts_chaat', name: 'Sprouted Moong & Pomegranate Chaat with Lemon', cat: 'snack2', cal: 135, protein: 8, carbs: 22, fat: 1, fiber: 7, vA: 90, vC: 30, vD: 0, b12: 0, calcium: 55, iron: 2.6, potassium: 340, diet: ['veg', 'vegan', 'eggetarian', 'nonveg'], conditions: ['diabetes', 'pcod', 'cholesterol'], featureTag: '🩸 Living Digestive Enzymes & High Fiber' },
-      { id: 'green_tea_walnuts', name: 'Matcha Green Tea + 3 Halved Raw Walnuts', cat: 'snack2', cal: 110, protein: 3, carbs: 4, fat: 9, fiber: 2, vA: 15, vC: 4, vD: 0, b12: 0, calcium: 30, iron: 0.8, potassium: 140, diet: ['veg', 'vegan', 'eggetarian', 'nonveg'], conditions: ['cholesterol', 'heart'], featureTag: '🧪 EGCG Polyphenols for Endothelial Health' },
-      { id: 'pumpkin_seeds_tea', name: 'Roasted Pumpkin Seeds + Chamomile Herb Tea', cat: 'snack2', cal: 135, protein: 6, carbs: 6, fat: 10, fiber: 3, vA: 10, vC: 0, vD: 0, b12: 0, calcium: 40, iron: 2.1, potassium: 230, diet: ['veg', 'vegan', 'eggetarian', 'nonveg'], conditions: ['thyroid', 'pcod'], featureTag: '🦋 Rich in Organic Zinc, Magnesium & Adaptogens' },
-      { id: 'roasted_chana_mint', name: 'Roasted Spiced Bengal Gram (Chana) + Green Tea', cat: 'snack2', cal: 140, protein: 7, carbs: 22, fat: 2, fiber: 6, vA: 10, vC: 3, vD: 0, b12: 0, calcium: 40, iron: 2.2, potassium: 280, diet: ['veg', 'vegan', 'eggetarian', 'nonveg'], conditions: ['none', 'diabetes'], featureTag: '✨ Sustained Blood Sugar & Satiety Booster' },
+      // 4. Evening Snack (Chai & 5:00 PM)
+      {
+        id: 'roasted_makhana',
+        name: 'Crispy Roasted Makhana (Foxnuts) with Turmeric & Rock Salt',
+        cat: 'snack2',
+        cal: 110,
+        protein: 3,
+        carbs: 20,
+        fat: 2,
+        fiber: 4,
+        vA: 10, vC: 0, vD: 0, b12: 0, calcium: 60, iron: 1.4, potassium: 160,
+        diet: ['veg', 'vegan', 'eggetarian', 'nonveg'],
+        conditions: ['bp', 'kidney', 'heart', 'diabetes', 'none'],
+        featureTag: 'Low Sodium • Crispy & Healthy',
+        portion: '1 full bowl roasted with a drop of ghee & pinch of haldi',
+        icon: '🍿'
+      },
+      {
+        id: 'sprouts_chaat',
+        name: 'Boiled Sprouted Moong Chaat with Cucumber, Onion & Fresh Lemon',
+        cat: 'snack2',
+        cal: 120,
+        protein: 8,
+        carbs: 20,
+        fat: 1,
+        fiber: 6,
+        vA: 80, vC: 28, vD: 0, b12: 0, calcium: 50, iron: 2.4, potassium: 320,
+        diet: ['veg', 'vegan', 'eggetarian', 'nonveg'],
+        conditions: ['diabetes', 'pcod', 'cholesterol'],
+        featureTag: 'High Fiber • Keeps Sugar Stable',
+        portion: '1 cup steamed sprouts with chopped tomatoes, cucumber & lemon',
+        icon: '🥗'
+      },
+      {
+        id: 'bhuna_chana',
+        name: 'Roasted Bengal Gram (Bhuna Chana) + Hot Adrak (Ginger) Tea',
+        cat: 'snack2',
+        cal: 125,
+        protein: 6,
+        carbs: 20,
+        fat: 2,
+        fiber: 5,
+        vA: 10, vC: 4, vD: 0, b12: 0, calcium: 40, iron: 2.1, potassium: 260,
+        diet: ['veg', 'vegan', 'eggetarian', 'nonveg'],
+        conditions: ['none', 'diabetes', 'bp'],
+        featureTag: 'Zero Oil Crunch • Sustained Energy',
+        portion: 'Small bowl of roasted chana with hot ginger tea (no sugar)',
+        icon: '🫘'
+      },
+      {
+        id: 'veg_sandwich',
+        name: 'Whole Wheat Cucumber-Tomato Sandwich with Green Mint Chutney',
+        cat: 'snack2',
+        cal: 140,
+        protein: 5,
+        carbs: 26,
+        fat: 2,
+        fiber: 4,
+        vA: 90, vC: 16, vD: 0, b12: 0, calcium: 45, iron: 1.8, potassium: 220,
+        diet: ['veg', 'vegan', 'eggetarian', 'nonveg'],
+        conditions: ['none', 'pcod', 'thyroid'],
+        featureTag: 'Filling & Fresh • Good Vitamins',
+        portion: '2 slices whole grain bread with fresh cucumber, tomato & mint',
+        icon: '🥪'
+      },
+      {
+        id: 'sweet_corn',
+        name: 'Warm Steamed Sweet Corn with Lemon Juice & Black Pepper',
+        cat: 'snack2',
+        cal: 115,
+        protein: 3,
+        carbs: 24,
+        fat: 1,
+        fiber: 4,
+        vA: 70, vC: 12, vD: 0, b12: 0, calcium: 20, iron: 1.2, potassium: 240,
+        diet: ['veg', 'vegan', 'eggetarian', 'nonveg'],
+        conditions: ['heart', 'cholesterol', 'none'],
+        featureTag: 'Rich in Fiber • Heart Friendly',
+        portion: '1 small bowl steamed corn seasoned with lemon & pepper',
+        icon: '🌽'
+      },
 
-      // Dinner items
-      { id: 'methi_moong_khichdi', name: 'Brown Rice & Methi Moong Khichdi + Mint Raita', cat: 'dinner', cal: 405, protein: 15, carbs: 62, fat: 8, fiber: 9, vA: 220, vC: 18, vD: 10, b12: 0.5, calcium: 195, iron: 4.1, potassium: 470, diet: ['veg'], conditions: ['diabetes', 'pcod'], featureTag: '🩸 Fenugreek 4-hydroxyisoleucine for Insulin Sensitivity' },
-      { id: 'steamed_fish_soup', name: 'Steamed Lemon-Pepper Fish (120g) + Clear Vegetable Broth', cat: 'dinner', cal: 410, protein: 32, carbs: 32, fat: 9, fiber: 5, vA: 160, vC: 16, vD: 60, b12: 2.6, calcium: 110, iron: 3.4, potassium: 590, diet: ['nonveg'], conditions: ['heart', 'bp', 'cholesterol'], featureTag: '🫀 Low Sodium Heart Recovery & Lean Protein' },
-      { id: 'grilled_chicken_veggies', name: 'Grilled Herb Chicken (120g) + Sautéed Zucchini & Mushrooms', cat: 'dinner', cal: 420, protein: 35, carbs: 28, fat: 10, fiber: 6, vA: 180, vC: 22, vD: 25, b12: 1.8, calcium: 90, iron: 3.9, potassium: 640, diet: ['nonveg'], conditions: ['pcod', 'thyroid', 'diabetes'], featureTag: '🍗 Low Carb & High Thermogenic Protein' },
-      { id: 'egg_bhurji_roti', name: 'Egg White Bhurji with Tomatoes & Onions + 2 Rotis', cat: 'dinner', cal: 395, protein: 20, carbs: 46, fat: 8, fiber: 6, vA: 110, vC: 14, vD: 30, b12: 1.4, calcium: 80, iron: 3.2, potassium: 420, diet: ['eggetarian', 'nonveg'], conditions: ['thyroid', 'none'], featureTag: '🥚 Light & Digestible Night Protein' },
-      { id: 'pumpkin_dal_soup', name: 'Mild Yellow Lentil & Pumpkin Soup + 1 Soft Phulka', cat: 'dinner', cal: 360, protein: 12, carbs: 58, fat: 5, fiber: 7, vA: 380, vC: 18, vD: 0, b12: 0, calcium: 80, iron: 2.8, potassium: 280, diet: ['veg', 'vegan'], conditions: ['kidney', 'bp'], featureTag: '🫘 Renal Gentle: Easily Digestible Low-Potassium' },
-      { id: 'palak_tofu_roti', name: 'Garlic Palak Tofu (Low Oil) + 2 Multigrain Rotis', cat: 'dinner', cal: 410, protein: 19, carbs: 48, fat: 11, fiber: 11, vA: 520, vC: 28, vD: 0, b12: 0, calcium: 290, iron: 5.2, potassium: 560, diet: ['veg', 'vegan'], conditions: ['cholesterol', 'heart', 'diabetes'], featureTag: '🧪 Zero Cholesterol & High Iron Folate' },
-      { id: 'lauki_chana_dal_roti', name: 'Lauki (Gourd) Chana Dal + 2 Soft Rotis + Salad', cat: 'dinner', cal: 395, protein: 14, carbs: 58, fat: 7, fiber: 10, vA: 140, vC: 20, vD: 0, b12: 0, calcium: 95, iron: 3.6, potassium: 440, diet: ['veg', 'vegan'], conditions: ['bp', 'none'], featureTag: '❤️ Light Heart-Healthy DASH Dinner' },
-      { id: 'traditional_veg_dinner', name: 'Palak Paneer (Low Fat) + 2 Phulkas + Steamed Dal', cat: 'dinner', cal: 420, protein: 18, carbs: 50, fat: 12, fiber: 9, vA: 420, vC: 24, vD: 15, b12: 0.8, calcium: 310, iron: 4.2, potassium: 510, diet: ['veg'], conditions: ['none'], featureTag: '✨ Classic Well-Balanced Wholesome Dinner' }
+      // 5. Dinner (Raat ka Khana)
+      {
+        id: 'moong_khichdi',
+        name: 'Soft Yellow Moong Dal Khichdi + 1 tsp Pure Ghee + Fresh Curd',
+        cat: 'dinner',
+        cal: 380,
+        protein: 13,
+        carbs: 60,
+        fat: 7,
+        fiber: 7,
+        vA: 120, vC: 10, vD: 10, b12: 0.5, calcium: 150, iron: 3.4, potassium: 420,
+        diet: ['veg'],
+        conditions: ['diabetes', 'pcod', 'bp', 'none'],
+        featureTag: 'Very Light on Stomach • Promotes Good Sleep',
+        portion: '1 bowl warm comforting khichdi tempered with cumin & 1 bowl curd',
+        icon: '🍲'
+      },
+      {
+        id: 'phulka_lauki_dal',
+        name: '2 Soft Phulkas + Lauki (Bottle Gourd) Dal + Cucumber Salad',
+        cat: 'dinner',
+        cal: 370,
+        protein: 13,
+        carbs: 58,
+        fat: 6,
+        fiber: 9,
+        vA: 140, vC: 18, vD: 0, b12: 0, calcium: 85, iron: 3.5, potassium: 440,
+        diet: ['veg', 'vegan'],
+        conditions: ['bp', 'heart', 'kidney', 'none'],
+        featureTag: 'Cooling & Light • Keeps BP Normal',
+        portion: '2 warm phulkas with gentle bottle gourd dal & fresh salad',
+        icon: '🫓'
+      },
+      {
+        id: 'phulka_palak_paneer',
+        name: '2 Soft Phulkas + Home-style Palak Paneer (Low Oil) + Warm Dal',
+        cat: 'dinner',
+        cal: 410,
+        protein: 18,
+        carbs: 48,
+        fat: 11,
+        fiber: 10,
+        vA: 420, vC: 24, vD: 15, b12: 0.7, calcium: 290, iron: 4.8, potassium: 520,
+        diet: ['veg'],
+        conditions: ['cholesterol', 'pcod', 'diabetes'],
+        featureTag: 'High Iron & Protein • Satisfying & Healthy',
+        portion: '2 phulkas with pureed spinach & fresh paneer cubes',
+        icon: '🥘'
+      },
+      {
+        id: 'grilled_chicken_soup',
+        name: 'Tawa Grilled Chicken (100g) + 1 Phulka + Warm Clear Veg Soup',
+        cat: 'dinner',
+        cal: 390,
+        protein: 32,
+        carbs: 32,
+        fat: 8,
+        fiber: 5,
+        vA: 160, vC: 16, vD: 25, b12: 1.6, calcium: 75, iron: 3.6, potassium: 580,
+        diet: ['nonveg'],
+        conditions: ['diabetes', 'pcod', 'thyroid', 'none'],
+        featureTag: 'Lean Protein • Light & No Bloating',
+        portion: 'Spiced chicken breast cooked on tawa with 1 roti & clear broth',
+        icon: '🍗'
+      },
+      {
+        id: 'phulka_egg_bhurji',
+        name: '2 Soft Phulkas + 2 Egg Bhurji with Tomatoes & Onions',
+        cat: 'dinner',
+        cal: 380,
+        protein: 18,
+        carbs: 46,
+        fat: 8,
+        fiber: 6,
+        vA: 110, vC: 14, vD: 30, b12: 1.4, calcium: 80, iron: 3.2, potassium: 410,
+        diet: ['eggetarian', 'nonveg'],
+        conditions: ['thyroid', 'none'],
+        featureTag: 'Quick & Light • High Quality Protein',
+        portion: '2 eggs scrambled with onions, tomatoes & green coriander + 2 rotis',
+        icon: '🍳'
+      },
+      {
+        id: 'veg_dalia',
+        name: 'Vegetable Dalia (Broken Wheat Khichdi) with Carrots, Peas & Curd',
+        cat: 'dinner',
+        cal: 385,
+        protein: 12,
+        carbs: 62,
+        fat: 6,
+        fiber: 10,
+        vA: 210, vC: 18, vD: 10, b12: 0.5, calcium: 140, iron: 3.8, potassium: 450,
+        diet: ['veg'],
+        conditions: ['diabetes', 'cholesterol', 'none'],
+        featureTag: 'High Fiber • Controls Morning Sugar',
+        portion: '1 bowl wholesome cracked wheat with vegetables & small curd',
+        icon: '🍲'
+      },
+      {
+        id: 'steamed_fish_phulka',
+        name: 'Light Steamed Fish (100g) + 1 Soft Phulka + Warm Moong Dal Soup',
+        cat: 'dinner',
+        cal: 360,
+        protein: 28,
+        carbs: 34,
+        fat: 6,
+        fiber: 4,
+        vA: 120, vC: 12, vD: 50, b12: 2.2, calcium: 80, iron: 3.0, potassium: 520,
+        diet: ['nonveg'],
+        conditions: ['heart', 'bp', 'cholesterol'],
+        featureTag: 'Low Sodium • Heart Safe & Lean',
+        portion: '1 fish fillet lightly spiced with turmeric & pepper + 1 roti & soup',
+        icon: '🐟'
+      },
+      {
+        id: 'mild_dal_soup_phulka',
+        name: '1 Soft Phulka + Large Bowl of Yellow Moong Dal Soup + Roasted Papad',
+        cat: 'dinner',
+        cal: 320,
+        protein: 11,
+        carbs: 52,
+        fat: 4,
+        fiber: 6,
+        vA: 70, vC: 10, vD: 0, b12: 0, calcium: 65, iron: 2.5, potassium: 260,
+        diet: ['veg', 'vegan'],
+        conditions: ['kidney', 'bp'],
+        featureTag: 'Very Light • Low Potassium for Kidney Care',
+        portion: '1 soft phulka with generous light moong soup & crunchy roasted papad',
+        icon: '🥣'
+      }
     ];
 
-    // Current State
+    // Current Plan State
     let currentPlan = {
       breakfast: FOOD_DATABASE[0],
       snack1: FOOD_DATABASE[8],
@@ -867,7 +1612,7 @@
     let filledWaterGlasses = 0;
     let swappingMealCategory = null;
 
-    // --- Auth & Init ---
+    // --- Init on Page Load ---
     window.addEventListener('DOMContentLoaded', () => {
       const userStr = localStorage.getItem('carenest_user');
       if (userStr) {
@@ -875,24 +1620,27 @@
           const user = JSON.parse(userStr);
           document.getElementById('user-name-display').innerText = user.name || 'User';
           const initials = user.name ? user.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase() : 'SK';
-          document.querySelector('.user-avatar-circle').innerText = initials;
+          const avatar = document.querySelector('.user-avatar-circle');
+          if (avatar) avatar.innerText = initials;
         } catch(e) {}
       }
       renderWaterTracker();
       updateCalculatedMetrics();
 
-      // Listen to form input changes to auto-update metrics & live plan if open
+      // Listen to form input changes to auto-update metrics & live plan
       ['input-age', 'input-height', 'input-weight', 'input-activity', 'input-gender'].forEach(id => {
-        document.getElementById(id).addEventListener('input', () => {
-          updateCalculatedMetrics();
-          const planSec = document.getElementById('meal-plan-section');
-          if (planSec && planSec.style.display !== 'none') {
-            generateMealPlan(false);
-          }
-        });
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('input', () => {
+            updateCalculatedMetrics();
+            const planSec = document.getElementById('meal-plan-section');
+            if (planSec && planSec.style.display !== 'none') {
+              generateMealPlan(false);
+            }
+          });
+        }
       });
 
-      // Listen to dietary preference change
       const dietSelect = document.getElementById('input-diet-type');
       if (dietSelect) {
         dietSelect.addEventListener('change', () => {
@@ -902,6 +1650,28 @@
           }
         });
       }
+
+      // Auto-sync diet logs from cloud
+      fetch(getCareNestApiUrl('/api/diet/history'))
+        .then(r => r.json())
+        .then(logs => {
+          if (Array.isArray(logs) && logs.length > 0) {
+            try { localStorage.setItem('carenest_diet_history', JSON.stringify(logs)); } catch(e) {}
+            const todayStr = new Date().toISOString().split('T')[0];
+            const todayLog = logs.find(l => l.date === todayStr);
+            if (todayLog) {
+              if (typeof todayLog.waterGlasses === 'number') {
+                filledWaterGlasses = todayLog.waterGlasses;
+                renderWaterTracker();
+              }
+              if (Array.isArray(todayLog.eatenMeals)) {
+                todayLog.eatenMeals.forEach(k => { eatenStatus[k] = true; });
+                renderMealPlan();
+              }
+            }
+          }
+        })
+        .catch(() => {});
     });
 
     // --- Health Condition Toggle Logic ---
@@ -932,7 +1702,6 @@
       }
       updateCalculatedMetrics();
 
-      // Dynamic reactive update: immediately refresh meal plan if section is active
       const planSec = document.getElementById('meal-plan-section');
       if (planSec && planSec.style.display !== 'none') {
         generateMealPlan(false);
@@ -954,6 +1723,7 @@
 
       let cat = 'Normal Weight';
       if (bmi < 18.5) cat = 'Underweight';
+      else if (bmi >= 23 && bmi < 24.9) cat = 'Normal (Asian Cutoff)';
       else if (bmi >= 25 && bmi < 29.9) cat = 'Overweight';
       else if (bmi >= 30) cat = 'Obese';
       document.getElementById('metric-bmi-cat').innerText = cat;
@@ -963,7 +1733,6 @@
       bmr += (gender === 'male' ? 5 : -161);
       let calories = Math.round(bmr * activity);
 
-      // Diabetes or kidney adjustments
       const isDiabetic = document.getElementById('cond-diabetes').checked;
       const isKidney = document.getElementById('cond-kidney').checked;
       if (isDiabetic) calories = Math.max(1500, Math.round(calories * 0.95));
@@ -971,7 +1740,6 @@
 
       document.getElementById('metric-calories').innerText = calories.toLocaleString() + ' kcal';
 
-      // Macronutrient targets
       const proteinMultiplier = isKidney ? 0.75 : 0.9;
       const protein = Math.round(weight * proteinMultiplier);
       const fat = Math.round((calories * 0.25) / 9);
@@ -983,67 +1751,64 @@
       document.getElementById('metric-fiber').innerText = isDiabetic ? '35 g' : '30 g';
     }
 
-    // --- Generate Dynamic Meal Plan Based on User Conditions & Preferences ---
+    // --- Generate Dynamic Meal Plan ---
     function generateMealPlan(shouldScroll = true) {
       const dietPref = document.getElementById('input-diet-type').value;
 
-      // Collect Active Conditions
       const activeConditions = [];
       const conditionNames = [];
       const conditionPillsData = [];
 
       if (document.getElementById('cond-none').checked) {
         activeConditions.push('none');
-        conditionNames.push('No Health Problems');
-        conditionPillsData.push({ text: '✨ Balanced Nutrition Standard', bg: '#f0fdf4', color: '#166534', border: '#bbf7d0' });
+        conditionNames.push('General Health');
+        conditionPillsData.push({ text: '✨ Wholesome Indian Home Diet', bg: '#f0fdf4', color: '#166534', border: '#bbf7d0' });
       }
       if (document.getElementById('cond-diabetes').checked) {
         activeConditions.push('diabetes');
         conditionNames.push('Diabetes');
-        conditionPillsData.push({ text: '🩸 Low-GI & High Soluble Fiber', bg: '#fef2f2', color: '#991b1b', border: '#fecaca' });
+        conditionPillsData.push({ text: '🩸 Sugar Friendly & High Fiber', bg: '#fef2f2', color: '#991b1b', border: '#fecaca' });
       }
       if (document.getElementById('cond-bp').checked) {
         activeConditions.push('bp');
-        conditionNames.push('High Blood Pressure');
-        conditionPillsData.push({ text: '❤️ Low Sodium DASH Protocol', bg: '#eff6ff', color: '#1e40af', border: '#bfdbfe' });
+        conditionNames.push('High BP');
+        conditionPillsData.push({ text: '❤️ Low Salt & Potassium Rich', bg: '#eff6ff', color: '#1e40af', border: '#bfdbfe' });
       }
       if (document.getElementById('cond-cholesterol').checked) {
         activeConditions.push('cholesterol');
-        conditionNames.push('High Cholesterol');
-        conditionPillsData.push({ text: '🧪 Low Saturated Fat & Beta-Glucans', bg: '#faf5ff', color: '#6b21a8', border: '#e9d5ff' });
+        conditionNames.push('Cholesterol');
+        conditionPillsData.push({ text: '🧪 Low Oil & Heart Healthy', bg: '#faf5ff', color: '#6b21a8', border: '#e9d5ff' });
       }
       if (document.getElementById('cond-thyroid').checked) {
         activeConditions.push('thyroid');
-        conditionNames.push('Thyroid Support');
-        conditionPillsData.push({ text: '🦋 High Selenium & Zinc Rich', bg: '#ecfdf5', color: '#065f46', border: '#a7f3d0' });
+        conditionNames.push('Thyroid');
+        conditionPillsData.push({ text: '🦋 Natural Selenium & Zinc', bg: '#ecfdf5', color: '#065f46', border: '#a7f3d0' });
       }
       if (document.getElementById('cond-kidney').checked) {
         activeConditions.push('kidney');
-        conditionNames.push('Kidney Disease');
-        conditionPillsData.push({ text: '🫘 Renal Gentle: Low Potassium & Phosphorus', bg: '#fffbeb', color: '#92400e', border: '#fde68a' });
+        conditionNames.push('Kidney Care');
+        conditionPillsData.push({ text: '🫘 Light & Renal Gentle', bg: '#fffbeb', color: '#92400e', border: '#fde68a' });
       }
       if (document.getElementById('cond-heart').checked) {
         activeConditions.push('heart');
-        conditionNames.push('Heart Disease');
-        conditionPillsData.push({ text: '🫀 Cardioprotective Omega-3 & Low Sodium', bg: '#fff1f2', color: '#9f1239', border: '#fecdd3' });
+        conditionNames.push('Heart Care');
+        conditionPillsData.push({ text: '🫀 Cardioprotective & Good Fats', bg: '#fff1f2', color: '#9f1239', border: '#fecdd3' });
       }
       if (document.getElementById('cond-pcod').checked) {
         activeConditions.push('pcod');
         conditionNames.push('PCOD / PCOS');
-        conditionPillsData.push({ text: '🌸 Anti-Inflammatory & Low Glycemic Load', bg: '#fdf2f8', color: '#9d174d', border: '#fbcfe8' });
+        conditionPillsData.push({ text: '🌸 Hormone Balance & Complex Carbs', bg: '#fdf2f8', color: '#9d174d', border: '#fbcfe8' });
       }
 
       if (activeConditions.length === 0) {
         activeConditions.push('none');
-        conditionNames.push('Standard Balanced');
-        conditionPillsData.push({ text: '✨ Standard Balanced Nutrition', bg: '#f0fdf4', color: '#166534', border: '#bbf7d0' });
+        conditionNames.push('General Health');
+        conditionPillsData.push({ text: '✨ Wholesome Indian Home Diet', bg: '#f0fdf4', color: '#166534', border: '#bbf7d0' });
       }
 
-      // Filter food candidates matching diet preference and score by conditions
       const selectBestFood = (category) => {
         let candidates = FOOD_DATABASE.filter(f => f.cat === category);
 
-        // Dietary preference filtering
         if (dietPref === 'veg') {
           candidates = candidates.filter(f => f.diet.includes('veg'));
         } else if (dietPref === 'vegan') {
@@ -1054,33 +1819,27 @@
           candidates = candidates.filter(f => f.diet.includes('nonveg') || f.diet.includes('veg') || f.diet.includes('eggetarian'));
         }
 
-        // Score candidates based on active conditions
         candidates.forEach(food => {
           let score = 0;
           activeConditions.forEach(cond => {
             if (food.conditions.includes(cond)) score += 20;
           });
 
-          // Clinical penalties / bonuses
           if (activeConditions.includes('kidney')) {
             if (food.potassium > 320) score -= 25;
             else score += 15;
           }
           if (activeConditions.includes('bp')) {
-            if (food.id.includes('sodium') || food.id.includes('lauki') || food.id.includes('makhana')) score += 20;
+            if (food.id.includes('lauki') || food.id.includes('makhana') || food.id.includes('coconut')) score += 20;
           }
           if (activeConditions.includes('diabetes')) {
-            if (food.fiber >= 6) score += 15;
-            if (food.carbs > 65) score -= 15;
+            if (food.fiber >= 5) score += 15;
           }
           if (activeConditions.includes('cholesterol') || activeConditions.includes('heart')) {
-            if (food.id.includes('oats') || food.id.includes('salmon') || food.id.includes('palak_tofu') || food.id.includes('walnut')) score += 25;
+            if (food.id.includes('oats') || food.id.includes('fish') || food.id.includes('badam')) score += 25;
           }
           if (activeConditions.includes('thyroid')) {
-            if (food.id.includes('egg') || food.id.includes('brazil') || food.id.includes('pumpkin')) score += 25;
-          }
-          if (activeConditions.includes('pcod')) {
-            if (food.id.includes('chilla') || food.id.includes('quinoa') || food.id.includes('sprouts') || food.id.includes('buttermilk')) score += 20;
+            if (food.id.includes('egg') || food.id.includes('badam')) score += 25;
           }
 
           food._tempScore = score;
@@ -1096,7 +1855,6 @@
       currentPlan.snack2 = selectBestFood('snack2');
       currentPlan.dinner = selectBestFood('dinner');
 
-      // Update Plan Tailored Header Banner
       const dietLabels = {
         veg: 'Vegetarian',
         nonveg: 'Non-Vegetarian',
@@ -1106,13 +1864,13 @@
 
       const titleEl = document.getElementById('plan-tailored-title');
       if (titleEl) {
-        titleEl.textContent = `Tailored Diet Plan for ${dietLabels[dietPref] || 'User'} • ${conditionNames.join(' + ')}`;
+        titleEl.textContent = `Custom Indian Diet Plan for ${dietLabels[dietPref] || 'User'} • ${conditionNames.join(' + ')}`;
       }
 
       const calPill = document.getElementById('plan-calorie-summary-pill');
       const totalDailyCal = (currentPlan.breakfast.cal + currentPlan.snack1.cal + currentPlan.lunch.cal + currentPlan.snack2.cal + currentPlan.dinner.cal);
       if (calPill) {
-        calPill.textContent = `Daily Plan Total: ~${totalDailyCal} kcal`;
+        calPill.textContent = `Daily Total: ~${totalDailyCal} kcal`;
       }
 
       const pillsContainer = document.getElementById('plan-condition-pills');
@@ -1133,33 +1891,14 @@
       }
     }
 
-    // SVG Dish Graphics for Meal Items
-    function getFoodSvg(id) {
-      if (id.includes('dosa') || id.includes('idli')) {
-        return `<svg viewBox="0 0 36 36" width="32" height="32"><circle cx="18" cy="18" r="14" fill="#fef08a" stroke="#eab308" stroke-width="1.5"/><circle cx="18" cy="18" r="6" fill="#fde047"/><circle cx="28" cy="12" r="4" fill="#86efac"/></svg>`;
-      } else if (id.includes('oats') || id.includes('porridge') || id.includes('khichdi') || id.includes('soup')) {
-        return `<svg viewBox="0 0 36 36" width="32" height="32"><path d="M6 16c0 9 5 15 12 15s12-6 12-15H6Z" fill="#bae6fd" stroke="#0284c7" stroke-width="1.5"/><path d="M8 16c0-4 4-6 10-6s10 2 10 6H8Z" fill="#fef08a"/><circle cx="14" cy="13" r="2" fill="#ef4444"/><circle cx="22" cy="13" r="2" fill="#15803d"/></svg>`;
-      } else if (id.includes('egg') || id.includes('omelette') || id.includes('bhurji')) {
-        return `<svg viewBox="0 0 36 36" width="32" height="32"><ellipse cx="18" cy="18" rx="14" ry="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/><circle cx="18" cy="18" r="6" fill="#f59e0b"/></svg>`;
-      } else if (id.includes('apple') || id.includes('fruit') || id.includes('guava') || id.includes('papaya')) {
-        return `<svg viewBox="0 0 36 36" width="32" height="32"><path d="M18 30c-5 0-10-3-10-10a9 9 0 0 1 18 0c0 7-5 10-8 10Z" fill="#ef4444"/><path d="M18 10c0-3 3-5 5-5" stroke="#15803d" stroke-width="1.5" fill="none"/></svg>`;
-      } else if (id.includes('chicken') || id.includes('fish') || id.includes('salmon')) {
-        return `<svg viewBox="0 0 36 36" width="32" height="32"><circle cx="18" cy="18" r="14" fill="#ffedd5" stroke="#ea580c" stroke-width="1.5"/><path d="M12 20c4-6 12-6 16 0" stroke="#ea580c" stroke-width="2.5" stroke-linecap="round"/><circle cx="15" cy="14" r="2" fill="#16a34a"/><circle cx="21" cy="14" r="2" fill="#ef4444"/></svg>`;
-      } else if (id.includes('chana') || id.includes('sprouts') || id.includes('makhana') || id.includes('seeds')) {
-        return `<svg viewBox="0 0 36 36" width="32" height="32"><circle cx="18" cy="18" r="14" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/><circle cx="14" cy="16" r="3" fill="#ca8a04"/><circle cx="22" cy="16" r="3" fill="#ca8a04"/><circle cx="18" cy="22" r="3" fill="#15803d"/></svg>`;
-      } else {
-        return `<svg viewBox="0 0 36 36" width="32" height="32"><circle cx="18" cy="18" r="14" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/><circle cx="18" cy="18" r="8" fill="#4ade80"/><circle cx="13" cy="15" r="3" fill="#facc15"/><circle cx="23" cy="15" r="3" fill="#f87171"/></svg>`;
-      }
-    }
-
-    // --- Render Meal Plan & Items ---
+    // --- Render Meal Schedule ---
     function renderMealPlan() {
       const meals = [
-        { key: 'breakfast', title: 'Breakfast', icon: '🌅' },
-        { key: 'snack1', title: 'Mid-Morning', icon: '🍎' },
-        { key: 'lunch', title: 'Lunch', icon: '☀️' },
-        { key: 'snack2', title: 'Evening Snack', icon: '🫖' },
-        { key: 'dinner', title: 'Dinner', icon: '🌙' }
+        { key: 'breakfast', title: 'Breakfast', time: '8:00 AM' },
+        { key: 'snack1', title: 'Mid-Morning', time: '11:00 AM' },
+        { key: 'lunch', title: 'Lunch', time: '1:30 PM' },
+        { key: 'snack2', title: 'Evening Snack', time: '5:00 PM' },
+        { key: 'dinner', title: 'Dinner', time: '8:00 PM' }
       ];
 
       meals.forEach(m => {
@@ -1169,44 +1908,42 @@
         document.getElementById('cal-' + m.key).innerText = `~${item.cal} kcal`;
 
         listEl.innerHTML = `
-          <div class="food-item-row ${isEaten ? 'eaten' : ''}" id="row-${m.key}">
-            <div class="food-meta">
-              <input type="checkbox" class="food-checkbox" ${isEaten ? 'checked' : ''} onchange="toggleItemEaten('${m.key}', this.checked)">
-              <div class="food-thumb-wrap" style="width: 44px; height: 44px; border-radius: 10px; background: #f8fafc; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                ${getFoodSvg(item.id)}
+          <div class="meal-dish-meta">
+            <div class="meal-dish-icon">
+              ${item.icon || '🍲'}
+            </div>
+            <div class="meal-dish-details">
+              <div class="dish-title-row">
+                <span class="dish-name-main">${item.name}</span>
+                <span class="dish-benefit-pill">${item.featureTag}</span>
               </div>
-              <div class="food-info-text">
-                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                  <span class="food-name" style="font-weight:700; color:#0f172a;">${item.name}</span>
-                  <span style="font-size:10px; font-weight:700; background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd; padding:1px 8px; border-radius:10px;">
-                    ${item.featureTag || '✨ Tailored Nutrition'}
-                  </span>
-                </div>
-                <span class="food-nutrients-sub" style="margin-top:3px; display:block;">
-                  ⚡ ${item.cal} kcal &nbsp;|&nbsp; 🍗 ${item.protein}g Protein &nbsp;|&nbsp; 🌾 ${item.carbs}g Carbs &nbsp;|&nbsp; 🥑 ${item.fat}g Fat &nbsp;|&nbsp; 🥦 ${item.fiber}g Fiber
-                </span>
+              <p class="dish-portion-text">🍽️ <strong>Portion:</strong> ${item.portion || '1 standard home serving'}</p>
+              <div class="dish-nutrient-strip">
+                <span class="nutrient-badge-item">⚡ ${item.cal} kcal</span>
+                <span class="nutrient-badge-item">🍗 ${item.protein}g Protein</span>
+                <span class="nutrient-badge-item">🌾 ${item.carbs}g Carbs</span>
+                <span class="nutrient-badge-item">🥦 ${item.fiber}g Fiber</span>
               </div>
             </div>
-            <button class="swap-btn" onclick="openSwapModal('${m.key}')">
-              🔄 Swap Item
+          </div>
+          <div class="meal-actions-group">
+            <button class="btn-take-meal ${isEaten ? 'eaten' : ''}" onclick="toggleMealEaten('${m.key}')">
+              ${isEaten ? '✓ Eaten' : 'Mark Eaten'}
+            </button>
+            <button class="btn-swap-dish" onclick="openSwapModal('${m.key}')">
+              🔄 Swap Dish
             </button>
           </div>
         `;
       });
     }
 
-    // --- Food Eaten Checkbox Toggle ---
-    function toggleItemEaten(mealKey, isChecked) {
-      eatenStatus[mealKey] = isChecked;
-      const row = document.getElementById('row-' + mealKey);
-      if (isChecked) {
-        row.classList.add('eaten');
-      } else {
-        row.classList.remove('eaten');
-      }
+    function toggleMealEaten(mealKey) {
+      eatenStatus[mealKey] = !eatenStatus[mealKey];
+      renderMealPlan();
     }
 
-    // --- Open Swap Modal ---
+    // --- Swap Modal ---
     function openSwapModal(mealKey) {
       swappingMealCategory = mealKey;
       const currentItem = currentPlan[mealKey];
@@ -1225,21 +1962,19 @@
         container.innerHTML = `<p style="color: #64748b; font-size: 14px;">No other alternatives currently match your strict dietary preference.</p>`;
       } else {
         container.innerHTML = candidates.map(opt => `
-          <div class="swap-option-card">
-            <div style="display: flex; gap: 12px; align-items: center;">
-              <div style="width: 40px; height: 40px; border-radius: 8px; background: #f8fafc; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                ${getFoodSvg(opt.id)}
-              </div>
+          <div class="swap-dish-card">
+            <div style="display: flex; gap: 14px; align-items: center; flex: 1;">
+              <div style="font-size: 32px; flex-shrink: 0;">${opt.icon || '🍲'}</div>
               <div>
-                <div style="font-weight: 700; font-size: 14px; color: #1e293b;">${opt.name}</div>
-                <div style="font-size: 11px; color: #0284c7; font-weight: 600; margin-top: 1px;">${opt.featureTag}</div>
+                <div style="font-weight: 800; font-size: 14.5px; color: #0f172a;">${opt.name}</div>
+                <div style="font-size: 12px; color: #16a34a; font-weight: 700; margin-top: 2px;">${opt.featureTag}</div>
                 <div style="font-size: 12px; color: #64748b; margin-top: 2px;">
-                  ${opt.cal} kcal &nbsp;•&nbsp; ${opt.protein}g Protein &nbsp;•&nbsp; ${opt.carbs}g Carbs &nbsp;•&nbsp; ${opt.fiber}g Fiber
+                  ${opt.cal} kcal &nbsp;•&nbsp; ${opt.protein}g Protein &nbsp;•&nbsp; ${opt.fiber}g Fiber &nbsp;•&nbsp; ${opt.portion}
                 </div>
               </div>
             </div>
-            <button class="btn btn-secondary btn-sm" onclick="selectSwapItem('${opt.id}')">
-              Select This
+            <button class="btn btn-secondary btn-sm" onclick="selectSwapItem('${opt.id}')" style="font-weight: 700; flex-shrink: 0;">
+              Pick This
             </button>
           </div>
         `).join('');
@@ -1257,18 +1992,18 @@
       const selected = FOOD_DATABASE.find(f => f.id === foodId);
       if (selected && swappingMealCategory) {
         currentPlan[swappingMealCategory] = selected;
-        eatenStatus[swappingMealCategory] = false; // Reset eaten status on replacement
+        eatenStatus[swappingMealCategory] = false;
         renderMealPlan();
         closeSwapModal();
       }
     }
 
-    // --- Confirm Plan ---
     function confirmMealPlan() {
-      alert("✅ Your daily diet plan has been confirmed! As you consume each meal today, check the box next to it. At the end of the day, review your comprehensive nutrient gain & deficiency report below.");
-      document.getElementById('btn-confirm-plan').innerText = "✓ Plan Active";
-      document.getElementById('btn-confirm-plan').classList.remove('btn-primary');
-      document.getElementById('btn-confirm-plan').classList.add('btn-secondary');
+      alert("✅ Your daily Indian meal schedule has been confirmed! As you finish each meal, click 'Mark Eaten'. Check your nutrient report at the end of the day!");
+      const btn = document.getElementById('btn-confirm-plan');
+      btn.innerText = "✓ Plan Active";
+      btn.classList.remove('btn-primary');
+      btn.classList.add('btn-secondary');
     }
 
     // --- Water Tracker ---
@@ -1277,8 +2012,8 @@
       container.innerHTML = '';
       for (let i = 1; i <= 8; i++) {
         const btn = document.createElement('div');
-        btn.className = `glass-btn ${i <= filledWaterGlasses ? 'filled' : ''}`;
-        btn.innerHTML = `<span>250ml</span><span>#${i}</span>`;
+        btn.className = `water-cup-btn ${i <= filledWaterGlasses ? 'filled' : ''}`;
+        btn.innerHTML = `<span>250ml</span><span style="font-size: 14px; margin-top: 2px;">${i <= filledWaterGlasses ? '💧' : '○'}</span><span style="font-size: 10px; opacity: 0.8;">#${i}</span>`;
         btn.onclick = () => {
           if (filledWaterGlasses === i) {
             filledWaterGlasses = i - 1;
@@ -1292,12 +2027,11 @@
       }
     }
 
-    // --- STEP 5: End-of-Day Nutrient & Deficiency Report ---
+    // --- End-of-Day Nutrient Report ---
     function showEndOfDayReport() {
       const reportSection = document.getElementById('end-of-day-report-section');
       reportSection.style.display = 'block';
 
-      // 1. Calculate Consumed Nutrients
       let totals = { cal: 0, protein: 0, carbs: 0, fat: 0, fiber: 0, vA: 0, vC: 0, vD: 0, b12: 0, calcium: 0, iron: 0, potassium: 0 };
       let eatenCount = 0;
       let missedItems = [];
@@ -1323,135 +2057,116 @@
         }
       });
 
-      // Targets
       const targetCal = parseInt(document.getElementById('metric-calories').innerText) || 1850;
       const targetProtein = parseInt(document.getElementById('metric-protein').innerText) || 65;
       const targetFiber = parseInt(document.getElementById('metric-fiber').innerText) || 30;
 
-      // Render Consumed Grid
       const consumedGrid = document.getElementById('consumed-summary-grid');
       consumedGrid.innerHTML = `
-        <div style="background: #ffffff; padding: 12px; border-radius: 8px; border: 1px solid #dcfce7;">
+        <div style="background: #ffffff; padding: 14px; border-radius: 10px; border: 1px solid #bbf7d0;">
           <div style="font-size: 11px; color: #166534; font-weight: 700;">TOTAL CALORIES</div>
           <div style="font-size: 20px; font-weight: 800; color: #15803d;">${totals.cal} / ${targetCal} kcal</div>
           <div style="font-size: 11px; color: #64748b;">${Math.round((totals.cal/targetCal)*100)}% of Daily Goal</div>
         </div>
-        <div style="background: #ffffff; padding: 12px; border-radius: 8px; border: 1px solid #dcfce7;">
+        <div style="background: #ffffff; padding: 14px; border-radius: 10px; border: 1px solid #bbf7d0;">
           <div style="font-size: 11px; color: #166534; font-weight: 700;">PROTEIN CONSUMED</div>
           <div style="font-size: 20px; font-weight: 800; color: #15803d;">${totals.protein} / ${targetProtein} g</div>
           <div style="font-size: 11px; color: #64748b;">${Math.round((totals.protein/targetProtein)*100)}% Target Met</div>
         </div>
-        <div style="background: #ffffff; padding: 12px; border-radius: 8px; border: 1px solid #dcfce7;">
+        <div style="background: #ffffff; padding: 14px; border-radius: 10px; border: 1px solid #bbf7d0;">
           <div style="font-size: 11px; color: #166534; font-weight: 700;">DIETARY FIBER</div>
           <div style="font-size: 20px; font-weight: 800; color: #15803d;">${totals.fiber} / ${targetFiber} g</div>
-          <div style="font-size: 11px; color: #64748b;">Digestive System Support</div>
+          <div style="font-size: 11px; color: #64748b;">Helps digestion &amp; sugar control</div>
         </div>
-        <div style="background: #ffffff; padding: 12px; border-radius: 8px; border: 1px solid #dcfce7;">
-          <div style="font-size: 11px; color: #166534; font-weight: 700;">CALCIUM & VITAMIN D</div>
+        <div style="background: #ffffff; padding: 14px; border-radius: 10px; border: 1px solid #bbf7d0;">
+          <div style="font-size: 11px; color: #166534; font-weight: 700;">CALCIUM &amp; VITAMIN D</div>
           <div style="font-size: 18px; font-weight: 800; color: #15803d;">${totals.calcium}mg | ${totals.vD}IU</div>
-          <div style="font-size: 11px; color: #64748b;">Bone Strength & Density</div>
+          <div style="font-size: 11px; color: #64748b;">Strong bones &amp; joints</div>
         </div>
-        <div style="background: #ffffff; padding: 12px; border-radius: 8px; border: 1px solid #dcfce7;">
-          <div style="font-size: 11px; color: #166534; font-weight: 700;">IRON & VITAMIN C</div>
+        <div style="background: #ffffff; padding: 14px; border-radius: 10px; border: 1px solid #bbf7d0;">
+          <div style="font-size: 11px; color: #166534; font-weight: 700;">IRON &amp; VITAMIN C</div>
           <div style="font-size: 18px; font-weight: 800; color: #15803d;">${totals.iron.toFixed(1)}mg | ${totals.vC}mg</div>
-          <div style="font-size: 11px; color: #64748b;">Immunity & Hemoglobin</div>
+          <div style="font-size: 11px; color: #64748b;">Hemoglobin &amp; stamina</div>
         </div>
-        <div style="background: #ffffff; padding: 12px; border-radius: 8px; border: 1px solid #dcfce7;">
+        <div style="background: #ffffff; padding: 14px; border-radius: 10px; border: 1px solid #bbf7d0;">
           <div style="font-size: 11px; color: #166534; font-weight: 700;">HYDRATION LOGGED</div>
           <div style="font-size: 20px; font-weight: 800; color: #0284c7;">${filledWaterGlasses * 250} / 2,000 ml</div>
           <div style="font-size: 11px; color: #64748b;">${filledWaterGlasses} of 8 Glasses consumed</div>
         </div>
       `;
 
-      // 2. Render Missed Items
       const missedContainer = document.getElementById('missed-items-list');
       if (missedItems.length === 0) {
-        missedContainer.innerHTML = `<div style="color: #15803d; font-weight: 600; padding: 8px;">🌟 Outstanding! You followed your full diet plan without skipping any meal!</div>`;
+        missedContainer.innerHTML = `<div style="color: #15803d; font-weight: 700; padding: 10px; background: #ffffff; border-radius: 8px;">🌟 Wonderful! You followed your full home meal plan today without skipping!</div>`;
       } else {
         missedContainer.innerHTML = missedItems.map(item => `
-          <div style="background: #ffffff; padding: 12px 16px; border-radius: 8px; margin-bottom: 8px; border-left: 3px solid #ef4444;">
+          <div style="background: #ffffff; padding: 12px 16px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #ef4444;">
             <strong style="color: #991b1b;">Skipped: ${item.name}</strong>
             <div style="font-size: 12px; color: #64748b; margin-top: 4px;">
-              Lost: <span style="color: #dc2626; font-weight: 600;">${item.cal} kcal, ${item.protein}g protein, ${item.fiber}g fiber, ${item.calcium}mg calcium, ${item.iron}mg iron, ${item.vC}mg Vitamin C</span>
+              Missed: ${item.cal} kcal, ${item.protein}g protein, ${item.fiber}g fiber, ${item.calcium}mg calcium, ${item.iron}mg iron
             </div>
           </div>
         `).join('');
       }
 
-      // 3. Deficiency Warnings & Health Problem Alerts
       const alertsContainer = document.getElementById('deficiency-alerts-container');
       let alerts = [];
 
-      // Check Calcium
-      if (totals.calcium < 500) {
+      if (totals.calcium < 450) {
         alerts.push({
-          nutrient: 'Calcium Deficit',
-          intake: `${totals.calcium} mg (Target: 1,000 mg)`,
-          risk: 'Low calcium causes bone density loss over time (risk of osteoporosis), muscle cramping, dental fragility, and cardiovascular fatigue.',
-          remedy: 'Consume low-fat curd, paneer, ragi, or fortified soy milk tomorrow.'
+          nutrient: 'Low Calcium',
+          intake: `${totals.calcium} mg (Recommended: 800-1,000 mg)`,
+          risk: 'Over time, low calcium weakens bone strength and causes leg cramps.',
+          remedy: 'Have 1 cup of curd (dahi), a glass of buttermilk (chaas), or paneer tomorrow.'
         });
       }
 
-      // Check Vitamin D
-      if (totals.vD < 30) {
-        alerts.push({
-          nutrient: 'Vitamin D Insufficiency',
-          intake: `${totals.vD} IU (Target: 400 IU)`,
-          risk: 'Impairs calcium absorption, causes chronic fatigue, low immunity, and bone/muscle aching.',
-          remedy: 'Spend 15 mins in early morning sunlight; incorporate fortified dairy, mushrooms, or egg yolks.'
-        });
-      }
-
-      // Check Iron
       if (totals.iron < 8) {
         alerts.push({
-          nutrient: 'Iron Deficiency Risk',
-          intake: `${totals.iron.toFixed(1)} mg (Target: 15-18 mg)`,
-          risk: 'Reduces hemoglobin synthesis causing anemia, lethargy, dizziness, shortness of breath, and pale skin.',
-          remedy: 'Add spinach, beetroot, pomegranate, roasted chana, and lentils to your upcoming meals.'
+          nutrient: 'Low Iron Intake',
+          intake: `${totals.iron.toFixed(1)} mg (Recommended: 15-18 mg)`,
+          risk: 'Low iron causes tiredness, weakness, and lower blood hemoglobin.',
+          remedy: 'Eat palak (spinach) dal, roasted chana, beetroot, or pomegranate.'
         });
       }
 
-      // Check Protein
       if (totals.protein < (targetProtein * 0.6)) {
         alerts.push({
-          nutrient: 'Protein Deficit',
+          nutrient: 'Low Daily Protein',
           intake: `${totals.protein} g (Target: ${targetProtein} g)`,
-          risk: 'Leads to muscle wasting, weakened immunity, sluggish metabolism, and prolonged wound recovery.',
-          remedy: 'Include moong dal, paneer, sprouts, eggs, or Greek yogurt in your next breakfast and lunch.'
+          risk: 'Can lead to muscle weakness and slow physical recovery.',
+          remedy: 'Include moong dal chilla, paneer, boiled eggs, or sprouts in your meals.'
         });
       }
 
-      // Check Fiber
       if (totals.fiber < 18) {
         alerts.push({
           nutrient: 'Low Dietary Fiber',
           intake: `${totals.fiber} g (Target: 30 g)`,
-          risk: 'Can trigger digestive constipation, post-meal glucose spikes, and elevated LDL cholesterol.',
-          remedy: 'Switch to whole grains (oats/brown rice), eat whole apples/guavas with skin, and add cucumber salad.'
+          risk: 'Causes poor digestion, constipation, and quicker blood sugar spikes.',
+          remedy: 'Eat whole rotis with bran, cucumber salad, and fruits like guava or papaya.'
         });
       }
 
-      // Check Water
       if (filledWaterGlasses < 5) {
         alerts.push({
-          nutrient: 'Sub-optimal Hydration',
+          nutrient: 'Low Water Hydration',
           intake: `${filledWaterGlasses * 250} ml (Target: 2,000 ml)`,
-          risk: 'Leads to dehydration headaches, reduced kidney filtration efficiency, dry skin, and sluggish digestion.',
-          remedy: 'Drink 1 full glass of warm water now and keep a water bottle accessible at your desk.'
+          risk: 'Mild dehydration causes tiredness, headaches, and hard digestion.',
+          remedy: 'Drink 1 glass of water now and keep a bottle handy near your table.'
         });
       }
 
       if (alerts.length === 0) {
-        alertsContainer.innerHTML = `<div style="color: #15803d; font-weight: 600; padding: 12px; background: #ffffff; border-radius: 8px;">🎉 Superb balance! All key vitamin and mineral thresholds were successfully satisfied today.</div>`;
+        alertsContainer.innerHTML = `<div style="color: #15803d; font-weight: 700; padding: 12px; background: #ffffff; border-radius: 8px;">🎉 Perfect balance! All your key daily vitamins and nutrients were satisfied!</div>`;
       } else {
         alertsContainer.innerHTML = alerts.map(a => `
-          <div class="deficiency-alert">
-            <div style="font-size: 24px;">⚠️</div>
+          <div style="display: flex; gap: 12px; padding: 12px 14px; background: #ffffff; border-left: 4px solid #f59e0b; border-radius: 8px; margin-top: 10px;">
+            <div style="font-size: 22px;">💡</div>
             <div>
-              <div style="font-weight: 700; color: #b91c1c; font-size: 14px;">${a.nutrient} (${a.intake})</div>
-              <div style="font-size: 13px; color: #475569; margin: 4px 0;"><strong>Potential Health Risks:</strong> ${a.risk}</div>
-              <div style="font-size: 12px; color: #0d7377; font-weight: 600;">💡 Doctor Recommended Adjustment: ${a.remedy}</div>
+              <div style="font-weight: 800; color: #b45309; font-size: 14px;">${a.nutrient} (${a.intake})</div>
+              <div style="font-size: 13px; color: #475569; margin: 3px 0;">${a.risk}</div>
+              <div style="font-size: 12px; color: #0d7377; font-weight: 700;">Easy Home Remedy: ${a.remedy}</div>
             </div>
           </div>
         `).join('');
@@ -1460,34 +2175,7 @@
       reportSection.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // --- Save Report to LocalStorage & Cloud ---
-    function saveReportToLocalStorage() {
-      const record = {
-        date: new Date().toISOString().split('T')[0],
-        timestamp: new Date().toLocaleTimeString(),
-        waterGlasses: filledWaterGlasses,
-        eatenMeals: Object.keys(eatenStatus).filter(k => eatenStatus[k]),
-        hungerLevel: selectedHungerLevel,
-        calories: calculatedCalories
-      };
-      let history = [];
-      try {
-        history = JSON.parse(localStorage.getItem('carenest_diet_history') || '[]');
-      } catch(e) {}
-      history.push(record);
-      localStorage.setItem('carenest_diet_history', JSON.stringify(history));
-
-      // Sync to cloud backend for multi-device access
-      fetch(getCareNestApiUrl('/api/diet/log'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(record)
-      }).catch(err => console.log('Offline diet sync:', err));
-
-      alert("💾 Daily diet log successfully saved to your CareNest profile history!");
-    }
-
-    // --- Satiety & Hunger Adjustment System ---
+    // --- Satiety & Hunger Adjustment ---
     let selectedHungerLevel = 'satisfied';
 
     function handleHungerChange(level) {
@@ -1498,44 +2186,46 @@
       const badge = document.getElementById('hunger-adjusted-badge');
       if (badge) badge.style.display = 'none';
 
-      // Reset card styles
-      const lNone = document.getElementById('label-hunger-none');
-      const lMild = document.getElementById('label-hunger-mild');
-      const lHigh = document.getElementById('label-hunger-high');
-
-      if (lNone) { lNone.style.borderColor = '#e2e8f0'; lNone.style.background = '#f8fafc'; }
-      if (lMild) { lMild.style.borderColor = '#e2e8f0'; lMild.style.background = '#f8fafc'; }
-      if (lHigh) { lHigh.style.borderColor = '#e2e8f0'; lHigh.style.background = '#f8fafc'; }
+      ['none', 'mild', 'high'].forEach(l => {
+        const el = document.getElementById('label-hunger-' + l);
+        if (el) {
+          el.style.borderColor = '#e2e8f0';
+          el.style.background = '#f8fafc';
+        }
+      });
 
       if (level === 'satisfied') {
-        if (lNone) { lNone.style.borderColor = '#22c55e'; lNone.style.background = '#f0fdf4'; }
+        const el = document.getElementById('label-hunger-none');
+        if (el) { el.style.borderColor = '#22c55e'; el.style.background = '#f0fdf4'; }
         if (panel) panel.style.display = 'none';
       } else if (level === 'mild') {
-        if (lMild) { lMild.style.borderColor = '#f59e0b'; lMild.style.background = '#fffbeb'; }
+        const el = document.getElementById('label-hunger-mild');
+        if (el) { el.style.borderColor = '#f59e0b'; el.style.background = '#fffbeb'; }
         if (panel) {
           panel.style.display = 'block';
           panel.style.background = '#fffbeb';
           panel.style.borderColor = '#fde68a';
           if (title) {
-            title.textContent = '⚡ Recommended Tomorrow Calorie Boost (+175 kcal)';
+            title.textContent = 'Recommended Tomorrow Calorie Boost (+175 kcal)';
             title.style.color = '#92400e';
           }
           if (desc) {
-            desc.innerHTML = 'You experienced mild hunger today. We propose adding <strong>+175 kcal of high-satiety fiber & healthy fats</strong> (e.g. roasted makhana & chia seed curd) to tomorrow\'s mid-evening snack so you feel full until dinner without glycemic spikes.';
+            desc.innerHTML = 'You experienced mild hunger today. We propose adding <strong>roasted makhana or boiled chana sundal</strong> to tomorrow\'s evening snack so you stay full until dinner without sugar spikes.';
           }
         }
       } else if (level === 'high') {
-        if (lHigh) { lHigh.style.borderColor = '#ef4444'; lHigh.style.background = '#fef2f2'; }
+        const el = document.getElementById('label-hunger-high');
+        if (el) { el.style.borderColor = '#ef4444'; el.style.background = '#fef2f2'; }
         if (panel) {
           panel.style.display = 'block';
           panel.style.background = '#fef2f2';
           panel.style.borderColor = '#fecaca';
           if (title) {
-            title.textContent = '⚡ Recommended Tomorrow Calorie Boost (+300 kcal)';
+            title.textContent = 'Recommended Tomorrow Calorie Boost (+300 kcal)';
             title.style.color = '#991b1b';
           }
           if (desc) {
-            desc.innerHTML = 'You experienced persistent hunger or low energy today. Your body expended more energy than expected. We propose boosting tomorrow\'s target by <strong>+300 kcal with clean protein & complex energy</strong> (e.g. adding sprouted moong salad to lunch and paneer/boiled egg toast to evening snack).';
+            desc.innerHTML = 'You felt low on energy today. We will boost tomorrow\'s portion size with an extra soft phulka, thick moong dal, and sprouts salad for clean natural stamina.';
           }
         }
       }
@@ -1544,68 +2234,59 @@
     function applyTomorrowHungerAdjustment() {
       const boostAmount = selectedHungerLevel === 'high' ? 300 : 175;
       
-      // Update target calories
-      calculatedCalories += boostAmount;
-      const calDisplay = document.getElementById('target-calories');
-      if (calDisplay) calDisplay.innerText = calculatedCalories;
-
-      // Add high-satiety food to tomorrow's snacks
-      if (selectedHungerLevel === 'mild') {
-        currentPlan.snack2 = FOOD_DATABASE.find(f => f.id === 'makhana') || currentPlan.snack2;
-      } else if (selectedHungerLevel === 'high') {
-        currentPlan.snack2 = FOOD_DATABASE.find(f => f.id === 'sprouts_salad') || currentPlan.snack2;
+      const calDisplay = document.getElementById('metric-calories');
+      if (calDisplay) {
+        let current = parseInt(calDisplay.innerText) || 1850;
+        current += boostAmount;
+        calDisplay.innerText = current.toLocaleString() + ' kcal';
       }
 
-      // Re-render meal plan
+      if (selectedHungerLevel === 'mild') {
+        currentPlan.snack2 = FOOD_DATABASE.find(f => f.id === 'roasted_makhana') || currentPlan.snack2;
+      } else if (selectedHungerLevel === 'high') {
+        currentPlan.snack2 = FOOD_DATABASE.find(f => f.id === 'sprouts_chaat') || currentPlan.snack2;
+      }
+
       renderMealPlan();
 
       const badge = document.getElementById('hunger-adjusted-badge');
       if (badge) {
-        badge.innerHTML = `✓ Tomorrow's Plan Boosted (+${boostAmount} kcal Satiety)!`;
+        badge.innerHTML = `✓ Tomorrow's Plan Boosted (+${boostAmount} kcal Indian Snacks)!`;
         badge.style.display = 'inline-block';
       }
 
-      // Show alert confirmation
-      alert(`🍽️ Tomorrow's Diet Successfully Recalibrated!\n\nAdded +${boostAmount} kcal with high-satiety, high-fiber foods to eliminate hunger pangs while maintaining condition safety. Scroll up to review tomorrow's enhanced schedule.`);
+      alert(`🍽️ Tomorrow's Diet Recalibrated!\n\nAdded +${boostAmount} kcal of wholesome Indian food to keep you full and energetic while staying safe for your health conditions.`);
       
-      // Smooth scroll back to meal schedule
       const planSec = document.getElementById('meal-plan-section');
       if (planSec) planSec.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // Auto-sync diet logs from cloud on page load
-    window.addEventListener('DOMContentLoaded', () => {
-      fetch(getCareNestApiUrl('/api/diet/history'))
-        .then(r => r.json())
-        .then(logs => {
-          if (Array.isArray(logs) && logs.length > 0) {
-            try { localStorage.setItem('carenest_diet_history', JSON.stringify(logs)); } catch(e) {}
-            const todayStr = new Date().toISOString().split('T')[0];
-            const todayLog = logs.find(l => l.date === todayStr);
-            if (todayLog) {
-              if (typeof todayLog.waterGlasses === 'number') {
-                filledWaterGlasses = todayLog.waterGlasses;
-                if (typeof renderWaterTrack === 'function') renderWaterTrack();
-              }
-              if (Array.isArray(todayLog.eatenMeals)) {
-                todayLog.eatenMeals.forEach(k => { eatenStatus[k] = true; });
-                if (typeof updateEatenVisuals === 'function') updateEatenVisuals();
-              }
-            }
-          }
-        })
-        .catch(err => console.log('Diet sync notice:', err));
+    // --- Save Report to LocalStorage & Cloud Backend ---
+    function saveReportToLocalStorage() {
+      const record = {
+        date: new Date().toISOString().split('T')[0],
+        timestamp: new Date().toLocaleTimeString(),
+        waterGlasses: filledWaterGlasses,
+        eatenMeals: Object.keys(eatenStatus).filter(k => eatenStatus[k]),
+        hungerLevel: selectedHungerLevel,
+        calories: parseInt(document.getElementById('metric-calories').innerText) || 1850
+      };
 
-      const userStr = localStorage.getItem('carenest_user');
-      if (userStr) {
-        try {
-          const user = JSON.parse(userStr);
-          const initials = user.name ? user.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase() : 'SK';
-          const avatar = document.querySelector('.user-avatar-circle');
-          if (avatar) avatar.innerText = initials;
-        } catch(e) {}
-      }
-    });
+      let history = [];
+      try {
+        history = JSON.parse(localStorage.getItem('carenest_diet_history') || '[]');
+      } catch(e) {}
+      history.push(record);
+      localStorage.setItem('carenest_diet_history', JSON.stringify(history));
+
+      fetch(getCareNestApiUrl('/api/diet/log'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(record)
+      }).catch(err => console.log('Offline diet sync:', err));
+
+      alert("💾 Daily diet log successfully saved to your CareNest profile history!");
+    }
   </script>
 </body>
 </html>
