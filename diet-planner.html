@@ -566,6 +566,7 @@
       transform: translateY(-1px);
     }
   </style>
+  <script src="carenest-language.js"></script>
 </head>
 <body class="portal-layout">
 
@@ -582,9 +583,6 @@
       </div>
     </div>
     <div class="portal-header-right">
-      <button class="btn btn-secondary btn-sm" onclick="promptCareNestBackendUrl()" title="Configure Render Backend Web Service Link" style="margin-right: 8px;">
-        ⚙️ Backend Link
-      </button>
       <button class="btn btn-secondary btn-sm" onclick="window.print()" style="margin-right: 12px;">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
         Print Plan
@@ -865,17 +863,18 @@
         <div class="meal-card-body" id="list-dinner"></div>
       </div>
 
-      <!-- Water Tracker -->
+      <!-- Water Tracker (Personalized & Dynamically Adjusted Based on Diet & Health) -->
       <div class="water-tracker-block">
         <div class="water-tracker-header">
           <div class="water-tracker-title">
             <h3>💧 Daily Water Tracker (Pani Peene ka Record)</h3>
-            <p>Target: 8 Glasses (2,000 ml). Tap each glass as you drink throughout the day!</p>
+            <p id="water-target-desc">Target: 8 Glasses (2,000 ml). Dynamically adjusted for your diet, weight &amp; health profile.</p>
           </div>
           <div style="font-size: 18px; font-weight: 800; color: #0284c7;" id="water-count-text">
             0 / 8 Glasses (0 ml)
           </div>
         </div>
+        <div id="water-target-badge" style="display: none; margin-bottom: 14px; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 20px; width: fit-content;"></div>
         <div class="glasses-flex-row" id="water-glasses-row"></div>
       </div>
 
@@ -1644,6 +1643,7 @@
       const dietSelect = document.getElementById('input-diet-type');
       if (dietSelect) {
         dietSelect.addEventListener('change', () => {
+          updateCalculatedMetrics();
           const planSec = document.getElementById('meal-plan-section');
           if (planSec && planSec.style.display !== 'none') {
             generateMealPlan(false);
@@ -1749,6 +1749,96 @@
       document.getElementById('metric-carbs').innerText = carbs + ' g';
       document.getElementById('metric-fat').innerText = fat + ' g';
       document.getElementById('metric-fiber').innerText = isDiabetic ? '35 g' : '30 g';
+
+      // Dynamically re-calculate hydration target based on diet, weight & conditions
+      updateDynamicWaterIntake();
+    }
+
+    // --- Dynamic Water Calculation Based on Diet, Weight & Health ---
+    function updateDynamicWaterIntake() {
+      const weight = parseFloat(document.getElementById('input-weight').value) || 70;
+      const activity = parseFloat(document.getElementById('input-activity').value) || 1.375;
+      const dietType = document.getElementById('input-diet-type') ? document.getElementById('input-diet-type').value : 'veg';
+      
+      const isKidney = document.getElementById('cond-kidney') && document.getElementById('cond-kidney').checked;
+      const isHeart = document.getElementById('cond-heart') && document.getElementById('cond-heart').checked;
+      const isBP = document.getElementById('cond-bp') && document.getElementById('cond-bp').checked;
+      const isDiabetes = document.getElementById('cond-diabetes') && document.getElementById('cond-diabetes').checked;
+
+      // Base hydration: 35 ml per kg body weight
+      let baseMl = weight * 35;
+
+      // Activity adjustment
+      if (activity >= 1.55) {
+        baseMl += 600; // Physically active / daily exercise
+      } else if (activity >= 1.375) {
+        baseMl += 300; // Moderate movement / office walk
+      }
+
+      // Diet adjustment: High protein (non-veg or egg diet) requires additional water for nitrogen processing
+      if (dietType === 'nonveg' || dietType === 'eggetarian') {
+        baseMl += 250;
+      }
+
+      let badgeText = '';
+      let badgeBg = '#e0f2fe';
+      let badgeColor = '#0369a1';
+      let badgeBorder = '#bae6fd';
+
+      // Clinical conditions adjustments
+      if (isKidney) {
+        baseMl = 1250; // Strict fluid restriction: 5 glasses (1,250 ml)
+        badgeText = '⚠️ Kidney Care: Fluid is medically moderated to 5 glasses (1,250 ml) to prevent fluid overload. Follow your doctor\'s prescription.';
+        badgeBg = '#fef2f2';
+        badgeColor = '#991b1b';
+        badgeBorder = '#fecaca';
+      } else if (isHeart || isBP) {
+        baseMl = Math.min(baseMl, 2000); // Heart safety: max 8 glasses
+        badgeText = '❤️ Heart & BP Safety: Hydration balanced to 7-8 glasses to prevent cardiac strain.';
+        badgeBg = '#fff7ed';
+        badgeColor = '#c2410c';
+        badgeBorder = '#ffedd5';
+      } else if (isDiabetes) {
+        baseMl = Math.max(baseMl, 2250); // Hydration aids renal glucose clearance
+        badgeText = '🩸 Diabetes Support: Hydration boosted to 9-10 glasses to assist natural glucose clearance.';
+        badgeBg = '#f0fdf4';
+        badgeColor = '#15803d';
+        badgeBorder = '#bbf7d0';
+      } else if (dietType === 'nonveg' || dietType === 'eggetarian') {
+        badgeText = `🍗 High Protein Diet Hydration: +1 Glass added for ${dietType === 'nonveg' ? 'non-vegetarian' : 'egg'} protein digestion.`;
+      }
+
+      // Calculate glasses (250 ml each)
+      const targetGlasses = Math.max(4, Math.min(12, Math.round(baseMl / 250)));
+      const targetMl = targetGlasses * 250;
+
+      window.dailyWaterTargetGlasses = targetGlasses;
+      window.dailyWaterTargetMl = targetMl;
+
+      const descEl = document.getElementById('water-target-desc');
+      if (descEl) {
+        descEl.innerText = `Target: ${targetGlasses} Glasses (${targetMl.toLocaleString()} ml). Dynamically adjusted for your ${weight}kg weight, ${dietType} diet & health profile.`;
+      }
+
+      const badgeEl = document.getElementById('water-target-badge');
+      if (badgeEl) {
+        if (badgeText) {
+          badgeEl.innerText = badgeText;
+          badgeEl.style.display = 'inline-block';
+          badgeEl.style.background = badgeBg;
+          badgeEl.style.color = badgeColor;
+          badgeEl.style.border = `1px solid ${badgeBorder}`;
+        } else {
+          badgeEl.style.display = 'none';
+        }
+      }
+
+      const countEl = document.getElementById('water-count-text');
+      if (countEl) {
+        countEl.innerText = `${filledWaterGlasses} / ${targetGlasses} Glasses (${filledWaterGlasses * 250} ml)`;
+      }
+
+      renderWaterTracker();
     }
 
     // --- Generate Dynamic Meal Plan ---
@@ -1936,7 +2026,17 @@
           </div>
         `;
       });
+
+      if (window.applyCareNestTranslations) {
+        window.applyCareNestTranslations();
+      }
     }
+
+    // React to language switch immediately
+    window.addEventListener('carenest_lang_changed', () => {
+      renderMealPlan();
+      if (typeof updateDynamicWaterIntake === 'function') updateDynamicWaterIntake();
+    });
 
     function toggleMealEaten(mealKey) {
       eatenStatus[mealKey] = !eatenStatus[mealKey];
@@ -1980,6 +2080,10 @@
         `).join('');
       }
 
+      if (window.applyCareNestTranslations) {
+        window.applyCareNestTranslations();
+      }
+
       document.getElementById('swapModal').style.display = 'flex';
     }
 
@@ -2006,11 +2110,13 @@
       btn.classList.add('btn-secondary');
     }
 
-    // --- Water Tracker ---
+    // --- Water Tracker (Dynamic Rendering Based on Calculated Target) ---
     function renderWaterTracker() {
       const container = document.getElementById('water-glasses-row');
+      if (!container) return;
       container.innerHTML = '';
-      for (let i = 1; i <= 8; i++) {
+      const totalGlasses = window.dailyWaterTargetGlasses || 8;
+      for (let i = 1; i <= totalGlasses; i++) {
         const btn = document.createElement('div');
         btn.className = `water-cup-btn ${i <= filledWaterGlasses ? 'filled' : ''}`;
         btn.innerHTML = `<span>250ml</span><span style="font-size: 14px; margin-top: 2px;">${i <= filledWaterGlasses ? '💧' : '○'}</span><span style="font-size: 10px; opacity: 0.8;">#${i}</span>`;
@@ -2021,7 +2127,10 @@
             filledWaterGlasses = i;
           }
           renderWaterTracker();
-          document.getElementById('water-count-text').innerText = `${filledWaterGlasses} / 8 Glasses (${filledWaterGlasses * 250} ml)`;
+          const countEl = document.getElementById('water-count-text');
+          if (countEl) {
+            countEl.innerText = `${filledWaterGlasses} / ${totalGlasses} Glasses (${filledWaterGlasses * 250} ml)`;
+          }
         };
         container.appendChild(btn);
       }
@@ -2090,8 +2199,8 @@
         </div>
         <div style="background: #ffffff; padding: 14px; border-radius: 10px; border: 1px solid #bbf7d0;">
           <div style="font-size: 11px; color: #166534; font-weight: 700;">HYDRATION LOGGED</div>
-          <div style="font-size: 20px; font-weight: 800; color: #0284c7;">${filledWaterGlasses * 250} / 2,000 ml</div>
-          <div style="font-size: 11px; color: #64748b;">${filledWaterGlasses} of 8 Glasses consumed</div>
+          <div style="font-size: 20px; font-weight: 800; color: #0284c7;">${filledWaterGlasses * 250} / ${(window.dailyWaterTargetMl || 2000).toLocaleString()} ml</div>
+          <div style="font-size: 11px; color: #64748b;">${filledWaterGlasses} of ${window.dailyWaterTargetGlasses || 8} Glasses consumed (${Math.round((filledWaterGlasses / (window.dailyWaterTargetGlasses || 8)) * 100)}%)</div>
         </div>
       `;
 
@@ -2148,12 +2257,14 @@
         });
       }
 
-      if (filledWaterGlasses < 5) {
+      const personalTargetGlasses = window.dailyWaterTargetGlasses || 8;
+      const personalTargetMl = window.dailyWaterTargetMl || 2000;
+      if (filledWaterGlasses < Math.ceil(personalTargetGlasses * 0.7)) {
         alerts.push({
           nutrient: 'Low Water Hydration',
-          intake: `${filledWaterGlasses * 250} ml (Target: 2,000 ml)`,
-          risk: 'Mild dehydration causes tiredness, headaches, and hard digestion.',
-          remedy: 'Drink 1 glass of water now and keep a bottle handy near your table.'
+          intake: `${filledWaterGlasses * 250} ml (Personal Target: ${personalTargetMl.toLocaleString()} ml)`,
+          risk: 'Mild dehydration causes fatigue, headaches, constipation, and sluggish digestion.',
+          remedy: 'Drink 1 glass of water now and keep a water bottle handy near your table.'
         });
       }
 
@@ -2170,6 +2281,10 @@
             </div>
           </div>
         `).join('');
+      }
+
+      if (window.applyCareNestTranslations) {
+        window.applyCareNestTranslations();
       }
 
       reportSection.scrollIntoView({ behavior: 'smooth' });

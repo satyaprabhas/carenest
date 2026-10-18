@@ -555,6 +555,7 @@
       }
     }
   </style>
+  <script src="carenest-language.js"></script>
 </head>
 <body>
 
@@ -629,6 +630,12 @@
 
       <!-- RIGHT SIDE: Orderly & Prominent Login / Register Forms -->
       <main class="auth-form-side">
+
+        <!-- Prominent Language Selector for Login & Signup -->
+        <div class="auth-lang-row" style="width: 100%; max-width: 440px; display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin: 0 auto 18px;">
+          <span style="font-size: 13px; font-weight: 700; color: #475569;">🌐 Language:</span>
+          <div id="auth-lang-mount"></div>
+        </div>
 
         <!-- Tab Switcher -->
         <div class="auth-switch-tabs">
@@ -724,7 +731,6 @@
         <div style="margin-top: 18px; text-align: center; font-size: 12px; color: #94a3b8; display: flex; justify-content: center; align-items: center; gap: 10px;">
           <span>© 2026 CareNest</span>
           <span>•</span>
-          <a href="javascript:void(0)" onclick="promptCareNestBackendUrl()" style="color: #0d7377; text-decoration: none; font-weight: 600;">⚙️ Configure Backend Link</a>
         </div>
       </main>
 
